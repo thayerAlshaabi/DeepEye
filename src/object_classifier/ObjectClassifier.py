@@ -37,7 +37,7 @@ import time
 sys.path.append("..")
 
 # imports from the object detection module.
-from ObjectDetector.object_detection.utils import label_map_util, visualization_utils
+from object_classifier.object_detection.utils import label_map_util, visualization_utils
 # ---------------------------------------------------------------------------- #
 
 class ObjectClassifier:
@@ -96,17 +96,20 @@ class ObjectClassifier:
         # Compressed file for the pre-trained model
         self.MODEL_FILE = classifier_codename + '.tar.gz'
 
-        # Relative path for the current directory
-        self.MODEL_PATH = os.path.join(os.getcwd(), 'ObjectDetector', self.FOLDER_NAME)
+        # Relative path for the MODEL FOLDER
+        self.MODEL_FOLDER_PATH = os.path.join(os.getcwd(), 'object_classifier', self.FOLDER_NAME)
+
+        # Relative path for the MODEL FILE
+        self.MODEL_FILE_PATH = os.path.join(self.MODEL_FOLDER_PATH, self.MODEL_FILE)
 
         # URL for TF Object Detection API
         self.DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 
         # Path to frozen detection graph. This is the actual model that is used for the object detection.
-        self.PATH_TO_CKPT = os.path.join(self.MODEL_PATH, classifier_codename, 'frozen_inference_graph.pb')
+        self.PATH_TO_CKPT = os.path.join(self.MODEL_FOLDER_PATH, classifier_codename, 'frozen_inference_graph.pb')
 
         # List of the strings that is used to add correct label for each box.
-        self.PATH_TO_LABELS = os.path.join(self.MODEL_PATH, 'data', dataset_codename + '_label_map.pbtxt')
+        self.PATH_TO_LABELS = os.path.join(self.MODEL_FOLDER_PATH, 'data', dataset_codename + '_label_map.pbtxt')
 
         # Max number of available category names in the model only for the COCO dataset
         self.COCO_MAX_CLASSES = 90
@@ -169,18 +172,19 @@ class ObjectClassifier:
         """
         Download pre-trained model from the tensorflow object detection API.
         """
-        if not os.path.exists(os.path.join(self.MODEL_PATH, self.MODEL_FILE)):
+        if not os.path.exists(self.MODEL_FILE_PATH):
             print('\n\n-- Downloading classifier model...')
             opener = urllib.request.URLopener()
-            opener.retrieve(self.DOWNLOAD_BASE + self.MODEL_FILE, self.FOLDER_NAME + '/' + self.MODEL_FILE)
+            opener.retrieve(self.DOWNLOAD_BASE + self.MODEL_FILE, self.MODEL_FILE_PATH)
+
 
         if not os.path.exists(self.PATH_TO_CKPT):
             print('\n\n-- Extracting classifier model...')
-            tar_file = tarfile.open(self.FOLDER_NAME + '/' + self.MODEL_FILE)
+            tar_file = tarfile.open(self.MODEL_FILE_PATH)
             for file in tar_file.getmembers():
                 file_name = os.path.basename(file.name)
                 if 'frozen_inference_graph.pb' in file_name:
-                    tar_file.extract(file, os.path.join(self.MODEL_PATH))
+                    tar_file.extract(file, os.path.join(self.MODEL_FOLDER_PATH))
 
 
     def load_model(self):

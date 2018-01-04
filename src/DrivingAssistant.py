@@ -12,7 +12,7 @@ to voice warning system that would notify the driver of any upcoming threats.
 
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
-from ObjectDetector.ObjectClassifier import *
+from object_classifier.ObjectClassifier import *
 # ---------------------------------------------------------------------------- #
 
 class DrivingAssistant:
