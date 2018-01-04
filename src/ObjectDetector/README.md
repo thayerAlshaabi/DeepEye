@@ -34,6 +34,7 @@ The API lists many different pre-trained models of the state-of-the-art CNN arch
 
 
 To use a different classifier and/or different dataset you'll need to look at:
+
 Parameter | Description 
 --- | ---
 **classifier_codename** | Codename of the pre-trained model used for object detection **([list of available models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md))**.
