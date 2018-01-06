@@ -26,8 +26,8 @@ class DrivingAssistant:
             dataset_codename = 'mscoco',
             classifier_threshold = .85,
             monitor_id = 1,
-            window_width = 512,
-            window_height = 512
+            window_width = 800,
+            window_height = 640,
         )
 
     def activate(self):

@@ -84,8 +84,8 @@ class ObjectClassifier:
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
         monitor_id = 1,
-        window_top_offset = None,
-        window_left_offset = None,
+        window_top_offset = 0,
+        window_left_offset = 0,
         window_width = None,
         window_height = None,
         window_scale = 1.0):
