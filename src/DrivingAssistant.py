@@ -22,10 +22,12 @@ class DrivingAssistant:
     # Constructor
     def __init__(self):
         self.classifier = ObjectClassifier(
-            classifier_codename = 'faster_rcnn_nas_coco_2017_11_08',
+            classifier_codename = 'faster_rcnn_resnet101_coco_2017_11_08',
             dataset_codename = 'mscoco',
             classifier_threshold = .85,
-            monitor_id = 2,
+            monitor_id = 1,
+            window_width = 512,
+            window_height = 512
         )
 
     def activate(self):
