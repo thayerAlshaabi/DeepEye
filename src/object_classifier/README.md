@@ -28,7 +28,8 @@ Name | Description
 
 ## Customization
 ### Model Architecture
-The API lists many different pre-trained models of the state-of-the-art CNN architectures including SSD, Inception, Resnet, R-CNN, NAS, etc... By default, our implementation uses the (faster_rcnn_nas | mAP=43) model. It's relatively slow but has one of the best mean average precision (mAP) as of today's standards. 
+The API lists many different pre-trained models, training and hyperparameter tuning pipelines for (Faster R-CNN, SSD, and R-FCN) network meta-architectures coupled with various feature extractors like (Resnet-101, VGG-16, Inception v2-v3, and some others). By default, our implementation uses the (faster_rcnn_resnet101 | mAP=32) model. It's a fair compromise to achieve a relatively high mean average precision (mAP) without slowing the network preformance too much. In other words, It provides the right speed/accuracy balance for our base model) that would serve efficiently given our target platform and limited hardware.
+
 
 **Note:** mAP is is the product of precision and recall on detecting bounding boxes. In short, the higher the mAP score, the more accurate the network is but that comes at the cost of processing speed.
 
