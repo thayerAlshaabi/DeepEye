@@ -28,7 +28,7 @@ Name | Description
 
 ## Customization
 ### Model Architecture
-The API lists many different pre-trained models, training and hyperparameter tuning pipelines for (Faster R-CNN, SSD, and R-FCN) network meta-architectures coupled with various feature extractors like (Resnet-101, VGG-16, Inception v2-v3, and some others). By default, our implementation uses the (faster_rcnn_resnet101 | mAP=32) model. It's a fair compromise to achieve a relatively high mean average precision (mAP) without slowing the network preformance too much. In other words, It provides the right speed/accuracy balance for our base model) that would serve efficiently given our target platform and limited hardware.
+The API lists many different pre-trained models, training and hyperparameter tuning pipelines for (Faster R-CNN, SSD, and R-FCN) network meta-architectures coupled with various feature extractors like (Resnet-101, VGG-16, Inception v2-v3, and some others). By default, our implementation uses the (faster_rcnn_resnet101 | mAP=32) model. It's a fair compromise to achieve a relatively high mean average precision (mAP) without slowing down the model's performance too much. In other words, It provides the right speed/accuracy balance for our base model that would serve efficiently given our target platform and limited hardware.
 
 
 **Note:** mAP is is the product of precision and recall on detecting bounding boxes. In short, the higher the mAP score, the more accurate the network is but that comes at the cost of processing speed.
