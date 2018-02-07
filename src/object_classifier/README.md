@@ -58,6 +58,6 @@ Parameter | Description
 
 
 ## Licensing Information
-The following code was adapted from the Tensorflow Object Detection API licensed under [Apache License 2.0](https://github.com/tensorflow/models/blob/master/LICENSE)
+The following code was adapted from the Tensorflow Object Detection API licensed under [Apache License 2.0](https://github.com/tensorflow/models/blob/master/LICENSE).
 
 Original SourceCode could be found @ [object_detection_tutorial](https://github.com/tensorflow/models/blob/master/research/object_detection/object_detection_tutorial.ipynb)

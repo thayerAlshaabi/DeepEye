@@ -25,9 +25,11 @@ class DrivingAssistant:
             classifier_codename = 'faster_rcnn_resnet101_coco_2017_11_08',
             dataset_codename = 'mscoco',
             classifier_threshold = .85,
-            monitor_id = 1,
-            window_width = 800,
-            window_height = 640,
+            monitor_id = 2,
+            window_top_offset = 150,
+            window_left_offset = 10,
+            window_width = 1280+10,
+            window_height = 720+150,
         )
 
     def activate(self):
