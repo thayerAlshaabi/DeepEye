@@ -102,7 +102,7 @@ class Lane:
         lane_color = (0, 255, 127),
         x_polygons_coefficients = 3.7/700, 
         y_polygons_coefficients = 30/720,
-        num_windows = 9):
+        num_windows = 2):
         
         # width of the lane marker
         self.marker_size = marker_size
