@@ -32,8 +32,7 @@ We used a combination of color and gradient thresholds to create a bitmap of zer
     
 
 - [cv2.GaussianBlur](https://docs.opencv.org/3.1.0/d4/d13/tutorial_py_filtering.html): removing gaussian noise from the frame.
-    
-- [cv2.getPerspectiveTransform & cv.warpPerspective](https://docs.opencv.org/3.4.0/da/d6e/tutorial_py_geometric_transformations.html): convert frame to a wrapped/flattened bird's eye view
+
 
 - [cv2.morphologyEx](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html): a morphological transformation to paint/fill the small gaps in the detected lines, basically to get a (solid line) instead of an (intermittent or dashed line)
 
@@ -50,7 +49,7 @@ Canny          |  After removing gaussian noise
 ![canny](readme_imgs/canny.png)  |  ![thresholds](readme_imgs/thresholds.jpeg)
 
 #### Perspective Transform
-This step is a very basic step, yet very crucial to figure out the lane curvature. The idea is to map the pixels in a given image to different ones with a new perspective, particularly, a **bird’s-eye view** in order to view a lane from above.
+This step is a very basic step, yet very crucial to figure out the lane curvature. The idea is to map the pixels in a given image to different ones with a new perspective, particularly, a **bird’s-eye view** in order to view a lane from above [cv2.getPerspectiveTransform & cv.warpPerspective](https://docs.opencv.org/3.4.0/da/d6e/tutorial_py_geometric_transformations.html).
 
 ![bird’s-eye view](readme_imgs/birdseye.jpg)
 
