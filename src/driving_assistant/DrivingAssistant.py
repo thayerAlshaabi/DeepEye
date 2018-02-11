@@ -20,13 +20,14 @@ class DrivingAssistant:
     def __init__(self):
         self.classifier = None
     
-    def set_prams(self, classifier, dataset, threshold, monitor, top, left, width, height):
+    def set_prams(self, classifier, dataset, threshold, lane_detection, monitor, top, left, width, height):
 
         if width !=0:
             self.classifier = ObjectClassifier(
                 classifier_codename = classifier,
                 dataset_codename = dataset,
                 classifier_threshold = threshold,
+                lane_detection = lane_detection,
                 monitor_id = monitor,
                 window_top_offset = top,
                 window_left_offset = left,
@@ -38,6 +39,7 @@ class DrivingAssistant:
                 classifier_codename = classifier,
                 dataset_codename = dataset,
                 classifier_threshold = threshold,
+                lane_detection = lane_detection,
                 monitor_id = monitor,
                 window_top_offset = top,
                 window_left_offset = left,

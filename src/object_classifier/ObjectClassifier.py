@@ -85,6 +85,7 @@ class ObjectClassifier:
         classifier_codename = 'faster_rcnn_nas_coco_2017_11_08',
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
+        lane_detection = True,
         monitor_id = 1,
         window_top_offset = 0,
         window_left_offset = 0,
@@ -92,6 +93,9 @@ class ObjectClassifier:
         window_height = None,
         window_scale = 1.0):
 
+        #Boolean flag for lane detection
+        self.lane_detection = lane_detection
+        
         # Folder name for object detection module
         self.FOLDER_NAME = 'object_detection'
 
@@ -269,7 +273,8 @@ class ObjectClassifier:
             line_thickness=1)
 
         # detect lane in the given frame
-        self.frame = self.lane_detector.detect_lane(self.frame)
+        if self.lane_detection:
+            self.frame = self.lane_detector.detect_lane(self.frame)
 
         # Display frame with detected objects.
         cv2.imshow('DeepEye | Obj-Detector', self.frame)

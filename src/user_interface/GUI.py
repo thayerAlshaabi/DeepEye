@@ -80,35 +80,34 @@ class Window:
         top.configure(background="#d9d9d9")
 
 
-
         self.DatasetFrame = ttk.Labelframe(top)
         self.DatasetFrame.place(relx=0.05, rely=0.61, relheight=0.34
                 , relwidth=0.53)
-        self.DatasetFrame.configure(text='''Dataset''')
+        self.DatasetFrame.configure(text='''Classifier''')
         self.DatasetFrame.configure(width=230)
 
         self.ClassifierCode = ttk.Combobox(self.DatasetFrame)
-        self.ClassifierCode.place(relx=0.39, rely=0.24, relheight=0.13
+        self.ClassifierCode.place(relx=0.39, rely=0.17, relheight=0.13
                 , relwidth=0.49)
         self.value_list = ['Nas','Inception-Resnet','Resnet101',]
         self.ClassifierCode.configure(values=self.value_list)
         self.ClassifierCode.configure(textvariable=gui_utils.ClassiferBox)
-        self.ClassifierCode.configure(width=113)
+        #self.ClassifierCode.configure(width=113)
         self.ClassifierCode.configure(takefocus="")
         self.ClassifierCode.insert(0,'Resnet101')
 
         self.DatasetCode = ttk.Combobox(self.DatasetFrame)
-        self.DatasetCode.place(relx=0.39, rely=0.45, relheight=0.13
+        self.DatasetCode.place(relx=0.39, rely=0.38, relheight=0.13
                 , relwidth=0.49)
         self.value_list = ['Coco','Kitti',]
         self.DatasetCode.configure(values=self.value_list)
         self.DatasetCode.configure(textvariable=gui_utils.DatasetBox)
-        self.DatasetCode.configure(width=113)
+        #self.DatasetCode.configure(width=113)
         self.DatasetCode.configure(takefocus="")
         self.DatasetCode.insert(0,'Coco')
         
         self.Threshold = Spinbox(self.DatasetFrame, from_=0.0, to=1.0)
-        self.Threshold.place(relx=0.39, rely=0.68, relheight=0.12, relwidth=0.24)
+        self.Threshold.place(relx=0.39, rely=0.58, relheight=0.12, relwidth=0.5)
 
         self.Threshold.configure(activebackground="#f9f9f9")
         self.Threshold.configure(background="white")
@@ -127,20 +126,20 @@ class Window:
         for i in range(101):
             self.value_list.append(str(i)+'%')        
         self.Threshold.configure(values=self.value_list)
-        self.Threshold.configure(width=55)
+        self.Threshold.configure(width=115)
         self.Threshold.delete(0,"end")
         self.Threshold.insert(0,'85%')
 
         self.TLabel4 = ttk.Label(self.DatasetFrame)
-        self.TLabel4.place(relx=0.09, rely=0.24, height=19, width=61)
+        self.TLabel4.place(relx=0.17, rely=0.17, height=19, width=31)
         self.TLabel4.configure(background="#d9d9d9")
         self.TLabel4.configure(foreground="#000000")
         self.TLabel4.configure(relief=FLAT)
-        self.TLabel4.configure(text='''Classifier''')
-        self.TLabel4.configure(width=61)
+        self.TLabel4.configure(text='''CNN''')
+        #self.TLabel4.configure(width=31)
 
         self.TLabel5 = ttk.Label(self.DatasetFrame)
-        self.TLabel5.place(relx=0.13, rely=0.46, height=20, width=50)
+        self.TLabel5.place(relx=0.13, rely=0.38, height=20, width=50)
         self.TLabel5.configure(background="#d9d9d9")
         self.TLabel5.configure(foreground="#000000")
         self.TLabel5.configure(relief=FLAT)
@@ -148,11 +147,26 @@ class Window:
         self.TLabel5.configure(width=50)
 
         self.TLabel6 = ttk.Label(self.DatasetFrame)
-        self.TLabel6.place(relx=0.07, rely=0.68, height=19, width=57)
+        self.TLabel6.place(relx=0.07, rely=0.58, height=19, width=57)
         self.TLabel6.configure(background="#d9d9d9")
         self.TLabel6.configure(foreground="#000000")
         self.TLabel6.configure(relief=FLAT)
         self.TLabel6.configure(text='''Threshold''')
+
+        self.LaneDetectionCheck = Checkbutton(self.DatasetFrame)
+        self.LaneDetectionCheck.place(relx=0.24, rely=0.74, relheight=0.15
+                , relwidth=0.66)
+        self.LaneDetectionCheck.configure(activebackground="#d9d9d9")
+        self.LaneDetectionCheck.configure(activeforeground="#000000")
+        self.LaneDetectionCheck.configure(background="#d9d9d9")
+        self.LaneDetectionCheck.configure(disabledforeground="#a3a3a3")
+        self.LaneDetectionCheck.configure(foreground="#000000")
+        self.LaneDetectionCheck.configure(highlightbackground="#d9d9d9")
+        self.LaneDetectionCheck.configure(highlightcolor="black")
+        self.LaneDetectionCheck.configure(justify=LEFT)
+        self.LaneDetectionCheck.configure(text='''Enable Lane Detection?''')
+        self.LaneDetectionCheck.configure(variable=gui_utils.LaneDetection)
+        self.LaneDetectionCheck.configure(width=151)
 
         self.InputOutputFrame = ttk.Labelframe(top)
         self.InputOutputFrame.place(relx=0.05, rely=0.27, relheight=0.32
@@ -175,7 +189,6 @@ class Window:
         self.CustomWindowCheck.configure(activebackground="#d9d9d9")
         self.CustomWindowCheck.configure(activeforeground="#000000")
         self.CustomWindowCheck.configure(background="#d9d9d9")
-        #self.CustomWindowCheck.configure(command=WindowHeight.configure(state='disabled'))
         self.CustomWindowCheck.configure(disabledforeground="#a3a3a3")
         self.CustomWindowCheck.configure(foreground="#000000")
         self.CustomWindowCheck.configure(highlightbackground="#d9d9d9")
@@ -363,7 +376,13 @@ class Window:
             self.WindowWidth['state'] = NORMAL
             self.WindowHeight['state'] = NORMAL
 
-
+    #def CheckLane(self):
+     #   self.test = self.LaneDetectionCheck.get()()
+      #  if self.test == 0:
+       #     False
+        #elif self.test == 1:
+         #   True
+            
     def runProgram(self):
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
@@ -393,12 +412,13 @@ class Window:
             convertedClassifier, 
             convertedDataset, 
             convertedThreshold,
+            gui_utils.LaneDetection.get(),
             int(self.MonitorId.get()), 
             int(self.TopOffset.get()),
             int(self.LeftOffset.get()), 
             convertedWindowWidth, 
             convertedWindowHeight)
-
+        print (gui_utils.LaneDetection.get())
         driving_assistant.activate()
 
         root.destroy()
