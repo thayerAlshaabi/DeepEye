@@ -12,7 +12,7 @@ Our system works in a cycle. Our main class where the cycle starts is the **Driv
 ## Architecture
 Name | Description 
 --- | ---
-**adsa** | This is the main class that controls all advanced driver-assistance systems. For more information please refer to [DrivingAssistant](adsa/README.md).
+**driving_assistant** | This is the main class that controls all advanced driver-assistance systems. For more information please refer to [DrivingAssistant](driving_assistant/README.md).
 **user_interface** | This is a graphical user interface built using Python TkInter. For more information  please refer to [GUI](user_interface/README.md).
 **object_classifier** | This class is a deep convolutional neural network implemented using Tensorflow Object Detection API. For more information please refer to [ObjectClassifier](object_classifier/README.md).
 **threat_classifer** | work in progress...

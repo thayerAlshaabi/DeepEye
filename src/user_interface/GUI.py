@@ -6,7 +6,7 @@
 import sys, os
 
 import user_interface.gui_utils as gui_utils
-from adsa.DrivingAssistant import *
+from driving_assistant.DrivingAssistant import *
 
 
 try:
@@ -387,9 +387,9 @@ class Window:
         elif self.DatasetCode.get() == 'Kitti':
             convertedDataset = 'kitti'
 
-        adsa = DrivingAssistant()
+        driving_assistant = DrivingAssistant()
         
-        adsa.set_prams(
+        driving_assistant.set_prams(
             convertedClassifier, 
             convertedDataset, 
             convertedThreshold,
@@ -399,6 +399,6 @@ class Window:
             convertedWindowWidth, 
             convertedWindowHeight)
 
-        adsa.activate()
+        driving_assistant.activate()
 
         root.destroy()
