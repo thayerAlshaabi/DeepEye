@@ -31,6 +31,7 @@ import os, sys
 import six.moves.urllib as urllib
 import tarfile, zipfile
 import mss
+import mss.tools
 import time
 
 # This is needed for relative paths since the code is stored in the object_detection folder.
@@ -38,6 +39,7 @@ sys.path.append("..")
 
 # imports from the object detection module.
 from object_classifier.object_detection.utils import label_map_util, visualization_utils
+from object_classifier.lane_detection.LaneDetector import *
 # ---------------------------------------------------------------------------- #
 
 class ObjectClassifier:
@@ -218,6 +220,7 @@ class ObjectClassifier:
         self.load_model()
         self.detection_graph.as_default()
         self.sess = tf.Session(graph = self.detection_graph)
+        self.lane_detector = LaneDetector()
         print('\n\n-- Running object detector: target_window:', self.target_window)
 
 
@@ -230,7 +233,7 @@ class ObjectClassifier:
 
         # Get raw pixels from the screen, save it to a Numpy array
         pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
-
+        
         # convert pixels from BGRA to RGB values
         self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
 
@@ -253,7 +256,7 @@ class ObjectClassifier:
         (self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections) = self.sess.run(
             [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
             feed_dict={self.image_tensor: frame_expanded})
-
+        
         # Visualization of the results of a detection.
         visualization_utils.visualize_boxes_and_labels_on_image_array(
             self.frame,
@@ -265,9 +268,13 @@ class ObjectClassifier:
             min_score_thresh=self.classifier_threshold,
             line_thickness=1)
 
+        # detect lane in the given frame
+        self.frame = self.lane_detector.detect_lane(self.frame)
+
         # Display frame with detected objects.
-        cv2.imshow('DeepEye | Obj-Detector', cv2.cvtColor(self.frame, cv2.COLOR_BGRA2GRAY))
+        cv2.imshow('DeepEye | Obj-Detector', self.frame)
 
         # Calculating fps based on the previous registered timer
         self.frame_rate = 10 / (time.time() - timer)
         print('frame_rate: {0}'.format(int(self.frame_rate)))
+

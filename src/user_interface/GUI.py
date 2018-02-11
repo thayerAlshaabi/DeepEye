@@ -4,6 +4,7 @@
 # In conjunction with Tcl version 8.6
 #    Jan 28, 2018 06:06:42 PM
 import sys
+#from src.DrivingAssistant import *
 
 try:
     from Tkinter import *
@@ -68,7 +69,7 @@ class New_Toplevel_1:
             [('selected', _compcolor), ('active',_ana2color)])
 
         top.geometry("436x489+606+201")
-        top.title("New Toplevel 1")
+        top.title("DeepEye")
         top.configure(background="#d9d9d9")
 
 
@@ -87,6 +88,7 @@ class New_Toplevel_1:
         self.ClassifierCode.configure(textvariable=GUI_support.ClassiferBox)
         self.ClassifierCode.configure(width=113)
         self.ClassifierCode.configure(takefocus="")
+        self.ClassifierCode.insert(0,'Resnet101')
 
         self.DatasetCode = ttk.Combobox(self.DatasetFrame)
         self.DatasetCode.place(relx=0.39, rely=0.45, relheight=0.13
@@ -96,7 +98,8 @@ class New_Toplevel_1:
         self.DatasetCode.configure(textvariable=GUI_support.DatasetBox)
         self.DatasetCode.configure(width=113)
         self.DatasetCode.configure(takefocus="")
-
+        self.DatasetCode.insert(0,'Coco')
+        
         self.Threshold = Spinbox(self.DatasetFrame, from_=0.0, to=1.0)
         self.Threshold.place(relx=0.39, rely=0.68, relheight=0.12, relwidth=0.24)
 
@@ -159,7 +162,7 @@ class New_Toplevel_1:
         self.MonitorSizeFrame.configure(width=185)
 
         self.windowCheck = IntVar()
-        self.CustomWindowCheck = Checkbutton(self.MonitorSizeFrame)
+        self.CustomWindowCheck = Checkbutton(self.MonitorSizeFrame, command=self.FlipState)
         self.CustomWindowCheck.place(relx=0.0, rely=0.02, relheight=0.39
                 , relwidth=0.98)
         self.CustomWindowCheck.configure(activebackground="#d9d9d9")
@@ -206,10 +209,7 @@ class New_Toplevel_1:
         self.WindowHeight.configure(textvariable=GUI_support.WindowHeightBox)
         self.WindowHeight.configure(to="5000.0")
         self.WindowHeight.configure(width=95)
-        #if self.windowCheck.get() == 0:
-            #self.WindowHeight['state'] = DISABLED
-        #elif self.windowCheck.get() == 1:
-            #self.WindowHeight['state'] = NORMAL
+        self.WindowHeight['state'] = DISABLED
 
 
         self.WindowWidth = Spinbox(self.MonitorSizeFrame, from_=1.0, to=5000.0)
@@ -229,6 +229,7 @@ class New_Toplevel_1:
         self.WindowWidth.configure(textvariable=GUI_support.WindowWidthBox)
         self.WindowWidth.configure(to="5000.0")
         self.WindowWidth.configure(width=95)
+        self.WindowWidth['state'] = DISABLED
 
         self.TLabel9 = ttk.Label(self.InputOutputFrame)
         self.TLabel9.place(relx=0.04, rely=0.26, height=19, width=61)
@@ -239,11 +240,13 @@ class New_Toplevel_1:
         self.TLabel9.configure(width=61)
 
         self.MonitorId = ttk.Combobox(self.InputOutputFrame)
-        self.MonitorId.place(relx=0.23, rely=0.26, relheight=0.14, relwidth=0.16)
-
+        self.MonitorId.place(relx=0.23, rely=0.26, relheight=0.14, relwidth=0.17)
         self.MonitorId.configure(textvariable=GUI_support.MonitorIDBox)
         self.MonitorId.configure(width=63)
         self.MonitorId.configure(takefocus="")
+        self.value_list = ['0','1', '2']
+        self.MonitorId.configure(values=self.value_list)
+        self.MonitorId.insert(0,'1')
 
         self.TLabel1 = ttk.Label(self.InputOutputFrame)
         self.TLabel1.place(relx=0.04, rely=0.46, height=19, width=63)
@@ -260,13 +263,13 @@ class New_Toplevel_1:
         self.TLabel2.configure(text='''Left Offset''')
 
         self.TopOffset = Spinbox(self.InputOutputFrame, from_=0.0, to=5000.0)
-        self.TopOffset.place(relx=0.23, rely=0.45, relheight=0.12, relwidth=0.17)
+        self.TopOffset.place(relx=0.23, rely=0.47, relheight=0.12, relwidth=0.17)
         self.TopOffset.configure(activebackground="#f9f9f9")
         self.TopOffset.configure(background="white")
         self.TopOffset.configure(buttonbackground="#d9d9d9")
         self.TopOffset.configure(disabledforeground="#a3a3a3")
         self.TopOffset.configure(foreground="black")
-        self.TopOffset.configure(from_="1.0")
+        self.TopOffset.configure(from_="0.0")
         self.TopOffset.configure(highlightbackground="black")
         self.TopOffset.configure(highlightcolor="black")
         self.TopOffset.configure(insertbackground="black")
@@ -274,21 +277,19 @@ class New_Toplevel_1:
         self.TopOffset.configure(selectforeground="black")
         self.TopOffset.configure(textvariable=GUI_support.TopOffsetBox)
         self.TopOffset.configure(to="5000.0")
-        #self.value_list = ['0',]
-        #self.TopOffset.configure(values=self.value_list)
         self.TopOffset.configure(width=65)
         self.TopOffset.insert(0,'0')
 
 
         self.LeftOffset = Spinbox(self.InputOutputFrame, from_=0.0, to=5000.0)
-        self.LeftOffset.place(relx=0.22, rely=0.69, relheight=0.12
+        self.LeftOffset.place(relx=0.23, rely=0.68, relheight=0.12
                 , relwidth=0.17)
         self.LeftOffset.configure(activebackground="#f9f9f9")
         self.LeftOffset.configure(background="white")
         self.LeftOffset.configure(buttonbackground="#d9d9d9")
         self.LeftOffset.configure(disabledforeground="#a3a3a3")
         self.LeftOffset.configure(foreground="black")
-        self.LeftOffset.configure(from_="1.0")
+        self.LeftOffset.configure(from_="0.0")
         self.LeftOffset.configure(highlightbackground="black")
         self.LeftOffset.configure(highlightcolor="black")
         self.LeftOffset.configure(insertbackground="black")
@@ -296,12 +297,10 @@ class New_Toplevel_1:
         self.LeftOffset.configure(selectforeground="black")
         self.LeftOffset.configure(textvariable=GUI_support.LeftOffsetBox)
         self.LeftOffset.configure(to="5000.0")
-        #self.value_list = ['0',]
-        #self.LeftOffset.configure(values=self.value_list)
         self.LeftOffset.configure(width=65)
         self.LeftOffset.insert(0,'0')
 
-        self.ExitButton = Button(top, command=root.quit)
+        self.ExitButton = Button(top, command=root.destroy)
         self.ExitButton.place(relx=0.64, rely=0.82, height=54, width=117)
         self.ExitButton.configure(activebackground="#d9d9d9")
         self.ExitButton.configure(activeforeground="#000000")
@@ -315,7 +314,7 @@ class New_Toplevel_1:
         self.ExitButton.configure(text='''Exit''')
         self.ExitButton.configure(width=117)
 
-        self.RunButton = Button(top)
+        self.RunButton = Button(top, command=self.RunProgram)
         self.RunButton.place(relx=0.64, rely=0.65, height=54, width=117)
         self.RunButton.configure(activebackground="#d9d9d9")
         self.RunButton.configure(activeforeground="#000000")
@@ -348,16 +347,49 @@ class New_Toplevel_1:
         self.Title.configure(text='''DeepEye''')
         self.Title.configure(width=496)
 
-def FlipState(self):
-    self.test = self.windowCheck.get()
-    if self.test == 0:
-        self.WindowWidth['state'] = DISABLED
-        self.WindowHeight['state'] = DISABLED
-    elif self.test == 1:
-        self.WindowWidth['state'] = NORMAL
-        self.WindowHeight['state'] = NORMAL
+    def RunProgram(self):
+        convertedThreshold = int(self.Threshold.get()[:-1])/100
+        convertedWindowHeight = 0
+        convertedWindowWidth = 0
+        
+        if self.windowCheck.get() == 1:
+            convertedWindowHeight = int(self.WindowHeight.get())
+            convertedWindowWidth = int(self.WindowWidth.get())
+            
+        convertedClassifier = ''
+        if self.ClassifierCode.get() == 'Resnet101':
+            convertedClassifier = 'faster_rcnn_resnet101_coco_2017_11_08'
+        elif self.ClassifierCode.get() == 'Nas':
+            convertedClassifier = 'faster_rcnn_nas'
+        elif self.ClassifierCode.get() == 'Inception-Resnet':
+            convertedClassifier = 'mask_rcnn_inception_v2_coco'
+            
+        convertedDataset = ''
+        if self.DatasetCode.get() == 'Coco':
+            convertedDataset = 'mscoco'
+        elif self.DatasetCode.get() == 'Kitti':
+            convertedDataset = 'kitti'
 
-if __name__ == '__main__':
-    vp_start_gui()
+        DeepEye = DrivingAssistant(convertedClassifier, convertedDataset, convertedThreshold,
+                         int(self.MonitorId.get()), int(self.TopOffset.get()),
+                         int(self.LeftOffset.get()), convertedWindowWidth, convertedWindowHeight)
+        print (convertedWindowWidth)
+        print (convertedWindowHeight)
+        
+        DeepEye.activate()
+        root.destroy()
+
+    
+    def FlipState(self):
+        self.test = self.windowCheck.get()
+        if self.test == 0:
+            self.WindowWidth['state'] = DISABLED
+            self.WindowHeight['state'] = DISABLED
+        elif self.test == 1:
+            self.WindowWidth['state'] = NORMAL
+            self.WindowHeight['state'] = NORMAL
+
+#if __name__ == '__main__':
+ #   vp_start_gui()
 
 

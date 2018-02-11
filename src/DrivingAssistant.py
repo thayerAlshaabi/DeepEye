@@ -20,15 +20,28 @@ class DrivingAssistant:
 
     """
     # Constructor
-    def __init__(self):
-        self.classifier = ObjectClassifier(
-            classifier_codename = 'faster_rcnn_resnet101_coco_2017_11_08',
-            dataset_codename = 'mscoco',
-            classifier_threshold = .85,
-            monitor_id = 1,
-            window_width = 800,
-            window_height = 640,
-        )
+    def __init__(self, classifier, dataset, threshold, monitor, top, left, width, height):
+
+        if width !=0:
+            self.classifier = ObjectClassifier(
+                classifier_codename = classifier,
+                dataset_codename = dataset,
+                classifier_threshold = threshold,
+                monitor_id = monitor,
+                window_top_offset = top,
+                window_left_offset = left,
+                window_width = width,
+                window_height = height,
+            )
+        else:
+            self.classifier = ObjectClassifier(
+                classifier_codename = classifier,
+                dataset_codename = dataset,
+                classifier_threshold = threshold,
+                monitor_id = monitor,
+                window_top_offset = top,
+                window_left_offset = left,
+            )
 
     def activate(self):
         print("\n\n\n")
@@ -54,6 +67,6 @@ class DrivingAssistant:
                 cv2.destroyAllWindows()
                 break
 
-if __name__== "__main__":
-    DeepEye = DrivingAssistant()
-    DeepEye.activate()
+#if __name__== "__main__":
+    #DeepEye = DrivingAssistant(classifier, dataset, threshold, monitor, top, left, width, height)
+    #DeepEye.activate()
