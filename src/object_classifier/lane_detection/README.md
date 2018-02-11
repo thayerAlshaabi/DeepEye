@@ -54,7 +54,7 @@ This step is a very basic step, yet very crucial to figure out the lane curvatur
 ![bird’s-eye view](readme_imgs/birdseye.jpg)
 
 #### Lane Detection
-For this step, we applied a smart **sliding window** technique on the frame to identify the exact pixels corresponding to the road marks. Starting from the very bottom of the image, we insert two windows, one for each peak point of the histogram of the bitmap. We then adjust the window's position based on the average density of pixels within the given window and slide the windows upwards till we reach the end of the image. Lastly, we draw a line through the center points of the windows to represent the lane boundary.
+For this step, we applied a smart **sliding window** technique to identify the exact pixels corresponding to the road marks. Starting from the very bottom of the image, we insert two windows, one for each peak point of the histogram of the bitmap. We then adjust the window's position based on the average density of pixels within the given window and slide the windows upwards till we reach the end of the image. Lastly, we draw a line through the center points of the windows to represent the lane boundary.
 
 Bird's-eye view (bitmap) | Bitmap Histogram |  Bird's-eye view (lane detected)
 :-------------------------:|:-------------------------:|:-------------------------:
