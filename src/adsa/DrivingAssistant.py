@@ -16,11 +16,11 @@ from object_classifier.ObjectClassifier import *
 # ---------------------------------------------------------------------------- #
 
 class DrivingAssistant:
-    """
-
-    """
     # Constructor
-    def __init__(self, classifier, dataset, threshold, monitor, top, left, width, height):
+    def __init__(self):
+        self.classifier = None
+    
+    def set_prams(self, classifier, dataset, threshold, monitor, top, left, width, height):
 
         if width !=0:
             self.classifier = ObjectClassifier(
@@ -66,7 +66,3 @@ class DrivingAssistant:
                 # Close all Python windows when everything's done
                 cv2.destroyAllWindows()
                 break
-
-#if __name__== "__main__":
-    #DeepEye = DrivingAssistant(classifier, dataset, threshold, monitor, top, left, width, height)
-    #DeepEye.activate()

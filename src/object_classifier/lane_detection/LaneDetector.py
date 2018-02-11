@@ -27,9 +27,6 @@ import object_classifier.lane_detection.visualization_utils as visualizer
 # ---------------------------------------------------------------------------- #
 
 class LaneDetector:
-    """
-
-    """
     # Constructor
     def __init__(self):
         self.lane_visualizer = visualizer.Lane()

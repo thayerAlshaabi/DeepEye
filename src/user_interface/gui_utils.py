@@ -5,7 +5,8 @@
 #    Jan 28, 2018 06:07:36 PM
 
 
-import sys
+import sys, os
+sys.path.append("..")
 
 try:
     from Tkinter import *
@@ -52,8 +53,4 @@ def destroy_window():
     global top_level
     top_level.destroy()
     top_level = None
-
-if __name__ == '__main__':
-    import GUI
-    GUI.vp_start_gui()
 
