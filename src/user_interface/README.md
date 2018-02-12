@@ -16,7 +16,7 @@ Name | Description
 --- | ---
 **Window** | This is the main class that contains all the widgets and their associated variables, positioning and default values.
 **FlipState** | This method controls whether the custom window width and height are enabled or disabled based on the state of the checkbox above them.
-**runProgram** | This method calls the DrivingAssistant class to start the program.  But first, it converts the values of the widget variables (such as turning strings to ints) so that they can be properly understood when passed to the DrivingAssistant class.  After the program is finished running, the GUI closes.    
+**runProgram** | This method calls the [DrivingAssistant](driving_assistant/README.md) class to start the program.  But first, it converts the values of the widget variables (such as turning strings to ints) so that they can be properly understood when passed to the DrivingAssistant class.  After the program is finished running, the GUI closes.    
 
 ## Customization
 Name | Description 
