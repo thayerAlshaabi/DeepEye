@@ -8,7 +8,7 @@
 
 ## Introduction
 This is a Graphical User Interface that pops up as soon as main is run.  This allows the user to change certain useful parameters for running the program, detailed below.  Once the user clicks "Run", the program launches with the given parameters.
-The code makes use of the Tkinter library.  The boilerplate code (for widget creation and placement) was generated using Page, a drag-and-drop Python GUI creation tool.
+The code makes use of the Tkinter library.  The boilerplate code (for widget creation and placement) was generated using [Page](http://page.sourceforge.net/), a drag-and-drop Python GUI creation tool.
 
 
 ## Methods
