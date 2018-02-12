@@ -4,7 +4,6 @@
 1. [Introduction](#introduction)
 2. [Methods](#methods)
 3. [Customization](#customization)
-4. [Licensing Information](#licensing-information)
 
 
 ## Introduction
@@ -27,7 +26,5 @@ Name | Description
 **Top/Left Offset** | By default, the visual stream will be feeding from the very top left corner on the monitor, even with a custom smaller window size.  Adding an offset allows the user to change what part of the screen is being fed to the visual feed.
 **CNN** | There are three options for changing the feature identifier model. The default is Resnet101, which gives us the best hardware performance.  NAS is a more accurate model, however its performance is slower.  Inception-Resnet is a compromise between the two, however we found that it didn't perform any better for us.
 **Dataset** | There are two options: Coco and Kitti.  Coco is an American trained dataset, with more classes, so this is the default option.  Kitti has less classes, and was trained in Europe.
-**Threshold** | This controls 
-
-## Licensing Information
-
+**Threshold** | This controls the confidence threshold cutoff for detected objects.  Any object detected with a confidence below the set threshold will not be displayed onscreen.  The default value is 85%.
+**Lane Detection** | Toggles whether lane detection runs.  Requires heavy computing resources.
