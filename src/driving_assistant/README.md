@@ -11,6 +11,7 @@ Our system consists of two major layers. In the first layer, a deep convolutiona
 ## Methods
 Name | Description 
 --- | ---
+**user_interface** | This is a graphical user interface built using Python TkInter. For more information  please refer to [GUI](user_interface/README.md).
 **set_prams** | set all parameters passed in from the user interface for the ObjectClassifier class.
 **activate** | capture frames from the screen, and detect objects.
 

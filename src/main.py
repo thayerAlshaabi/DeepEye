@@ -2,7 +2,7 @@
 
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
-from user_interface.GUI import * 
+from driving_assistant.user_interface.GUI import * 
 
 import sys, os
 sys.path.append("..")

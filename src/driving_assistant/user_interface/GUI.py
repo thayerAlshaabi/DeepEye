@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------------- #
 import sys, os
 
-import user_interface.gui_utils as gui_utils
+import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
 
 
@@ -25,7 +25,7 @@ except ImportError:
 
 # Utility Functions
 # ---------------------------------------------------------------------------- #
-FOLDER_PATH = os.path.join(os.getcwd(), 'user_interface')
+FOLDER_PATH = os.path.join(os.getcwd(), 'driving_assistant', 'user_interface')
 
 def start_gui():
     '''Starting point when module is the main routine.'''
