@@ -123,23 +123,24 @@ def convert_to_bitmap(frame, kernel_size=3):
     return bitmap
 
 
-def convert_to_birdseye_view(frame, roi_width=540, roi_height=460):
+def convert_to_birdseye_view(frame):
     """
     Convert frame to a wrapped/flattened bird's eye view.
     """
     height, width = frame.shape[:2]
 
-    # define the dimensions of source matrix
-    src = np.float32([[width, height-10],           # bottom-right
-                      [0, height-10],               # bottom-left
-                      [roi_width, roi_height],      # top-left
-                      [roi_width+190, roi_height]]) # top-right
-    
-    # define the dimensions of output matrix
-    dst = np.float32([[width, height],  # bottom-right              
-                      [0, height],      # bottom-left  
-                      [0, 0],           # top-left  
-                      [width, 0]])      # top-right
+    # define 4 points in the original space 
+    src = np.float32([[width, height],   
+                      [0, height],        
+                      [width/3, height * (2/3)], 
+                      [width/2, height * (2/3)]]) 
+
+    # define 4 points in the warped space 
+    dst = np.float32([[width, height],     
+                      [0, height],     
+                      [0, 0],       
+                      [width, 0]])    
+
 
     # compute transformation matrices
     forward_transformation_matrix = cv2.getPerspectiveTransform(src, dst)

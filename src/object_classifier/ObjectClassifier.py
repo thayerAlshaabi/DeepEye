@@ -86,6 +86,7 @@ class ObjectClassifier:
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
         lane_detection = True,
+        visualization = False,
         monitor_id = 1,
         window_top_offset = 0,
         window_left_offset = 0,
@@ -93,8 +94,9 @@ class ObjectClassifier:
         window_height = None,
         window_scale = 1.0):
 
-        #Boolean flag for lane detection
+        # Boolean flags for visualization utils
         self.lane_detection = lane_detection
+        self.visualization = visualization
         
         # Folder name for object detection module
         self.FOLDER_NAME = 'object_detection'
@@ -136,9 +138,9 @@ class ObjectClassifier:
             self.target_window['top'] += window_top_offset
             self.target_window['height'] -= window_top_offset
         if window_width:
-            self.target_window['width'] = window_width - window_left_offset
+            self.target_window['width'] = window_width
         if window_height:
-            self.target_window['height'] = window_height - window_top_offset
+            self.target_window['height'] = window_height
         if window_scale:
             self.target_window['scale'] = window_scale
 
@@ -261,20 +263,25 @@ class ObjectClassifier:
             [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
             feed_dict={self.image_tensor: frame_expanded})
         
-        # Visualization of the results of a detection.
-        visualization_utils.visualize_boxes_and_labels_on_image_array(
-            self.frame,
-            np.squeeze(self.detection_boxes),
-            np.squeeze(self.detection_classes).astype(np.int32),
-            np.squeeze(self.detection_scores),
-            self.categories_dict,
-            use_normalized_coordinates=True,
-            min_score_thresh=self.classifier_threshold,
-            line_thickness=1)
+        if self.visualization:
+            # Visualization of the results of a detection.
+            visualization_utils.visualize_boxes_and_labels_on_image_array(
+                self.frame,
+                np.squeeze(self.detection_boxes),
+                np.squeeze(self.detection_classes).astype(np.int32),
+                np.squeeze(self.detection_scores),
+                self.categories_dict,
+                use_normalized_coordinates=True,
+                min_score_thresh=self.classifier_threshold,
+                line_thickness=1)
 
         # detect lane in the given frame
         if self.lane_detection:
             self.frame = self.lane_detector.detect_lane(self.frame)
+
+        if self.visualization and not self.lane_detection:
+            # convert to grayscale to reduce computational power needed for the process
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
 
         # Display frame with detected objects.
         cv2.imshow('DeepEye | Obj-Detector', self.frame)

@@ -45,6 +45,8 @@ class LaneDetector:
         """
         Mark the area enclosed by your lane onto the given frame.
         """
+        height, width = frame.shape[:2]
+
         # adjust calibration prams to the given frame 
         adjusted_frame = calibrator.set_distortion_coefficients(
             frame,
