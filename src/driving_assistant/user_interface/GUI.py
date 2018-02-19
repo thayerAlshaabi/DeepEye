@@ -3,7 +3,7 @@
 
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
-import sys, os
+import sys, os, threading, time
 
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
@@ -44,13 +44,14 @@ def create_gui(root, *args, **kwargs):
     w = Toplevel (root)
     gui_utils.set_Tk_var()
     top = Window (w)
-    gui_utils.init(w, top, *args, **kwargs)
+    gui_utils.init(w, top, *args, **kwargs)       
     return (w, top)
 
 def destroy_gui():
     global w
     w.destroy()
     w = None
+    
 # ---------------------------------------------------------------------------- #
 
 class Window:
@@ -75,40 +76,35 @@ class Window:
         self.style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
 
-        top.geometry("436x489+606+201")
+        top.geometry("496x707+2678+135")
         top.title("DeepEye")
         top.configure(background="#d9d9d9")
 
 
         self.DatasetFrame = ttk.Labelframe(top)
-        self.DatasetFrame.place(relx=0.05, rely=0.61, relheight=0.34
-                , relwidth=0.53)
-        self.DatasetFrame.configure(text='''Classifier''')
-        self.DatasetFrame.configure(width=230)
+        self.DatasetFrame.place(relx=0.5, rely=0.21, relheight=0.18
+                , relwidth=0.45)
+        self.DatasetFrame.configure(text='''CNN''')
+        self.DatasetFrame.configure(width=225)
 
         self.ClassifierCode = ttk.Combobox(self.DatasetFrame)
-        self.ClassifierCode.place(relx=0.39, rely=0.17, relheight=0.13
-                , relwidth=0.49)
+        self.ClassifierCode.place(relx=0.38, rely=0.03, relheight=0.23, relwidth=0.54)
         self.value_list = ['Nas','Inception-Resnet','Resnet101',]
         self.ClassifierCode.configure(values=self.value_list)
         self.ClassifierCode.configure(textvariable=gui_utils.ClassiferBox)
-        #self.ClassifierCode.configure(width=113)
         self.ClassifierCode.configure(takefocus="")
         self.ClassifierCode.insert(0,'Resnet101')
 
         self.DatasetCode = ttk.Combobox(self.DatasetFrame)
-        self.DatasetCode.place(relx=0.39, rely=0.38, relheight=0.13
-                , relwidth=0.49)
+        self.DatasetCode.place(relx=0.38, rely=0.37, relheight=0.23, relwidth=0.54)
         self.value_list = ['Coco','Kitti',]
         self.DatasetCode.configure(values=self.value_list)
         self.DatasetCode.configure(textvariable=gui_utils.DatasetBox)
-        #self.DatasetCode.configure(width=113)
         self.DatasetCode.configure(takefocus="")
         self.DatasetCode.insert(0,'Coco')
         
         self.Threshold = Spinbox(self.DatasetFrame, from_=0.0, to=1.0)
-        self.Threshold.place(relx=0.39, rely=0.58, relheight=0.12, relwidth=0.5)
-
+        self.Threshold.place(relx=0.38, rely=0.69, relheight=0.23, relwidth=0.54)
         self.Threshold.configure(activebackground="#f9f9f9")
         self.Threshold.configure(background="white")
         self.Threshold.configure(buttonbackground="#d9d9d9")
@@ -131,31 +127,71 @@ class Window:
         self.Threshold.insert(0,'85%')
 
         self.TLabel4 = ttk.Label(self.DatasetFrame)
-        self.TLabel4.place(relx=0.17, rely=0.17, height=19, width=31)
+        self.TLabel4.place(relx=0.1, rely=0.05, height=19, width=51)
         self.TLabel4.configure(background="#d9d9d9")
         self.TLabel4.configure(foreground="#000000")
         self.TLabel4.configure(relief=FLAT)
-        self.TLabel4.configure(text='''CNN''')
-        #self.TLabel4.configure(width=31)
+        self.TLabel4.configure(text='''Identifier''')
 
         self.TLabel5 = ttk.Label(self.DatasetFrame)
-        self.TLabel5.place(relx=0.13, rely=0.38, height=20, width=50)
+        self.TLabel5.place(relx=0.14, rely=0.39, height=19, width=51)
         self.TLabel5.configure(background="#d9d9d9")
         self.TLabel5.configure(foreground="#000000")
         self.TLabel5.configure(relief=FLAT)
         self.TLabel5.configure(text='''Dataset''')
-        self.TLabel5.configure(width=50)
+        #self.TLabel5.configure(width=51)
 
         self.TLabel6 = ttk.Label(self.DatasetFrame)
-        self.TLabel6.place(relx=0.07, rely=0.58, height=19, width=57)
+        self.TLabel6.place(relx=0.08, rely=0.71, height=19, width=57)
         self.TLabel6.configure(background="#d9d9d9")
         self.TLabel6.configure(foreground="#000000")
         self.TLabel6.configure(relief=FLAT)
         self.TLabel6.configure(text='''Threshold''')
 
-        self.LaneDetectionCheck = Checkbutton(self.DatasetFrame)
-        self.LaneDetectionCheck.place(relx=0.24, rely=0.74, relheight=0.15
-                , relwidth=0.66)
+        self.InputOutputFrame = ttk.Labelframe(top)
+        self.InputOutputFrame.place(relx=0.04, rely=0.21, relheight=0.43
+                , relwidth=0.42)
+        self.InputOutputFrame.configure(text='''Monitor Output''')
+        self.InputOutputFrame.configure(width=210)
+
+
+        self.TLabel9 = ttk.Label(self.InputOutputFrame)
+        self.TLabel9.place(relx=0.07, rely=0.04, height=19, width=61)
+        self.TLabel9.configure(background="#d9d9d9")
+        self.TLabel9.configure(foreground="#000000")
+        self.TLabel9.configure(relief=FLAT)
+        self.TLabel9.configure(text='''Monitor ID''')
+
+
+        self.MonitorId = ttk.Combobox(self.InputOutputFrame)
+        self.MonitorId.place(relx=0.43, rely=0.04, relheight=0.07, relwidth=0.4)
+        self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
+        self.MonitorId.configure(width=83)
+        self.MonitorId.configure(takefocus="")
+        self.value_list = ['0','1', '2']
+        self.MonitorId.configure(values=self.value_list)
+        self.MonitorId.insert(0,'1')
+
+
+        self.visualCheck = IntVar()
+        self.EnableVisual = Checkbutton(self.InputOutputFrame, command=self.FlipState)
+        self.EnableVisual.place(relx=0.08, rely=0.15, relheight=0.08, relwidth=0.65)
+        self.EnableVisual.configure(activebackground="#d9d9d9")
+        self.EnableVisual.configure(activeforeground="#000000")
+        self.EnableVisual.configure(background="#d9d9d9")
+        self.EnableVisual.configure(disabledforeground="#a3a3a3")
+        self.EnableVisual.configure(foreground="#000000")
+        self.EnableVisual.configure(highlightbackground="#d9d9d9")
+        self.EnableVisual.configure(highlightcolor="black")
+        self.EnableVisual.configure(justify=LEFT)
+        self.EnableVisual.configure(text='''Enable Visualization?''')
+        self.EnableVisual.configure(variable=self.visualCheck)
+        self.EnableVisual.select()
+
+
+        self.LaneDetectionCheck = Checkbutton(self.InputOutputFrame)
+        self.LaneDetectionCheck.place(relx=0.08, rely=0.27, relheight=0.08
+                , relwidth=0.72)
         self.LaneDetectionCheck.configure(activebackground="#d9d9d9")
         self.LaneDetectionCheck.configure(activeforeground="#000000")
         self.LaneDetectionCheck.configure(background="#d9d9d9")
@@ -167,25 +203,13 @@ class Window:
         self.LaneDetectionCheck.configure(text='''Enable Lane Detection?''')
         self.LaneDetectionCheck.configure(variable=gui_utils.LaneDetection)
         self.LaneDetectionCheck.configure(width=151)
+        self.LaneDetectionCheck.select()
 
-        self.InputOutputFrame = ttk.Labelframe(top)
-        self.InputOutputFrame.place(relx=0.05, rely=0.27, relheight=0.32
-                , relwidth=0.89)
-        self.InputOutputFrame.configure(text='''Input/Output''')
-        self.InputOutputFrame.configure(width=390)
-
-        self.MonitorSizeFrame = ttk.Frame(self.InputOutputFrame)
-        self.MonitorSizeFrame.place(relx=0.46, rely=0.17, relheight=0.74
-                , relwidth=0.47)
-        self.MonitorSizeFrame.configure(relief=GROOVE)
-        self.MonitorSizeFrame.configure(borderwidth="2")
-        self.MonitorSizeFrame.configure(relief=GROOVE)
-        self.MonitorSizeFrame.configure(width=185)
-
+        
         self.windowCheck = IntVar()
-        self.CustomWindowCheck = Checkbutton(self.MonitorSizeFrame, command=self.FlipState)
-        self.CustomWindowCheck.place(relx=0.0, rely=0.02, relheight=0.39
-                , relwidth=0.98)
+        self.CustomWindowCheck = Checkbutton(self.InputOutputFrame, command=self.FlipState)
+        self.CustomWindowCheck.place(relx=0.088, rely=0.39, relheight=0.08
+                , relwidth=0.77)
         self.CustomWindowCheck.configure(activebackground="#d9d9d9")
         self.CustomWindowCheck.configure(activeforeground="#000000")
         self.CustomWindowCheck.configure(background="#d9d9d9")
@@ -196,24 +220,48 @@ class Window:
         self.CustomWindowCheck.configure(justify=LEFT)
         self.CustomWindowCheck.configure(text='''Set Custom Window Size?''')
         self.CustomWindowCheck.configure(variable=self.windowCheck)
+        self.CustomWindowCheck.configure(width=151)
+        
 
-        self.TLabel7 = ttk.Label(self.MonitorSizeFrame)
-        self.TLabel7.place(relx=0.05, rely=0.37, height=19, width=43)
+        self.TLabel8 = ttk.Label(self.InputOutputFrame)
+        self.TLabel8.place(relx=0.19, rely=0.52, height=19, width=43)
+        self.TLabel8.configure(background="#d9d9d9")
+        self.TLabel8.configure(foreground="#000000")
+        self.TLabel8.configure(relief=FLAT)
+        self.TLabel8.configure(text='''Width''')
+        
+
+        self.WindowWidth = Spinbox(self.InputOutputFrame, from_=1.0, to=5000.0)
+        self.WindowWidth.place(relx=0.4, rely=0.52, relheight=0.06
+                , relwidth=0.45)
+        self.WindowWidth.configure(activebackground="#f9f9f9")
+        self.WindowWidth.configure(background="white")
+        self.WindowWidth.configure(buttonbackground="#d9d9d9")
+        self.WindowWidth.configure(disabledforeground="#a3a3a3")
+        self.WindowWidth.configure(foreground="black")
+        self.WindowWidth.configure(from_="1.0")
+        self.WindowWidth.configure(highlightbackground="black")
+        self.WindowWidth.configure(highlightcolor="black")
+        self.WindowWidth.configure(insertbackground="black")
+        self.WindowWidth.configure(selectbackground="#c4c4c4")
+        self.WindowWidth.configure(selectforeground="black")
+        self.WindowWidth.configure(textvariable=gui_utils.WindowWidthBox)
+        self.WindowWidth.configure(to="5000.0")
+        self.WindowWidth.configure(width=95)
+        self.WindowWidth['state'] = DISABLED
+
+
+        self.TLabel7 = ttk.Label(self.InputOutputFrame)
+        self.TLabel7.place(relx=0.17, rely=0.6, height=35, width=45)
         self.TLabel7.configure(background="#d9d9d9")
         self.TLabel7.configure(foreground="#000000")
         self.TLabel7.configure(relief=FLAT)
         self.TLabel7.configure(text='''Height''')
 
-        self.TLabel8 = ttk.Label(self.MonitorSizeFrame)
-        self.TLabel8.place(relx=0.08, rely=0.63, height=19, width=43)
-        self.TLabel8.configure(background="#d9d9d9")
-        self.TLabel8.configure(foreground="#000000")
-        self.TLabel8.configure(relief=FLAT)
-        self.TLabel8.configure(text='''Width''')
-
-        self.WindowHeight = Spinbox(self.MonitorSizeFrame, from_=1.0, to=5000.0)
-        self.WindowHeight.place(relx=0.35, rely=0.37, relheight=0.17
-                , relwidth=0.51)
+        
+        self.WindowHeight = Spinbox(self.InputOutputFrame, from_=1.0, to=5000.0)
+        self.WindowHeight.place(relx=0.4, rely=0.63, relheight=0.06
+                , relwidth=0.45)
         self.WindowHeight.configure(activebackground="#f9f9f9")
         self.WindowHeight.configure(background="white")
         self.WindowHeight.configure(buttonbackground="#d9d9d9")
@@ -232,58 +280,16 @@ class Window:
         self.WindowHeight['state'] = DISABLED
 
 
-        self.WindowWidth = Spinbox(self.MonitorSizeFrame, from_=1.0, to=5000.0)
-        self.WindowWidth.place(relx=0.35, rely=0.63, relheight=0.17
-                , relwidth=0.51)
-        self.WindowWidth.configure(activebackground="#f9f9f9")
-        self.WindowWidth.configure(background="white")
-        self.WindowWidth.configure(buttonbackground="#d9d9d9")
-        self.WindowWidth.configure(disabledforeground="#a3a3a3")
-        self.WindowWidth.configure(foreground="black")
-        self.WindowWidth.configure(from_="1.0")
-        self.WindowWidth.configure(highlightbackground="black")
-        self.WindowWidth.configure(highlightcolor="black")
-        self.WindowWidth.configure(insertbackground="black")
-        self.WindowWidth.configure(selectbackground="#c4c4c4")
-        self.WindowWidth.configure(selectforeground="black")
-        self.WindowWidth.configure(textvariable=gui_utils.WindowWidthBox)
-        self.WindowWidth.configure(to="5000.0")
-        self.WindowWidth.configure(width=95)
-        self.WindowWidth['state'] = DISABLED
-
-        self.TLabel9 = ttk.Label(self.InputOutputFrame)
-        self.TLabel9.place(relx=0.04, rely=0.26, height=19, width=61)
-        self.TLabel9.configure(background="#d9d9d9")
-        self.TLabel9.configure(foreground="#000000")
-        self.TLabel9.configure(relief=FLAT)
-        self.TLabel9.configure(text='''Monitor ID''')
-        self.TLabel9.configure(width=61)
-
-        self.MonitorId = ttk.Combobox(self.InputOutputFrame)
-        self.MonitorId.place(relx=0.23, rely=0.26, relheight=0.14, relwidth=0.17)
-        self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
-        self.MonitorId.configure(width=63)
-        self.MonitorId.configure(takefocus="")
-        self.value_list = ['0','1', '2']
-        self.MonitorId.configure(values=self.value_list)
-        self.MonitorId.insert(0,'1')
-
         self.TLabel1 = ttk.Label(self.InputOutputFrame)
-        self.TLabel1.place(relx=0.04, rely=0.46, height=19, width=63)
+        self.TLabel1.place(relx=0.07, rely=0.74, height=19, width=63)
         self.TLabel1.configure(background="#d9d9d9")
         self.TLabel1.configure(foreground="#000000")
         self.TLabel1.configure(relief=FLAT)
         self.TLabel1.configure(text='''Top Offest''')
 
-        self.TLabel2 = ttk.Label(self.InputOutputFrame)
-        self.TLabel2.place(relx=0.04, rely=0.68, height=19, width=59)
-        self.TLabel2.configure(background="#d9d9d9")
-        self.TLabel2.configure(foreground="#000000")
-        self.TLabel2.configure(relief=FLAT)
-        self.TLabel2.configure(text='''Left Offset''')
 
         self.TopOffset = Spinbox(self.InputOutputFrame, from_=0.0, to=5000.0)
-        self.TopOffset.place(relx=0.23, rely=0.47, relheight=0.12, relwidth=0.17)
+        self.TopOffset.place(relx=0.4, rely=0.74, relheight=0.06, relwidth=0.45)
         self.TopOffset.configure(activebackground="#f9f9f9")
         self.TopOffset.configure(background="white")
         self.TopOffset.configure(buttonbackground="#d9d9d9")
@@ -297,13 +303,21 @@ class Window:
         self.TopOffset.configure(selectforeground="black")
         self.TopOffset.configure(textvariable=gui_utils.TopOffsetBox)
         self.TopOffset.configure(to="5000.0")
-        self.TopOffset.configure(width=65)
         self.TopOffset.insert(0,'0')
+        self.TopOffset.configure(width=95)
+        self.TopOffset['state'] = DISABLED
+        
+
+        self.TLabel2 = ttk.Label(self.InputOutputFrame)
+        self.TLabel2.place(relx=0.07, rely=0.85, height=19, width=59)
+        self.TLabel2.configure(background="#d9d9d9")
+        self.TLabel2.configure(foreground="#000000")
+        self.TLabel2.configure(relief=FLAT)
+        self.TLabel2.configure(text='''Left Offset''')
 
 
         self.LeftOffset = Spinbox(self.InputOutputFrame, from_=0.0, to=5000.0)
-        self.LeftOffset.place(relx=0.23, rely=0.68, relheight=0.12
-                , relwidth=0.17)
+        self.LeftOffset.place(relx=0.4, rely=0.85, relheight=0.06, relwidth=0.45)
         self.LeftOffset.configure(activebackground="#f9f9f9")
         self.LeftOffset.configure(background="white")
         self.LeftOffset.configure(buttonbackground="#d9d9d9")
@@ -317,11 +331,22 @@ class Window:
         self.LeftOffset.configure(selectforeground="black")
         self.LeftOffset.configure(textvariable=gui_utils.LeftOffsetBox)
         self.LeftOffset.configure(to="5000.0")
-        self.LeftOffset.configure(width=65)
         self.LeftOffset.insert(0,'0')
+        self.LeftOffset.configure(width=95)
+        self.LeftOffset['state'] = DISABLED
 
-        self.ExitButton = Button(top, command=root.destroy)
-        self.ExitButton.place(relx=0.64, rely=0.82, height=54, width=117)
+
+        self.RunExitFrame = ttk.Frame(top)
+        self.RunExitFrame.place(relx=0.5, rely=0.42, relheight=0.22
+                , relwidth=0.45)
+        self.RunExitFrame.configure(relief=GROOVE)
+        self.RunExitFrame.configure(borderwidth="2")
+        self.RunExitFrame.configure(relief=GROOVE)
+        self.RunExitFrame.configure(width=225)
+
+
+        self.ExitButton = Button(self.RunExitFrame, command=root.destroy)
+        self.ExitButton.place(relx=0.09, rely=0.55, height=54, width=187)
         self.ExitButton.configure(activebackground="#d9d9d9")
         self.ExitButton.configure(activeforeground="#000000")
         self.ExitButton.configure(background="#ec0006")
@@ -332,10 +357,10 @@ class Window:
         self.ExitButton.configure(highlightcolor="black")
         self.ExitButton.configure(pady="0")
         self.ExitButton.configure(text='''Exit''')
-        self.ExitButton.configure(width=117)
 
-        self.RunButton = Button(top, command=self.runProgram)
-        self.RunButton.place(relx=0.64, rely=0.65, height=54, width=117)
+
+        self.RunButton = Button(self.RunExitFrame, command=self.runProgram)
+        self.RunButton.place(relx=0.09, rely=0.1, height=54, width=187)
         self.RunButton.configure(activebackground="#d9d9d9")
         self.RunButton.configure(activeforeground="#000000")
         self.RunButton.configure(background="#33cf1d")
@@ -346,7 +371,7 @@ class Window:
         self.RunButton.configure(highlightcolor="black")
         self.RunButton.configure(pady="0")
         self.RunButton.configure(text='''Run''')
-        self.RunButton.configure(width=117)
+
 
         self.EyeBall = ttk.Label(top)
         self.EyeBall.place(relx=0.02, rely=0.02, height=99, width=106)
@@ -358,6 +383,7 @@ class Window:
         self._img1 = PhotoImage(file=os.path.join(FOLDER_PATH, 'eye.gif'))
         self.EyeBall.configure(image=self._img1)
 
+
         self.Title = ttk.Label(top)
         self.Title.place(relx=0.3, rely=0.04, height=110, width=496)
         self.Title.configure(background="#d9d9d9")
@@ -365,32 +391,79 @@ class Window:
         self.Title.configure(font=font21)
         self.Title.configure(relief=FLAT)
         self.Title.configure(text='''DeepEye''')
-        self.Title.configure(width=496)
-    
+
+
+        self.OutputFrame = LabelFrame(top)
+        self.OutputFrame.place(relx=0.04, rely=0.66, relheight=0.32
+                , relwidth=0.91)
+        self.OutputFrame.configure(relief=GROOVE)
+        self.OutputFrame.configure(foreground="black")
+        self.OutputFrame.configure(text='''Program Output''')
+        self.OutputFrame.configure(background="#d9d9d9")
+        self.OutputFrame.configure(width=450)
+
+
+        self.CommandLineOutput = ScrolledListBox(self.OutputFrame)
+        self.CommandLineOutput.place(relx=0.02, rely=0.09, relheight=0.87
+                , relwidth=0.96)
+        #self.CommandLineOutput.pack(side="top", fill="both", expand=True)
+        #self.CommandLineOutput.tag_configure("stderr", foreground="#b22222")
+        self.CommandLineOutput.configure(background="white")
+        self.CommandLineOutput.configure(disabledforeground="#a3a3a3")
+        self.CommandLineOutput.configure(font="TkFixedFont")
+        self.CommandLineOutput.configure(foreground="black")
+        self.CommandLineOutput.configure(highlightbackground="#d9d9d9")
+        self.CommandLineOutput.configure(highlightcolor="#d9d9d9")
+        self.CommandLineOutput.configure(selectbackground="#c4c4c4")
+        self.CommandLineOutput.configure(selectforeground="black")
+        self.CommandLineOutput.configure(width=10)
+        self.CommandLineOutput.configure(listvariable=gui_utils.CommandLineOutput)
+        sys.stdout = TextRedirector(self.CommandLineOutput)
+        
+    def print_stdout(self):
+        '''Illustrate that using 'print' writes to stdout'''
+        print ("Example text")
+
+        
     def FlipState(self):
-        self.test = self.windowCheck.get()
-        if self.test == 0:
+        self.test = self.visualCheck.get()
+        self.test2 = self.windowCheck.get()
+            
+        if self.test2 == 0:
             self.WindowWidth['state'] = DISABLED
             self.WindowHeight['state'] = DISABLED
-        elif self.test == 1:
+            self.TopOffset['state'] = DISABLED
+            self.LeftOffset['state'] = DISABLED
+        elif self.test2 == 1:
             self.WindowWidth['state'] = NORMAL
             self.WindowHeight['state'] = NORMAL
+            self.TopOffset['state'] = NORMAL
+            self.LeftOffset['state'] = NORMAL
+            
+        if self.test == 0:
+            self.CustomWindowCheck.deselect()
+            self.CustomWindowCheck['state'] = DISABLED
+            self.WindowWidth['state'] = DISABLED
+            self.WindowHeight['state'] = DISABLED
+            self.TopOffset['state'] = DISABLED
+            self.LeftOffset['state'] = DISABLED
+        elif self.test == 1:
+            self.CustomWindowCheck['state'] = NORMAL
 
-    #def CheckLane(self):
-     #   self.test = self.LaneDetectionCheck.get()()
-      #  if self.test == 0:
-       #     False
-        #elif self.test == 1:
-         #   True
             
     def runProgram(self):
+        print ("Loading...")
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
         convertedWindowWidth = 0
+        convertedTopOffset = 0
+        convertedLeftOffset = 0
         
         if self.windowCheck.get() == 1:
             convertedWindowHeight = int(self.WindowHeight.get())
             convertedWindowWidth = int(self.WindowWidth.get())
+            convertedTopOffset = int(self.TopOffset.get())
+            convertedLeftOffset = int(self.LeftOffset.get())
             
         convertedClassifier = ''
         if self.ClassifierCode.get() == 'Resnet101':
@@ -414,11 +487,96 @@ class Window:
             convertedThreshold,
             gui_utils.LaneDetection.get(),
             int(self.MonitorId.get()), 
-            int(self.TopOffset.get()),
-            int(self.LeftOffset.get()), 
+            convertedTopOffset,
+            convertedLeftOffset, 
             convertedWindowWidth, 
             convertedWindowHeight)
-        print (gui_utils.LaneDetection.get())
         driving_assistant.activate()
 
         root.destroy()
+        
+class TextRedirector(object):
+    def __init__(self, widget):
+        self.widget = widget
+        #self.tag = tag
+
+    def write(self, str):
+        self.widget.configure(state="normal")
+        self.widget.insert("end", str)
+        self.widget.configure(state="disabled")
+
+
+# The following code is added to facilitate the Scrolled widgets.
+class AutoScroll(object):
+    #Configure the scrollbars for a widget.
+
+    def __init__(self, master):
+        #  Rozen. Added the try-except clauses so that this class
+        #  could be used for scrolled entry widget for which vertical
+        #  scrolling is not supported. 5/7/14.
+        try:
+            vsb = ttk.Scrollbar(master, orient='vertical', command=self.yview)
+        except:
+            pass
+        hsb = ttk.Scrollbar(master, orient='horizontal', command=self.xview)
+
+        #self.configure(yscrollcommand=_autoscroll(vsb),
+        #    xscrollcommand=_autoscroll(hsb))
+        try:
+            self.configure(yscrollcommand=self._autoscroll(vsb))
+        except:
+            pass
+        self.configure(xscrollcommand=self._autoscroll(hsb))
+
+        self.grid(column=0, row=0, sticky='nsew')
+        try:
+            vsb.grid(column=1, row=0, sticky='ns')
+        except:
+            pass
+        hsb.grid(column=0, row=1, sticky='ew')
+
+        master.grid_columnconfigure(0, weight=1)
+        master.grid_rowconfigure(0, weight=1)
+
+        # Copy geometry methods of master  (taken from ScrolledText.py)
+        if py3:
+            methods = Pack.__dict__.keys() | Grid.__dict__.keys() \
+                  | Place.__dict__.keys()
+        else:
+            methods = Pack.__dict__.keys() + Grid.__dict__.keys() \
+                  + Place.__dict__.keys()
+
+        for meth in methods:
+            if meth[0] != '_' and meth not in ('config', 'configure'):
+                setattr(self, meth, getattr(master, meth))
+
+    @staticmethod
+    def _autoscroll(sbar):
+        #Hide and show scrollbar as needed.
+        def wrapped(first, last):
+            first, last = float(first), float(last)
+            if first <= 0 and last >= 1:
+                sbar.grid_remove()
+            else:
+                sbar.grid()
+            sbar.set(first, last)
+        return wrapped
+
+    def __str__(self):
+        return str(self.master)
+
+def _create_container(func):
+    #Creates a ttk Frame with a given master, and use this new frame to
+    #place the scrollbars and the widget.
+    def wrapped(cls, master, **kw):
+        container = ttk.Frame(master)
+        return func(cls, container, **kw)
+    return wrapped
+
+class ScrolledListBox(AutoScroll, Listbox):
+    #A standard Tkinter Text widget with scrollbars that will
+    #automatically show/hide as needed.
+    @_create_container
+    def __init__(self, master, **kw):
+        Listbox.__init__(self, master, **kw)
+        AutoScroll.__init__(self, master)

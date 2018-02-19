@@ -58,7 +58,9 @@ class DrivingAssistant:
         print("\n\n------------------------------------------\n\n")
 
         print("Activating DeepEye Advanced Co-pilot Mode")
+
         self.classifier.setup()
+        
 
         while (True):
             self.classifier.scan_road()

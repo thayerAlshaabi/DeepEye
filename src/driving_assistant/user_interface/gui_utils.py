@@ -43,6 +43,12 @@ def set_Tk_var():
     TopOffsetBox = StringVar()
     global LeftOffsetBox
     LeftOffsetBox = StringVar()
+    global EnableVisualization
+    EnableVisualization = StringVar()
+    global che38
+    che38 = StringVar()
+    global CommandLineOutput
+    CommandLineOutput = StringVar()
 
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
