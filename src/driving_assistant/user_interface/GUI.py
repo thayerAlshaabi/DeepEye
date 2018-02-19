@@ -418,7 +418,7 @@ class Window:
         self.CommandLineOutput.configure(selectforeground="black")
         self.CommandLineOutput.configure(width=10)
         self.CommandLineOutput.configure(listvariable=gui_utils.CommandLineOutput)
-        sys.stdout = TextRedirector(self.CommandLineOutput)
+        #sys.stdout = TextRedirector(self.CommandLineOutput)
         
     def print_stdout(self):
         '''Illustrate that using 'print' writes to stdout'''
@@ -453,6 +453,7 @@ class Window:
             
     def runProgram(self):
         print ("Loading...")
+        print (self.visualCheck.get())
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
         convertedWindowWidth = 0
@@ -485,6 +486,7 @@ class Window:
             convertedClassifier, 
             convertedDataset, 
             convertedThreshold,
+            self.visualCheck.get(),
             gui_utils.LaneDetection.get(),
             int(self.MonitorId.get()), 
             convertedTopOffset,
@@ -495,15 +497,14 @@ class Window:
 
         root.destroy()
         
-class TextRedirector(object):
-    def __init__(self, widget):
-        self.widget = widget
-        #self.tag = tag
+#class TextRedirector(object):
+    #def __init__(self, widget):
+        #self.widget = widget
 
-    def write(self, str):
-        self.widget.configure(state="normal")
-        self.widget.insert("end", str)
-        self.widget.configure(state="disabled")
+    #def write(self, str):
+        #self.widget.configure(state="normal")
+        #self.widget.insert("end", str)
+        #self.widget.configure(state="disabled")
 
 
 # The following code is added to facilitate the Scrolled widgets.

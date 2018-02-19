@@ -272,8 +272,8 @@ class ObjectClassifier:
                 np.squeeze(self.detection_scores),
                 self.categories_dict,
                 use_normalized_coordinates=True,
-                min_score_thresh=self.classifier_threshold,
-                line_thickness=1)
+                min_score_thresh=self.classifier_threshold, line_thickness=1)
+            cv2.imshow('DeepEye | Obj-Detector', self.frame)
 
         # detect lane in the given frame
         if self.lane_detection:
@@ -284,7 +284,7 @@ class ObjectClassifier:
             self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
 
         # Display frame with detected objects.
-        cv2.imshow('DeepEye | Obj-Detector', self.frame)
+        #cv2.imshow('DeepEye | Obj-Detector', self.frame)
 
         # Calculating fps based on the previous registered timer
         self.frame_rate = 10 / (time.time() - timer)
