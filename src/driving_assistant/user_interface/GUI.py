@@ -76,7 +76,7 @@ class Window:
         self.style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
 
-        top.geometry("496x707+2678+135")
+        top.geometry("496x707")
         top.title("DeepEye")
         top.configure(background="#d9d9d9")
 
@@ -426,29 +426,18 @@ class Window:
 
         
     def FlipState(self):
-        self.test = self.visualCheck.get()
-        self.test2 = self.windowCheck.get()
-            
-        if self.test2 == 0:
-            self.WindowWidth['state'] = DISABLED
-            self.WindowHeight['state'] = DISABLED
-            self.TopOffset['state'] = DISABLED
-            self.LeftOffset['state'] = DISABLED
-        elif self.test2 == 1:
-            self.WindowWidth['state'] = NORMAL
-            self.WindowHeight['state'] = NORMAL
-            self.TopOffset['state'] = NORMAL
-            self.LeftOffset['state'] = NORMAL
+        self.test = self.windowCheck.get()
             
         if self.test == 0:
-            self.CustomWindowCheck.deselect()
-            self.CustomWindowCheck['state'] = DISABLED
             self.WindowWidth['state'] = DISABLED
             self.WindowHeight['state'] = DISABLED
             self.TopOffset['state'] = DISABLED
             self.LeftOffset['state'] = DISABLED
         elif self.test == 1:
-            self.CustomWindowCheck['state'] = NORMAL
+            self.WindowWidth['state'] = NORMAL
+            self.WindowHeight['state'] = NORMAL
+            self.TopOffset['state'] = NORMAL
+            self.LeftOffset['state'] = NORMAL
 
             
     def runProgram(self):
