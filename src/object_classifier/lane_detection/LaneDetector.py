@@ -72,6 +72,7 @@ class LaneDetector:
                 adjusted_frame, 
                 backward_transformation_matrix,
                 lane_color=(255, 0, 0))
+            
 
         # if car is slightly off-lane => highlight lane in orange
         elif potential_threat_level == 1:
@@ -96,14 +97,14 @@ class LaneDetector:
             - return 1 :: if car is slightly off-lane
             - return 2 :: if car is off-lane
         """
-        threat_level = 0
+        threat_level = 0 
         offset = 0
         monitor_ratio = frame.shape[0]/frame.shape[1]
 
         if self.lane.lane_detected:
 
             # calculate the right and left boundaries of the given lane 
-            left_boundary = np.mean(
+            left_boundary = np.mean( 
                 self.lane.left_marker.x_axis_pixels
                 [
                     self.lane.left_marker.y_axis_pixels > 0.95 \
@@ -111,7 +112,7 @@ class LaneDetector:
                 ]
             )
             
-            right_boundary = nclearp.mean(
+            right_boundary = np.mean(
                 self.lane.right_marker.x_axis_pixels
                 [
                     self.lane.right_marker.y_axis_pixels > 0.95 \
@@ -125,15 +126,14 @@ class LaneDetector:
             center_point = frame.shape[1] / 2   
 
             # calculate the offset from the center point of the given lane
-            offset = abs((left_boundary + width / 2) - center_point) * monitor_ratio
-
+            offset = np.round(abs((left_boundary + width / 2) - center_point) * monitor_ratio)
         
         # if car is off-lane
-        if offset > 100:
+        if offset >= 75:
             threat_level =  2
         
         # if car is slightly off-lane
-        elif offset > 60 and offset < 100:
+        elif offset > 50 and offset < 75:
             threat_level =  1
 
         # if car is relatively in the center of lane
