@@ -48,16 +48,7 @@ class DrivingAssistant:
             )
 
     def activate(self):
-        print("\n\n\n")
-        print("  _____                  ______           ")
-        print(" |  __ \                |  ____|          ")
-        print(" | |  | | ___  ___ _ __ | |__  _   _  ___ ")
-        print(" | |  | |/ _ \/ _ \ '_ \|  __|| | | |/ _ \\")
-        print(" | |__| |  __/  __/ |_) | |___| |_| |  __/")
-        print(" |_____/ \___|\___| .__/|______\__, |\___|")
-        print("                  | |           __/ |     ")
-        print("                  |_|          |___/      ")
-        print("\n\n------------------------------------------\n\n")
+        #print("\n\n------------------------------------------\n\n")
 
         print("Activating DeepEye Advanced Co-pilot Mode")
 

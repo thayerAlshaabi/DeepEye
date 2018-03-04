@@ -76,7 +76,7 @@ class Window:
         self.style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
 
-        top.geometry("496x707+2678+135")
+        top.geometry("496x707")
         top.title("DeepEye")
         top.configure(background="#d9d9d9")
 
@@ -406,8 +406,6 @@ class Window:
         self.CommandLineOutput = ScrolledListBox(self.OutputFrame)
         self.CommandLineOutput.place(relx=0.02, rely=0.09, relheight=0.87
                 , relwidth=0.96)
-        #self.CommandLineOutput.pack(side="top", fill="both", expand=True)
-        #self.CommandLineOutput.tag_configure("stderr", foreground="#b22222")
         self.CommandLineOutput.configure(background="white")
         self.CommandLineOutput.configure(disabledforeground="#a3a3a3")
         self.CommandLineOutput.configure(font="TkFixedFont")
@@ -418,42 +416,25 @@ class Window:
         self.CommandLineOutput.configure(selectforeground="black")
         self.CommandLineOutput.configure(width=10)
         self.CommandLineOutput.configure(listvariable=gui_utils.CommandLineOutput)
-        #sys.stdout = TextRedirector(self.CommandLineOutput)
-        
-    def print_stdout(self):
-        '''Illustrate that using 'print' writes to stdout'''
-        print ("Example text")
-
+        self.CommandLineOutput.see("end")
+        sys.stdout = TextRedirector(self.CommandLineOutput)
         
     def FlipState(self):
-        self.test = self.visualCheck.get()
-        self.test2 = self.windowCheck.get()
-            
-        if self.test2 == 0:
-            self.WindowWidth['state'] = DISABLED
-            self.WindowHeight['state'] = DISABLED
-            self.TopOffset['state'] = DISABLED
-            self.LeftOffset['state'] = DISABLED
-        elif self.test2 == 1:
-            self.WindowWidth['state'] = NORMAL
-            self.WindowHeight['state'] = NORMAL
-            self.TopOffset['state'] = NORMAL
-            self.LeftOffset['state'] = NORMAL
+        self.test = self.windowCheck.get()
             
         if self.test == 0:
-            self.CustomWindowCheck.deselect()
-            self.CustomWindowCheck['state'] = DISABLED
             self.WindowWidth['state'] = DISABLED
             self.WindowHeight['state'] = DISABLED
             self.TopOffset['state'] = DISABLED
             self.LeftOffset['state'] = DISABLED
         elif self.test == 1:
-            self.CustomWindowCheck['state'] = NORMAL
+            self.WindowWidth['state'] = NORMAL
+            self.WindowHeight['state'] = NORMAL
+            self.TopOffset['state'] = NORMAL
+            self.LeftOffset['state'] = NORMAL
 
             
     def runProgram(self):
-        print ("Loading...")
-        print (self.visualCheck.get())
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
         convertedWindowWidth = 0
@@ -493,18 +474,22 @@ class Window:
             convertedLeftOffset, 
             convertedWindowWidth, 
             convertedWindowHeight)
-        driving_assistant.activate()
 
-        root.destroy()
+        t = threading.Thread(target=driving_assistant.activate)
+        t.start()
+
+        #root.destroy()
         
-#class TextRedirector(object):
-    #def __init__(self, widget):
-        #self.widget = widget
+class TextRedirector(object):
+    def __init__(self, widget):
+        self.widget = widget
 
-    #def write(self, str):
-        #self.widget.configure(state="normal")
-        #self.widget.insert("end", str)
-        #self.widget.configure(state="disabled")
+    def write(self, str):
+        self.widget.configure(state="normal")
+        self.widget.insert("end", str)
+        self.widget.configure(state="disabled")
+        self.widget.see("end")
+
 
 
 # The following code is added to facilitate the Scrolled widgets.
