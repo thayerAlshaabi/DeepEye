@@ -13,8 +13,8 @@ os.system(_generate_cProfile_cmd)
 _generate_pGraph_cmd = "gprof2dot -f pstats " + \
     os.path.join(PROFILER_STATS_PATH, 'profile.pstats') + \
     " > " + \
-    os.path.join(PROFILER_STATS_PATH, 'map.svg')
-    
+    os.path.join(PROFILER_STATS_PATH, 'map.dot')
+
 
 os.system(_generate_pGraph_cmd)
 

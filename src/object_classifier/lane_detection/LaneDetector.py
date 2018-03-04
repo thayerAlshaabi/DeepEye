@@ -153,4 +153,3 @@ class LaneDetector:
             threat_level = 0
 
         return threat_level
-
