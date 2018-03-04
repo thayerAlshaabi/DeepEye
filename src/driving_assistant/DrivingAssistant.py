@@ -13,12 +13,14 @@ to voice warning system that would notify the driver of any upcoming threats.
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
 from object_classifier.ObjectClassifier import *
+from driving_assistant.warning_interface.WarningInterface import *
 # ---------------------------------------------------------------------------- #
 
 class DrivingAssistant:
     # Constructor
     def __init__(self):
         self.classifier = None
+        #self.interface = Warning_Interface()
     
     def set_prams(self, classifier, dataset, threshold, visualization, lane_detection, monitor, top, left, width, height):
 
@@ -54,9 +56,12 @@ class DrivingAssistant:
 
         self.classifier.setup()
         
+        
+        #vp_start_warning_interface()
 
         while (True):
             self.classifier.scan_road()
+            #warningInterface.updateState()
 
             # Press ESC key to exit.
             if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
