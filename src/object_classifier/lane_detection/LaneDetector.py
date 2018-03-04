@@ -29,7 +29,7 @@ import object_classifier.lane_detection.visualization_utils as visualizer
 class LaneDetector:
     # Constructor
     def __init__(self):
-        self.lane_visualizer = visualizer.Lane()
+        self.lane = visualizer.Lane()
 
         # setup calibration parameters
         # -------------------------------------------------------------------- #
@@ -59,16 +59,86 @@ class LaneDetector:
         # compute transformation matrices to get bird's eye view
         birdseye_view, forward_transformation_matrix, backward_transformation_matrix = transformer.convert_to_birdseye_view(lanes_bitmap)
 
-        #run a sliding window search to detect lane in the frame  
-        lane_was_detected = self.lane_visualizer.detect_pixles(birdseye_view)
+        # run a sliding window search to detect lane in the frame  
+        self.lane.detect_pixles(birdseye_view)
+        
+        # evaluate the current situation for any potential threats
+        potential_threat_level = self.threat_classifier(adjusted_frame)
 
         # highlight lane onto the given frame if it was detected
-        if lane_was_detected:
-            output = self.lane_visualizer.highlight(
+        # if car is off-lane => highlight lane in red to alert the driver
+        if potential_threat_level == 2:    
+            output = self.lane.highlight(
                 adjusted_frame, 
-                backward_transformation_matrix)
+                backward_transformation_matrix,
+                lane_color=(255, 0, 0))
+            
 
-            return cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+        # if car is slightly off-lane => highlight lane in orange
+        elif potential_threat_level == 1:
+            output = self.lane.highlight(
+                adjusted_frame, 
+                backward_transformation_matrix,
+                lane_color=(255, 127, 0))
+
+        else: # if car is relatively in the center of lane => highlight lane in green
+            output = self.lane.highlight(
+                adjusted_frame, 
+                backward_transformation_matrix,
+                lane_color=(0, 255, 127))
+
+        return cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+    
+
+    def threat_classifier(self, frame):
+        """
+        Evaluate the current situation for any potential threats
+            - return 0 :: if car is relatively in the center of lane
+            - return 1 :: if car is slightly off-lane
+            - return 2 :: if car is off-lane
+        """
+        threat_level = 0 
+        offset = 0
+        monitor_ratio = frame.shape[0]/frame.shape[1]
+
+        if self.lane.lane_detected:
+
+            # calculate the right and left boundaries of the given lane 
+            left_boundary = np.mean( 
+                self.lane.left_marker.x_axis_pixels
+                [
+                    self.lane.left_marker.y_axis_pixels > 0.95 \
+                    * self.lane.left_marker.y_axis_pixels.max()
+                ]
+            )
+            
+            right_boundary = np.mean(
+                self.lane.right_marker.x_axis_pixels
+                [
+                    self.lane.right_marker.y_axis_pixels > 0.95 \
+                    * self.lane.right_marker.y_axis_pixels.max()
+                ]
+            )
+            
+            # calculate the width of the lane
+            width = right_boundary - left_boundary
+            
+            center_point = frame.shape[1] / 2   
+
+            # calculate the offset from the center point of the given lane
+            offset = np.round(abs((left_boundary + width / 2) - center_point) * monitor_ratio)
         
-        else: # otherwise return the original frame 
-            return cv2.cvtColor(adjusted_frame, cv2.COLOR_BGR2RGB)
+        # if car is off-lane
+        if offset >= 75:
+            threat_level =  2
+        
+        # if car is slightly off-lane
+        elif offset > 50 and offset < 75:
+            threat_level =  1
+
+        # if car is relatively in the center of lane
+        else:
+            threat_level = 0
+
+        return threat_level
+

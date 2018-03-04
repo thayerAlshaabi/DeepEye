@@ -1,7 +1,16 @@
+# models
+*/object_classifier/lane_detection/camera_cal/calibration_data.pickle
+*/object_classifier/lane_detection/camera_cal/Thumbs.db
+*/object_classifier/lane_detection/readme_imgs/Thumbs.db
+*/object_classifier/lane_detection/readme_imgs/Thumbs.db
+*/object_classifier/object_detection/*_coco_2017_11_08
+*/object_classifier/object_detection/*_coco_2017_11_08.tar.gz
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
