@@ -67,15 +67,16 @@ class LaneDetector:
 
         # highlight lane onto the given frame if it was detected
         # if car is off-lane => highlight lane in red to alert the driver
-        if potential_threat_level == 2:    
+        if potential_threat_level == 2 or potential_threat_level == -2:  
+            print("-- Lane-Departure Warning")
             output = self.lane.highlight(
                 adjusted_frame, 
                 backward_transformation_matrix,
                 lane_color=(255, 0, 0))
             
-
         # if car is slightly off-lane => highlight lane in orange
-        elif potential_threat_level == 1:
+        elif potential_threat_level == 1 or potential_threat_level == -1:
+            print("-- Off-Lane Warning")
             output = self.lane.highlight(
                 adjusted_frame, 
                 backward_transformation_matrix,
@@ -93,12 +94,14 @@ class LaneDetector:
     def threat_classifier(self, frame):
         """
         Evaluate the current situation for any potential threats
-            - return 0 :: if car is relatively in the center of lane
-            - return 1 :: if car is slightly off-lane
-            - return 2 :: if car is off-lane
+            - return -2 :: if car is off-lane (left-side)
+            - return -1 :: if car is slightly off-lane (left-side)
+            - return  0 :: if car is relatively in the center of lane
+            - return  1 :: if car is slightly off-lane (right-side)
+            - return  2 :: if car is off-lane (right-side)
         """
         threat_level = 0 
-        offset = 0
+        current_pos = 0
         monitor_ratio = frame.shape[0]/frame.shape[1]
 
         if self.lane.lane_detected:
@@ -126,16 +129,25 @@ class LaneDetector:
             center_point = frame.shape[1] / 2   
 
             # calculate the offset from the center point of the given lane
-            offset = np.round(abs((left_boundary + width / 2) - center_point) * monitor_ratio)
+            current_pos = ((left_boundary + width / 2) - center_point) * monitor_ratio
         
-        # if car is off-lane
-        if offset >= 75:
-            threat_level =  2
-        
-        # if car is slightly off-lane
-        elif offset > 50 and offset < 75:
-            threat_level =  1
 
+        # if car is off-lane (right-side)
+        if current_pos >= 75:
+            threat_level = 2
+                    
+        # if car is off-lane (left-side)
+        elif current_pos <= -75:
+            threat_level =  -2
+           
+        # if car is slightly off-lane (right-side)
+        elif current_pos > 50 and current_pos < 75:
+            threat_level =  1
+            
+        # if car is slightly off-lane (left-side)
+        elif current_pos < -50 and current_pos > -75:
+            threat_level =  -1
+            
         # if car is relatively in the center of lane
         else:
             threat_level = 0
