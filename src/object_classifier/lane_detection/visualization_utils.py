@@ -99,7 +99,7 @@ class Lane:
     def __init__(self,
         marker_size = 50, 
         marker_color = (255, 255, 255),
-        num_windows = 2):
+        num_windows = 6):
         
         # width of the lane marker
         self.marker_size = marker_size
