@@ -478,7 +478,10 @@ class Window:
         t = threading.Thread(target=driving_assistant.activate)
         t.start()
 
-        #root.destroy()
+        #vp_start_warning_interface()
+        #while(True):
+            #self.updateState(driving_assistant.threat_classifier())
+
         
 class TextRedirector(object):
     def __init__(self, widget):

@@ -21,17 +21,17 @@ except ImportError:
 
 
 def init(top, gui, *args, **kwargs):
-    global w, top_level, root
+    global w, Warning_Interface, root
     w = gui
-    top_level = top
+    Warning_Interface = top
     root = top
 
 def destroy_window():
     # Function which closes the window.
-    global top_level
-    top_level.destroy()
-    top_level = None
+    global Warning_Interface
+    Warning_Interface.destroy()
+    Warning_Interface = None
 
 if __name__ == '__main__':
     import WarningInterface
-    WarningInterface.vp_start_gui()
+    WarningInterface.vp_start_warning_interface()

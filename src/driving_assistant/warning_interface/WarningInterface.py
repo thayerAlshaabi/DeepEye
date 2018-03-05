@@ -17,15 +17,15 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = 1
 
-from driving_assistant.warning_interface.WarningUtils import *
+import driving_assistant.warning_interface.WarningUtils as WarningUtils
 
 FOLDER_PATH = os.path.join(os.getcwd(), 'driving_assistant', 'warning_interface')
-
 
 def vp_start_warning_interface():
     '''Starting point when module is the main routine.'''
     global val, w, root
-    root = Tk()
+    root = Toplevel()
+    #WarningUtils.set_Tk_var()
     top = Warning_Interface (root)
     WarningUtils.init(root, top)
     root.mainloop()
@@ -159,6 +159,10 @@ class Warning_Interface:
         self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
         self.StopSign.configure(image=self._img5)
 
+        self.NoStopSign = ttk.Label(self.SignsFrame)
+        self.NoStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.NoStopSign.configure(background="#d9d9d9")
+
         self.TrafficLights = ttk.Label(self.SignsFrame)
         self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
         self.TrafficLights.configure(background="#d9d9d9")
@@ -168,6 +172,10 @@ class Warning_Interface:
         self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
         self.TrafficLights.configure(image=self._img6)
 
+        self.NoTrafficLights = ttk.Label(self.SignsFrame)
+        self.NoTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.NoTrafficLights.configure(background="#d9d9d9")
+
         self.LaneFrame = LabelFrame(top)
         self.LaneFrame.place(relx=0.01, rely=0.73, relheight=0.25, relwidth=0.98)
         self.LaneFrame.configure(relief=GROOVE)
@@ -176,9 +184,9 @@ class Warning_Interface:
         self.LaneFrame.configure(background="#d9d9d9")
         self.LaneFrame.configure(width=460)
 
-        self.var = IntVar()
-        self.Test = ttk.Checkbutton(self.LaneFrame, text="button", variable=self.var, command=self.FlipState)
-        self.Test.place(relx=0.58, rely=0.05)
+        #self.var = IntVar()
+        #self.Test = ttk.Checkbutton(self.LaneFrame, text="button", variable=self.var, command=self.FlipStateTest)
+        #self.Test.place(relx=0.58, rely=0.05)
 
     
     def show_label(self, widget1, widget2):
@@ -188,17 +196,36 @@ class Warning_Interface:
     def hide_label(self, widget1, widget2):
         widget1.lower(widget2)
 
-    def FlipState(self):
-        self.test = self.var.get()
+    #def FlipStateTest(self):
+        #self.test = self.var.get()
             
-        if self.test == 0:
+        #if self.test == 0:
+            #self.show_label(self.Pedestrians, self.NoPedestrians)
+        #elif self.test == 1:
+            #self.hide_label(self.Pedestrians, self.NoPedestrians)
+
+    def updateState(self, threats):
+        if threats['PEDESTRIAN']:
             self.show_label(self.Pedestrians, self.NoPedestrians)
-        elif self.test == 1:
+        else:
             self.hide_label(self.Pedestrians, self.NoPedestrians)
 
-    def updateState(self):
-         #if (person is in array)
-            self.show_label(self.Pedestrians, self.NoPedestrians)
-        #else:
-            self.hide_label(self.Pedestrians, self.NoPedestrians)
+        if threats['BIKES']:
+            self.show_label(self.Bikes, self.NoBikes)
+        else:
+            self.hide_label(self.Bikes, self.NoBikes)
 
+        if threats['VEHICLES']:
+            self.show_label(self.Vehicles, self.NoVehicles)
+        else:
+            self.hide_label(self.Vehicles, self.NoVehicles)
+
+        if threats['STOP_SIGN']:
+            self.show_label(self.StopSign, self.NoStopSign)
+        else:
+            self.hide_label(self.StopSign, self.NoStopSign)
+
+        if threats['TRAFFIC_LIGHT']:
+            self.show_label(self.TrafficLights, self.NoTrafficLights)
+        else:
+            self.hide_label(self.TrafficLights, self.NoTrafficLights)
