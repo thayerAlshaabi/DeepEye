@@ -14,7 +14,7 @@ Name | Description
 --- | ---
 **driving_assistant** | This is the main class that controls all advanced driver-assistance systems. For more information please refer to [DrivingAssistant](driving_assistant/README.md).
 **object_classifier** | This class is a deep convolutional neural network implemented using Tensorflow Object Detection API. For more information please refer to [ObjectClassifier](object_classifier/README.md).
-**threat_classifer** | work in progress...
+**lane_detector** | This class detects current lane that the car is driving in, then highlights both the road markers, as well as, the area enclosed by your lane onto the given frame. For more information please refer to [LaneDetector](lane_detector/README.md).
 
 ## Requirements
 ### Software

@@ -2,7 +2,7 @@
 import os, sys
 sys.path.append("..")
 
-PROFILER_STATS_PATH = os.path.join(os.getcwd(), 'profiler')
+PROFILER_STATS_PATH = os.path.join(os.getcwd(), 'profiler_stats')
 
 _generate_cProfile_cmd = "python3 -m cProfile -o " + \
     os.path.join(PROFILER_STATS_PATH, 'profile.pstats') + \

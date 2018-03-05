@@ -461,24 +461,29 @@ class Window:
         elif self.DatasetCode.get() == 'Kitti':
             convertedDataset = 'kitti'
 
-        driving_assistant = DrivingAssistant()
-        
-        driving_assistant.set_prams(
+        driving_assistant = DrivingAssistant(
             convertedClassifier, 
             convertedDataset, 
             convertedThreshold,
-            self.visualCheck.get(),
-            gui_utils.LaneDetection.get(),
+            True,
+            True,
+            True,
+            True,
             int(self.MonitorId.get()), 
             convertedTopOffset,
             convertedLeftOffset, 
             convertedWindowWidth, 
-            convertedWindowHeight)
+            convertedWindowHeight,
+            1.0
+        )
+     
 
         t = threading.Thread(target=driving_assistant.activate)
         t.start()
+        
+        #vp_start_warning_interface()
+        #self.Warning_Interface.updateState(self.driving_assistant.threat_classifier())
 
-        #root.destroy()
         
 class TextRedirector(object):
     def __init__(self, widget):
