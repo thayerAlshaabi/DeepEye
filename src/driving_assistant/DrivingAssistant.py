@@ -16,6 +16,22 @@ from object_classifier.ObjectClassifier import *
 from driving_assistant.warning_interface.WarningInterface import *
 # ---------------------------------------------------------------------------- #
 
+
+PEDESRIAN = 1
+
+BIKES = [2, 3]
+
+VEHICLES = [3, 6, 7, 8, 9]
+
+TRAFFIC_LIGHT = 10
+
+STOP_SIGN = 13
+
+PARKING_METER = 14
+
+ANIMALS = [17, 18, 19, 20, 21, 22, 23, 24, 25]
+
+
 class DrivingAssistant:
     # Constructor
     def __init__(self):
@@ -55,14 +71,35 @@ class DrivingAssistant:
         print("Activating DeepEye Advanced Co-pilot Mode")
 
         self.classifier.setup()
-        
-        
         #vp_start_warning_interface()
-
-        while (True):
+        
+        while(True):
             self.classifier.scan_road()
-            #warningInterface.updateState()
 
+            # get the detected objects by the neural network along with their confidence scores
+            detected_objs = zip(self.classifier.detection_classes[0], self.classifier.detection_scores[0])
+            
+            # update warning interface as needed 
+            for(obj_id, net_confidence) in detected_objs:
+                
+                if obj_id == PEDESRIAN and net_confidence >= self.classifier.classifier_threshold:
+                    print("-- PEDESRIAN WARNING")
+                
+                elif obj_id == STOP_SIGN and net_confidence >= self.classifier.classifier_threshold:
+                    print("-- STOP_SIGN WARNING")
+
+                elif obj_id == TRAFFIC_LIGHT and net_confidence >= self.classifier.classifier_threshold:
+                    print("-- TRAFFIC_LIGHT WARNING")
+
+                elif obj_id in BIKES and net_confidence >= self.classifier.classifier_threshold:
+                    print("-- BIKES WARNING")
+                    #warningInterface.updateState()
+
+                elif obj_id in ANIMALS and net_confidence >= self.classifier.classifier_threshold:
+                    print("-- OBSTACLES WARNING")
+                    #warningInterface.updateState()
+
+            
             # Press ESC key to exit.
             if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
                 # Close all Python windows when everything's done
