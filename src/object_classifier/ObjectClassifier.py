@@ -39,7 +39,6 @@ sys.path.append("..")
 
 # imports from the object detection module.
 from object_classifier.object_detection.utils import label_map_util, visualization_utils
-from object_classifier.lane_detection.LaneDetector import *
 # ---------------------------------------------------------------------------- #
 
 class ObjectClassifier:
@@ -68,34 +67,15 @@ class ObjectClassifier:
         A list of pre-trained models could be found here:
         https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 
-    - Window Management:
-        We use a cross-platform API for captureing screenshots called (MSS)
-        For more information about MSS-API refer to http://python-mss.readthedocs.io/examples.html
-
-        Note: By default our calss will capture the entire main monitor and pass it into the CNN.
-        - monitor_id: ID of the monitor to be captured
-        - window_top_offset: Top Offset in pixels (0 by default)
-        - window_left_offset: Left Offset in pixels (0 by default)
-        - window_width: The desired width of the captured window (full width of the given monitor by default)
-        - window_height: The desired height of the captured window (full height of the given monitor by default)
-        - window_scale: A scaling factor for the captured window (1.0 by default)
     """
     # Constructor
     def __init__(self,
         classifier_codename = 'faster_rcnn_nas_coco_2017_11_08',
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
-        lane_detection = True,
-        visualization = False,
-        monitor_id = 1,
-        window_top_offset = 0,
-        window_left_offset = 0,
-        window_width = None,
-        window_height = None,
-        window_scale = 1.0):
+        visualization = False):
 
-        # Boolean flags for visualization utils
-        self.lane_detection = lane_detection
+        # Boolean flag for visualization utils
         self.visualization = visualization
         
         # Folder name for object detection module
@@ -121,39 +101,20 @@ class ObjectClassifier:
 
         # Max number of available category names in the model only for the COCO dataset
         self.COCO_MAX_CLASSES = 90
-
-        # Instance of the MSS-API for captureing screenshots
-        self.window_manager = mss.mss()
-
-        # Note:
-        #   - monitor_id = 0 | grab all monitors together
-        #   - monitor_id = n | grab a given monitor (n) : where n > 0
-        self.target_window = self.window_manager.monitors[monitor_id]
-
-        # Update position of the window that will be captured
-        if window_left_offset:
-            self.target_window['left'] += window_left_offset
-            self.target_window['width'] -= window_left_offset
-        if window_top_offset:
-            self.target_window['top'] += window_top_offset
-            self.target_window['height'] -= window_top_offset
-        if window_width:
-            self.target_window['width'] = window_width
-        if window_height:
-            self.target_window['height'] = window_height
-        if window_scale:
-            self.target_window['scale'] = window_scale
-
-
+    
         # Placeholders:
         # -------------------------------------------------------------------- #
         # A dictionary of [IDs] => category names
         # i.e. If our CNN predicts `1`, we know that this corresponds to `person`.
         # - Check '../object_detection_api/data/mscoco_label_map.pbtxt' for a full list of category names
         self.categories_dict = None
-
-        # Captured frame
-        self.frame = None
+        self.PEDESRIAN = 1
+        self.BIKES = [2, 3]
+        self.VEHICLES = [3, 6, 7, 8, 9]
+        self.TRAFFIC_LIGHT = 10
+        self.STOP_SIGN = 13
+        self.PARKING_METER = 14
+        self.ANIMALS = [17, 18, 19, 20, 21, 22, 23, 24, 25]
 
         # Each box represents a part of the image where a particular object was detected.
         self.detection_boxes = None
@@ -170,11 +131,8 @@ class ObjectClassifier:
 
         # The decision threshold : all detection scores below this given threshold will be discarded
         self.classifier_threshold = classifier_threshold
-
-        # Number of frames captured per second
-        self.frame_rate = 0
         # -------------------------------------------------------------------- #
-
+        
 
     def download_model(self):
         """
@@ -226,25 +184,14 @@ class ObjectClassifier:
         self.load_model()
         self.detection_graph.as_default()
         self.sess = tf.Session(graph = self.detection_graph)
-        self.lane_detector = LaneDetector()
-        print('\n\n-- Running object detector: target_window:', self.target_window)
 
 
-    def scan_road(self):
+    def scan_road(self, frame):
         """
-        Capture frames and detecte objects.
+        Detect objects and classify them into one of the defined categories in the dataset.
         """
-        # Register current time to be used for calculating frame rate
-        timer = time.time()
-
-        # Get raw pixels from the screen, save it to a Numpy array
-        pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
-        
-        # convert pixels from BGRA to RGB values
-        self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
-
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-        frame_expanded = np.expand_dims(self.frame, axis=0)
+        frame_expanded = np.expand_dims(frame, axis=0)
 
         # Definite input and output Tensors for detection_graph
         self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
@@ -266,26 +213,52 @@ class ObjectClassifier:
         if self.visualization:
             # Visualization of the results of a detection.
             visualization_utils.visualize_boxes_and_labels_on_image_array(
-                self.frame,
+                frame,
                 np.squeeze(self.detection_boxes),
                 np.squeeze(self.detection_classes).astype(np.int32),
                 np.squeeze(self.detection_scores),
                 self.categories_dict,
                 use_normalized_coordinates=True,
                 min_score_thresh=self.classifier_threshold, line_thickness=1)
+        
+        return frame
 
-        # detect lane in the given frame
-        if self.lane_detection:
-            self.frame = self.lane_detector.detect_lane(self.frame)
 
-        if self.visualization and not self.lane_detection:
-            # convert to grayscale to reduce computational power needed for the process
-            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
+    def threat_classifier(self):
+        """
+        Evaluate detected objects and return a dictionary to indicate any potential threats.
+        """
+        objects_dict = {
+            "PEDESRIAN": False,
+            "STOP_SIGN": False,
+            "TRAFFIC_LIGHT": False,
+            "VEHICLES": False,
+            "BIKES": False,
+            "OBSTACLES": False
+        }
 
-        # Display frame with detected objects.
-        cv2.imshow('DeepEye | Obj-Detector', self.frame)
+        # get the detected objects by the neural network along with their confidence scores
+        detected_objs = zip(self.detection_classes[0], self.detection_scores[0])
+        
+        # update warning interface as needed 
+        for(obj_id, confidence_score) in detected_objs:
+            
+            if obj_id == self.PEDESRIAN and confidence_score >= self.classifier_threshold:
+                objects_dict["PEDESRIAN"] = True
+            
+            elif obj_id == self.STOP_SIGN and confidence_score >= self.classifier_threshold:
+                objects_dict["STOP_SIGN"] = True
 
-        # Calculating fps based on the previous registered timer
-        self.frame_rate = 10 / (time.time() - timer)
-        print('frame_rate: {0}'.format(int(self.frame_rate)))
+            elif obj_id == self.TRAFFIC_LIGHT and confidence_score >= self.classifier_threshold:
+                objects_dict["TRAFFIC_LIGHT"] = True
 
+            elif obj_id in self.VEHICLES and confidence_score >= self.classifier_threshold:
+                objects_dict["VEHICLES"] = True
+
+            elif obj_id in self.BIKES and confidence_score >= self.classifier_threshold:
+                objects_dict["BIKES"] = True
+
+            elif obj_id in self.ANIMALS and confidence_score >= self.classifier_threshold:
+                objects_dict["ANIMALS"] = True
+
+        return objects_dict

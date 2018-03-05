@@ -127,7 +127,7 @@ class Warning_Interface:
         self.NoBikes = ttk.Label(self.ObjectsFrame)
         self.NoBikes.place(relx=0.43, rely=0.05, height=125, width=130)
         self.NoBikes.configure(background="#d9d9d9")
-        self.Bikes.lift(self.NoBikes)
+        #self.Bikes.lift(self.NoBikes)
 
         self.Vehicles = ttk.Label(self.ObjectsFrame)
         self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
@@ -140,7 +140,7 @@ class Warning_Interface:
         self.NoVehicles = ttk.Label(self.ObjectsFrame)
         self.NoVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
         self.NoVehicles.configure(background="#d9d9d9")
-        self.Vehicles.lift(self.NoVehicles)
+        #self.Vehicles.lift(self.NoVehicles)
         
         self.SignsFrame = LabelFrame(top)
         self.SignsFrame.place(relx=0.01, rely=0.46, relheight=0.25, relwidth=0.98)
@@ -227,5 +227,6 @@ class Warning_Interface:
 
         if threats['TRAFFIC_LIGHT']:
             self.show_label(self.TrafficLights, self.NoTrafficLights)
+
         else:
             self.hide_label(self.TrafficLights, self.NoTrafficLights)

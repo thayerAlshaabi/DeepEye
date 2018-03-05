@@ -21,15 +21,20 @@ import cv2
 import numpy as np
 
 # imports from the lane detection module.
-import object_classifier.lane_detection.calibration_utils as calibrator
-import object_classifier.lane_detection.graphic_utils as transformer
-import object_classifier.lane_detection.visualization_utils as visualizer
+import lane_detector.calibration_utils as calibrator
+import lane_detector.graphic_utils as transformer
+import lane_detector.visualization_utils as visualizer
 # ---------------------------------------------------------------------------- #
 
 class LaneDetector:
     # Constructor
-    def __init__(self):
+    def __init__(self,
+        visualization = True):
+
         self.lane = visualizer.Lane()
+
+        # Boolean flag for visualization utils
+        self.visualization = visualization
 
         # setup calibration parameters
         # -------------------------------------------------------------------- #
@@ -65,28 +70,27 @@ class LaneDetector:
         # evaluate the current situation for any potential threats
         potential_threat_level = self.threat_classifier(adjusted_frame)
 
-        # highlight lane onto the given frame if it was detected
-        # if car is off-lane => highlight lane in red to alert the driver
-        if potential_threat_level == 2 or potential_threat_level == -2:  
-            print("-- Lane-Departure Warning")
-            output = self.lane.highlight(
-                adjusted_frame, 
-                backward_transformation_matrix,
-                lane_color=(255, 0, 0))
-            
-        # if car is slightly off-lane => highlight lane in orange
-        elif potential_threat_level == 1 or potential_threat_level == -1:
-            print("-- Off-Lane Warning")
-            output = self.lane.highlight(
-                adjusted_frame, 
-                backward_transformation_matrix,
-                lane_color=(255, 127, 0))
+        if self.visualization:
+            # highlight lane onto the given frame if it was detected
+            # if car is off-lane => highlight lane in red to alert the driver
+            if potential_threat_level == 2 or potential_threat_level == -2:  
+                output = self.lane.highlight(
+                    adjusted_frame, 
+                    backward_transformation_matrix,
+                    lane_color=(255, 0, 0))
+                
+            # if car is slightly off-lane => highlight lane in orange
+            elif potential_threat_level == 1 or potential_threat_level == -1:
+                output = self.lane.highlight(
+                    adjusted_frame, 
+                    backward_transformation_matrix,
+                    lane_color=(255, 127, 0))
 
-        else: # if car is relatively in the center of lane => highlight lane in green
-            output = self.lane.highlight(
-                adjusted_frame, 
-                backward_transformation_matrix,
-                lane_color=(0, 255, 127))
+            else: # if car is relatively in the center of lane => highlight lane in green
+                output = self.lane.highlight(
+                    adjusted_frame, 
+                    backward_transformation_matrix,
+                    lane_color=(0, 255, 127))
 
         return cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
     

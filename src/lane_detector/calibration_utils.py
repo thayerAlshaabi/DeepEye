@@ -48,8 +48,7 @@ import os, os.path as path
 # relative path to chessboard images that are used for calibration 
 CALIBRATION_MODULE_PATH = path.join(
     os.getcwd(), 
-    'object_classifier', 
-    'lane_detection', 
+    'lane_detector', 
     'camera_cal')
 
 # path for a pickle data file to avoid recalibrating every time.

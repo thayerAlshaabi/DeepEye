@@ -24,7 +24,8 @@ Name | Description
 **load_model()** | Load pre-trained model into memory.
 **setup()** | This method would download a trained model from the API if necessary files were not found. And, it loads the trained model into memory - preferably GPU memory using the methods stated above. Then, prep. the tensorflow computation graph and initiates a tensorflow session.
 **scan_road()** | Capture frames and detecte objects.
-**detect_lane()** | Detect current lane that the car is driving in, then highlights both the road markers, as well as, the area enclosed by your lane onto the given frame. For more information please refer to [LaneDetector](lane_detection/README.md). 
+**threat_classifier** | Evaluate detected objects and return a dictionary to indicate any potential threats.
+
 
 
 ## Customization
@@ -41,21 +42,6 @@ Parameter | Description
 **classifier_codename** | Codename of the pre-trained model used for object detection **([list of available models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md))**.
 **dataset_codename** | Codename of the dataset that the model was trained on (available datasets: **mscoco, kitti**).
 **classifier_threshold** | The decision threshold : all detection scores below this given threshold will be discarded **(0.75 by default)**.
-
-### Window Management
-We use a cross-platform API for captureing screenshots called (Python MSS). For more information about MSS-API refer to [python-mss](http://python-mss.readthedocs.io/examples.html).
-
-**Note:** By default our calss will capture the entire main monitor and pass it into the CNN.
-Here's a list of additional parameters to look at:
-
-Parameter | Description 
---- | ---
-**monitor_id** | ID of the monitor to be captured.
-**window_top_offset** | Top Offset in pixels **(0 by default)**.
-**window_left_offset** | Left Offset in pixels **(0 by default)**.
-**window_width** | The desired width of the captured window **(full width of the given monitor by default)**.
-**window_height** | The desired height of the captured window **(full height of the given monitor by default)**.
-**window_scale** | A scaling factor for the captured window **(1.0 by default)**.
 
 
 ## Licensing Information
