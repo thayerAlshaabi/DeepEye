@@ -1,8 +1,8 @@
 # models
-*/object_classifier/lane_detection/camera_cal/calibration_data.pickle
-*/object_classifier/lane_detection/camera_cal/Thumbs.db
-*/object_classifier/lane_detection/readme_imgs/Thumbs.db
-*/object_classifier/lane_detection/readme_imgs/Thumbs.db
+*/lane_detector/camera_cal/calibration_data.pickle
+*/lane_detector/camera_cal/Thumbs.db
+*/lane_detector/readme_imgs/Thumbs.db
+*/lane_detector/readme_imgs/Thumbs.db
 */object_classifier/object_detection/*_coco_2017_11_08
 */object_classifier/object_detection/*_coco_2017_11_08.tar.gz
 
@@ -11,12 +11,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
+__pycache__/
 
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -87,10 +89,11 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# dotenv
 .env
+
+# virtualenv
 .venv
-env/
 venv/
 ENV/
 
