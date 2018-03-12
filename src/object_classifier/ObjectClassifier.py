@@ -108,7 +108,7 @@ class ObjectClassifier:
         # i.e. If our CNN predicts `1`, we know that this corresponds to `person`.
         # - Check '../object_detection_api/data/mscoco_label_map.pbtxt' for a full list of category names
         self.categories_dict = None
-        self.PEDESRIAN = 1
+        self.PEDESTRIAN = 1
         self.BIKES = [2, 3]
         self.VEHICLES = [3, 6, 7, 8, 9]
         self.TRAFFIC_LIGHT = 10
@@ -229,7 +229,7 @@ class ObjectClassifier:
         Evaluate detected objects and return a dictionary to indicate any potential threats.
         """
         objects_dict = {
-            "PEDESRIAN": False,
+            "PEDESTRIAN": False,
             "STOP_SIGN": False,
             "TRAFFIC_LIGHT": False,
             "VEHICLES": False,
@@ -243,8 +243,8 @@ class ObjectClassifier:
         # update warning interface as needed 
         for(obj_id, confidence_score) in detected_objs:
             
-            if obj_id == self.PEDESRIAN and confidence_score >= self.classifier_threshold:
-                objects_dict["PEDESRIAN"] = True
+            if obj_id == self.PEDESTRIAN and confidence_score >= self.classifier_threshold:
+                objects_dict["PEDESTRIAN"] = True
             
             elif obj_id == self.STOP_SIGN and confidence_score >= self.classifier_threshold:
                 objects_dict["STOP_SIGN"] = True

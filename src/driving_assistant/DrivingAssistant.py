@@ -34,6 +34,7 @@ import time
 
 from object_classifier.ObjectClassifier import *
 from lane_detector.LaneDetector import *
+
 # ---------------------------------------------------------------------------- #
 
 class DrivingAssistant:
@@ -84,6 +85,8 @@ class DrivingAssistant:
 
 
         print("Activating DeepEye Advanced Co-pilot Mode")
+
+
         
         self.object_detector = ObjectClassifier(
             classifier_codename = classifier_codename,
@@ -96,13 +99,26 @@ class DrivingAssistant:
             visualization = lane_visualization
         )
 
+        self.threats = {
+            "PEDESTRIAN": False,
+            "STOP_SIGN": False,
+            "TRAFFIC_LIGHT": False,
+            "VEHICLES": False,
+            "BIKES": False,
+            "OBSTACLES": False,
+            "FAR_LEFT": False,
+            "FAR_RIGHT": False,
+            "RIGHT": False,
+            "LEFT": False,
+            "CENTER": True
+        }
 
-    def threat_classifier(self):
+    def threat_classifier(self, frame):
         """
         Run the threat_classifier() methods in both object_detector & lane_detector, 
         then return a dictionary to indicate any potential threats:
         {
-            "PEDESRIAN": False,
+            "PEDESTRIAN": False,
             "STOP_SIGN": False,
             "TRAFFIC_LIGHT": False,
             "VEHICLES": False,
@@ -117,7 +133,7 @@ class DrivingAssistant:
         """
         objects_dict = self.object_detector.threat_classifier()
 
-        threat_code = self.lane_detector.threat_classifier()
+        threat_code = self.lane_detector.threat_classifier(frame)
        
         lane_dict = {
             "FAR_LEFT": False,
@@ -141,53 +157,43 @@ class DrivingAssistant:
         return {**objects_dict, **lane_dict}
 
 
-    def activate(self):   
+    def run(self):   
         """
         Capture frames, initiate both objects and lane detectors, and then visualize output. 
         """
-        print('\n\n-- Running object detector: ', self.target_window)
-        self.object_detector.setup()
+        # Get raw pixels from the screen, save it to a Numpy array
+        pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
+        
+        # convert pixels from BGRA to RGB values
+        self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
 
-        while(True):
-            # Register current time to be used for calculating frame rate
-            timer = time.time()
+        # detect objects in the given frame
+        if self.object_detection:
+            self.frame = self.object_detector.scan_road(self.frame)
 
-            # Get raw pixels from the screen, save it to a Numpy array
-            pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
-            
-            # convert pixels from BGRA to RGB values
-            self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
- 
-            # detect objects in the given frame
-            if self.object_detection:
-                self.frame = self.object_detector.scan_road(self.frame)
+        # detect lane in the given frame
+        if self.lane_detection:
+            self.frame = self.lane_detector.detect_lane(self.frame)
 
-            # detect lane in the given frame
-            if self.lane_detection:
-                self.frame = self.lane_detector.detect_lane(self.frame)
+        #visualization customization 
+        if (self.object_visualization and self.lane_visualization) or self.lane_visualization:
+            # Display frame with detected objects.
+            cv2.imshow('DeepEye Dashboard', self.frame)
 
-            # visualization customization 
-            if (self.object_visualization and self.lane_visualization) or self.lane_visualization:
-                # Display frame with detected objects.
-                cv2.imshow('DeepEye | Obj-Detector', self.frame)
+        elif self.object_visualization and not self.lane_visualization:
+            # convert to grayscale to reduce computational power needed for the process
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
+            # Display frame with detected objects.
+            cv2.imshow('DeepEye Dashboard', self.frame)
 
-            elif self.object_visualization and not self.lane_visualization:
-                # convert to grayscale to reduce computational power needed for the process
-                self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
-
-            else:
-                pass # skip visualization
-            
-
-            # Calculating fps based on the previous registered timer
-            frame_rate = 10 / (time.time() - timer)
-            print('frame_rate: {0}'.format(int(frame_rate)))
+        else:
+            pass # skip visualization
+        
+        self.threats = self.threat_classifier(self.frame)            
 
 
-            # Press ESC key to exit.
-            if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
-                # Close all Python windows when everything's done
-                cv2.destroyAllWindows()
-                break
+
+
+           
 
         

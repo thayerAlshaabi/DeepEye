@@ -3,10 +3,11 @@
 
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
-import sys, os, threading, time
+import sys, os, threading, time, cv2
 
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
+
 
 
 try:
@@ -359,7 +360,7 @@ class Window:
         self.ExitButton.configure(text='''Exit''')
 
 
-        self.RunButton = Button(self.RunExitFrame, command=self.runProgram)
+        self.RunButton = Button(self.RunExitFrame, command=threading.Thread(target=self.mainLoop).start())
         self.RunButton.place(relx=0.09, rely=0.1, height=54, width=187)
         self.RunButton.configure(activebackground="#d9d9d9")
         self.RunButton.configure(activeforeground="#000000")
@@ -418,6 +419,131 @@ class Window:
         self.CommandLineOutput.configure(listvariable=gui_utils.CommandLineOutput)
         self.CommandLineOutput.see("end")
         sys.stdout = TextRedirector(self.CommandLineOutput)
+
+        self.ObjectsFrame = LabelFrame(top)
+        self.ObjectsFrame.place(relx=0.01, rely=0.18, relheight=0.25, relwidth=0.98)
+        self.ObjectsFrame.configure(relief=GROOVE)
+        self.ObjectsFrame.configure(foreground="black")
+        self.ObjectsFrame.configure(text='''Objects''')
+        self.ObjectsFrame.configure(background="#d9d9d9")
+        self.ObjectsFrame.configure(width=460)
+
+        self.Pedestrians = ttk.Label(self.ObjectsFrame)
+        self.Pedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.Pedestrians.configure(background="#d9d9d9")
+        self.Pedestrians.configure(foreground="#000000")
+        self.Pedestrians.configure(relief=FLAT)
+        self._img2 = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
+        self.Pedestrians.configure(image=self._img2)
+
+        self.NoPedestrians = ttk.Label(self.ObjectsFrame)
+        self.NoPedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.NoPedestrians.configure(background="#d9d9d9")
+        #self.Pedestrians.lift(self.NoPedestrians)
+
+        self.Bikes = ttk.Label(self.ObjectsFrame)
+        self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.Bikes.configure(background="#d9d9d9")
+        self.Bikes.configure(foreground="#000000")
+        self.Bikes.configure(relief=FLAT)
+        self._img3 = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
+        self.Bikes.configure(image=self._img3)
+
+        self.NoBikes = ttk.Label(self.ObjectsFrame)
+        self.NoBikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.NoBikes.configure(background="#d9d9d9")
+        #self.Bikes.lift(self.NoBikes)
+
+        self.Vehicles = ttk.Label(self.ObjectsFrame)
+        self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.Vehicles.configure(background="#d9d9d9")
+        self.Vehicles.configure(foreground="#000000")
+        self.Vehicles.configure(relief=FLAT)
+        self._img4 = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
+        self.Vehicles.configure(image=self._img4)
+
+        self.NoVehicles = ttk.Label(self.ObjectsFrame)
+        self.NoVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.NoVehicles.configure(background="#d9d9d9")
+        #self.Vehicles.lift(self.NoVehicles)
+        
+        self.SignsFrame = LabelFrame(top)
+        self.SignsFrame.place(relx=0.01, rely=0.46, relheight=0.25, relwidth=0.98)
+        self.SignsFrame.configure(relief=GROOVE)
+        self.SignsFrame.configure(foreground="black")
+        self.SignsFrame.configure(text='''Signs''')
+        self.SignsFrame.configure(background="#d9d9d9")
+        self.SignsFrame.configure(width=460)
+
+        self.StopSign = ttk.Label(self.SignsFrame)
+        self.StopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.StopSign.configure(background="#d9d9d9")
+        self.StopSign.configure(foreground="#000000")
+        self.StopSign.configure(relief=FLAT)
+        self.StopSign.configure(text='''Tlabel''')
+        self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
+        self.StopSign.configure(image=self._img5)
+
+        self.NoStopSign = ttk.Label(self.SignsFrame)
+        self.NoStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.NoStopSign.configure(background="#d9d9d9")
+
+        self.TrafficLights = ttk.Label(self.SignsFrame)
+        self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.TrafficLights.configure(background="#d9d9d9")
+        self.TrafficLights.configure(foreground="#000000")
+        self.TrafficLights.configure(relief=FLAT)
+        self.TrafficLights.configure(text='''Tlabel''')
+        self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
+        self.TrafficLights.configure(image=self._img6)
+
+        self.NoTrafficLights = ttk.Label(self.SignsFrame)
+        self.NoTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.NoTrafficLights.configure(background="#d9d9d9")
+
+        self.LaneFrame = LabelFrame(top)
+        self.LaneFrame.place(relx=0.01, rely=0.73, relheight=0.25, relwidth=0.98)
+        self.LaneFrame.configure(relief=GROOVE)
+        self.LaneFrame.configure(foreground="black")
+        self.LaneFrame.configure(text='''Lane''')
+        self.LaneFrame.configure(background="#d9d9d9")
+        self.LaneFrame.configure(width=460)
+
+    def show_label(self, widget1, widget2):
+        widget1.lift(widget2)
+
+
+    def hide_label(self, widget1, widget2):
+        widget1.lower(widget2)
+
+    def updateState(self, threats):   
+        print(threats)        
+        if threats['PEDESTRIAN']:
+            self.show_label(self.Pedestrians, self.NoPedestrians)
+        else:
+            self.hide_label(self.Pedestrians, self.NoPedestrians)
+
+        if threats['BIKES']:
+            self.show_label(self.Bikes, self.NoBikes)
+        else:
+            self.hide_label(self.Bikes, self.NoBikes)
+
+        if threats['VEHICLES']:
+            self.show_label(self.Vehicles, self.NoVehicles)
+        else:
+            self.hide_label(self.Vehicles, self.NoVehicles)
+
+        if threats['STOP_SIGN']:
+            self.show_label(self.StopSign, self.NoStopSign)
+        else:
+            self.hide_label(self.StopSign, self.NoStopSign)
+
+        if threats['TRAFFIC_LIGHT']:
+            self.show_label(self.TrafficLights, self.NoTrafficLights)
+
+        else:
+            self.hide_label(self.TrafficLights, self.NoTrafficLights)
+
         
     def FlipState(self):
         self.test = self.windowCheck.get()
@@ -433,8 +559,7 @@ class Window:
             self.TopOffset['state'] = NORMAL
             self.LeftOffset['state'] = NORMAL
 
-            
-    def runProgram(self):
+    def mainLoop(self):
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
         convertedWindowWidth = 0
@@ -467,8 +592,8 @@ class Window:
             convertedThreshold,
             True,
             True,
-            True,
-            True,
+            False,
+            False,
             int(self.MonitorId.get()), 
             convertedTopOffset,
             convertedLeftOffset, 
@@ -476,11 +601,36 @@ class Window:
             convertedWindowHeight,
             1.0
         )
-     
 
-        t = threading.Thread(target=driving_assistant.activate)
-        t.start()
+        driving_assistant.object_detector.setup()
+
+        while(True):
+            # Register current time to be used for calculating frame rate
+            timer = time.time()
+
+            driving_assistant.run()
+            self.updateState(driving_assistant.threats)
+
+             # Calculating fps based on the previous registered timer
+            frame_rate = 10 / (time.time() - timer)
+            print('frame_rate: {0}'.format(int(frame_rate)))
+
+
+            # Press ESC key to exit.
+            if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
+                # Close all Python windows when everything's done
+                cv2.destroyAllWindows()
+                break
+
+
+    def runProgram(self):
+
+        threading.Thread(target=self.mainLoop).start()
+
         
+        
+
+
         #vp_start_warning_interface()
         #self.Warning_Interface.updateState(self.driving_assistant.threat_classifier())
 
