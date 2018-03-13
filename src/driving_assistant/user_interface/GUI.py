@@ -66,7 +66,7 @@ class Window:
         _ana2color = '#d9d9d9' # X11 color: 'gray85' 
         font18 = "-family {Calibri Light} -size 22 -weight bold -slant"  \
             " roman -underline 0 -overstrike 0"
-        font21 = "-family David -size 48 -weight bold -slant italic "  \
+        font21 = "-family Helvetica -size 32 -weight bold -slant italic "  \
             "-underline 0 -overstrike 0"
         self.style = ttk.Style()
         if sys.platform == "win32":
@@ -93,12 +93,12 @@ class Window:
         self.EyeBall.configure(image=self._img1)
 
         self.Title = ttk.Label(top)
-        self.Title.place(relx=0.3, rely=0.04, height=110, width=496)
+        self.Title.place(relx=0.2, rely=0.02, height=110, width=496)
         self.Title.configure(background="#d9d9d9")
         self.Title.configure(foreground="#000000")
         self.Title.configure(font=font21)
         self.Title.configure(relief=FLAT)
-        self.Title.configure(text='''DeepEye''')
+        self.Title.configure(text='''DeepEye\nYour Personal CoPilot!''')
 
         self.WarningInterfaceFrame = ttk.Frame(top)
         self.WarningInterfaceFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
@@ -507,9 +507,9 @@ class Window:
         self.RunButton.configure(pady="0")
         self.RunButton.configure(text='''Run''')
 
-        print("Welcome to the DeepEye Threat Detector!")
-        print("Configure setup, this press run.")
-        print("To exit and return to this menu, press 'Escape'")
+        print("Welcome to DeepEye Advanced Driver-Assistance Systems.\n")
+        print("Configure setup, then press run.")
+        print("To exit and return to this menu, press 'Esc' key.")
 
     def show_label(self, widget1, widget2):
         widget1.lift(widget2)
@@ -554,12 +554,13 @@ class Window:
             self.WindowWidth['state'] = DISABLED
             self.WindowHeight['state'] = DISABLED
             self.TopOffset['state'] = DISABLED
-            self.LeftOffset['statcde'] = DISABLED
+            self.LeftOffset['state'] = DISABLED
         elif self.test == 1:
             self.WindowWidth['state'] = NORMAL
             self.WindowHeight['state'] = NORMAL
             self.TopOffset['state'] = NORMAL
             self.LeftOffset['state'] = NORMAL
+
 
     def set_adas_prams(self):
         convertedThreshold = int(self.Threshold.get()[:-1])/100
@@ -591,10 +592,10 @@ class Window:
         return convertedClassifier, \
             convertedDataset, \
             convertedThreshold, \
-            gui_utils.ObjectDetection, \
-            self.ObjectVisualCheck, \
+            gui_utils.ObjectDetection.get(), \
+            self.ObjectVisualCheck.get(), \
             gui_utils.LaneDetection.get(), \
-            self.LaneVisualCheck, \
+            self.LaneVisualCheck.get(), \
             int(self.MonitorId.get()), \
             convertedTopOffset, \
             convertedLeftOffset, \

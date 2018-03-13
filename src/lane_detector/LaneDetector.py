@@ -93,8 +93,8 @@ class LaneDetector:
                     backward_transformation_matrix,
                     lane_color=(0, 255, 127))
 
-            else:
-                output = adjusted_frame
+        else:
+            output = adjusted_frame
 
         return cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
     
