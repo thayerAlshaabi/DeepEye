@@ -29,6 +29,8 @@ def set_Tk_var():
     ThresholdBox = StringVar()
     global LaneDetection
     LaneDetection = BooleanVar(value=1)
+    global ObjectDetection
+    ObjectDetection = BooleanVar(value=1)
     global cpd53
     cpd53 = StringVar()
     global spinbox
