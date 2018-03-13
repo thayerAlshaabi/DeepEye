@@ -99,7 +99,7 @@ class Lane:
     def __init__(self,
         marker_size = 50, 
         marker_color = (255, 255, 255),
-        num_windows = 6):
+        num_windows = 10):
         
         # width of the lane marker
         self.marker_size = marker_size
@@ -124,7 +124,10 @@ class Lane:
         Get the target pixels that encapsulate both road markers in the given frame. 
         """
         frame_height, frame_width = birdeye_view.shape
-        ratio = frame_height/frame_width
+
+        # Lane width in the US is ~ 3.7 meters and difference between dashes is 3 metres.
+        x_ratio = (3.7) * frame_height/frame_width
+        y_ratio = (3.0) * frame_height/frame_width
 
         # set the width & height of the windows used for search
         self.window_height = np.int(frame_height / self.num_windows)
@@ -230,8 +233,8 @@ class Lane:
             new_px_left = np.polyfit(self.left_marker.y_axis_pixels, 
                 self.left_marker.x_axis_pixels, 2)
 
-            new_coefficients_left = np.polyfit(self.left_marker.y_axis_pixels * ratio, 
-                self.left_marker.x_axis_pixels * ratio, 2)
+            new_coefficients_left = np.polyfit(self.left_marker.y_axis_pixels * y_ratio, 
+                self.left_marker.x_axis_pixels * x_ratio, 2)
 
         # if the right road marker was not detected in the last iteration
         if not list(self.right_marker.x_axis_pixels) or \
@@ -246,8 +249,8 @@ class Lane:
             new_px_right = np.polyfit(self.right_marker.y_axis_pixels, 
                 self.right_marker.x_axis_pixels, 2)
 
-            new_coefficients_right = np.polyfit(self.right_marker.y_axis_pixels * ratio, 
-                self.right_marker.x_axis_pixels * ratio, 2)
+            new_coefficients_right = np.polyfit(self.right_marker.y_axis_pixels * y_ratio, 
+                self.right_marker.x_axis_pixels * x_ratio, 2)
 
         # update road marker onto the frame as needed
         self.left_marker.adjust(new_px_left, new_coefficients_left, self.lane_detected)
