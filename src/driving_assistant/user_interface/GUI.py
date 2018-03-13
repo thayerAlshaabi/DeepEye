@@ -100,13 +100,104 @@ class Window:
         self.Title.configure(relief=FLAT)
         self.Title.configure(text='''DeepEye''')
 
+        self.WarningInterfaceFrame = ttk.Frame(top)
+        self.WarningInterfaceFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
+
+        self.ObjectsFrame = LabelFrame(self.WarningInterfaceFrame)
+        self.ObjectsFrame.place(relx=0.01, rely=0.02, relheight=0.32, relwidth=0.98)
+        self.ObjectsFrame.configure(relief=GROOVE)
+        self.ObjectsFrame.configure(foreground="black")
+        self.ObjectsFrame.configure(text='''Objects''')
+        self.ObjectsFrame.configure(background="#d9d9d9")
+
+        self.Pedestrians = ttk.Label(self.ObjectsFrame)
+        self.Pedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.Pedestrians.configure(background="#d9d9d9")
+        self.Pedestrians.configure(foreground="#000000")
+        self.Pedestrians.configure(relief=FLAT)
+        self._img2 = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
+        self.Pedestrians.configure(image=self._img2)
+
+        self.NoPedestrians = ttk.Label(self.ObjectsFrame)
+        self.NoPedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.NoPedestrians.configure(background="#d9d9d9")
+        self.Pedestrians.lift(self.NoPedestrians)
+
+        self.Bikes = ttk.Label(self.ObjectsFrame)
+        self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.Bikes.configure(background="#d9d9d9")
+        self.Bikes.configure(foreground="#000000")
+        self.Bikes.configure(relief=FLAT)
+        self._img3 = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
+        self.Bikes.configure(image=self._img3)
+
+        self.NoBikes = ttk.Label(self.ObjectsFrame)
+        self.NoBikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.NoBikes.configure(background="#d9d9d9")
+        self.Bikes.lift(self.NoBikes)
+
+        self.Vehicles = ttk.Label(self.ObjectsFrame)
+        self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.Vehicles.configure(background="#d9d9d9")
+        self.Vehicles.configure(foreground="#000000")
+        self.Vehicles.configure(relief=FLAT)
+        self._img4 = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
+        self.Vehicles.configure(image=self._img4)
+
+        self.NoVehicles = ttk.Label(self.ObjectsFrame)
+        self.NoVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.NoVehicles.configure(background="#d9d9d9")
+        self.Vehicles.lift(self.NoVehicles)
+        
+        self.SignsFrame = LabelFrame(self.WarningInterfaceFrame)
+        self.SignsFrame.place(relx=0.01, rely=0.34, relheight=0.32, relwidth=0.98)
+        self.SignsFrame.configure(relief=GROOVE)
+        self.SignsFrame.configure(foreground="black")
+        self.SignsFrame.configure(text='''Signs''')
+        self.SignsFrame.configure(background="#d9d9d9")
+        self.SignsFrame.configure(width=460)
+
+        self.StopSign = ttk.Label(self.SignsFrame)
+        self.StopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.StopSign.configure(background="#d9d9d9")
+        self.StopSign.configure(foreground="#000000")
+        self.StopSign.configure(relief=FLAT)
+        self.StopSign.configure(text='''Tlabel''')
+        self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
+        self.StopSign.configure(image=self._img5)
+
+        self.NoStopSign = ttk.Label(self.SignsFrame)
+        self.NoStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.NoStopSign.configure(background="#d9d9d9")
+        self.StopSign.lift(self.NoStopSign)
+
+        self.TrafficLights = ttk.Label(self.SignsFrame)
+        self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.TrafficLights.configure(background="#d9d9d9")
+        self.TrafficLights.configure(foreground="#000000")
+        self.TrafficLights.configure(relief=FLAT)
+        self.TrafficLights.configure(text='''Tlabel''')
+        self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
+        self.TrafficLights.configure(image=self._img6)
+
+        self.NoTrafficLights = ttk.Label(self.SignsFrame)
+        self.NoTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.NoTrafficLights.configure(background="#d9d9d9")
+        self.TrafficLights.lift(self.NoTrafficLights)
+
+        self.LaneFrame = LabelFrame(self.WarningInterfaceFrame)
+        self.LaneFrame.place(relx=0.01, rely=0.66, relheight=0.32, relwidth=0.98)
+        self.LaneFrame.configure(relief=GROOVE)
+        self.LaneFrame.configure(foreground="black")
+        self.LaneFrame.configure(text='''Lane''')
+        self.LaneFrame.configure(background="#d9d9d9")
+        self.LaneFrame.configure(width=460)
+
         self.setupFrame = ttk.Frame(top)
         self.setupFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
         self.setupFrame.configure(relief=GROOVE)
         self.setupFrame.configure(borderwidth="2")
         self.setupFrame.configure(relief=GROOVE)
-        #self.setupFrame.configure(background="#d9d9d9")
-        self.setupFrame.configure(width=915)
 
         self.OutputFrame = LabelFrame(self.setupFrame)
         self.OutputFrame.place(relx=0.03, rely=0.04, relheight=0.34, relwidth=.94)
@@ -129,8 +220,8 @@ class Window:
         self.CommandLineOutput.see("end")
         sys.stdout = TextRedirector(self.CommandLineOutput)
 
-        self.WindowManagerFrame = ttk.Labelframe(top)
-        self.WindowManagerFrame.place(relx=0.05, rely=0.53, relheight=0.4, relwidth=0.24)
+        self.WindowManagerFrame = ttk.Labelframe(self.setupFrame)
+        self.WindowManagerFrame.place(relx=0.03, rely=0.425, relheight=0.51, relwidth=0.25)
         self.WindowManagerFrame.configure(text='''Window Manager''')
 
         self.MonitorIdTitle = ttk.Label(self.WindowManagerFrame)
@@ -308,7 +399,7 @@ class Window:
         self.EnableObjectVisual.configure(variable=self.ObjectVisualCheck)
 
         self.LaneVisualCheck = IntVar()
-        self.EnableLaneVisual = Checkbutton(self.CustomizationFrame, command=self.FlipState)
+        self.EnableLaneVisual = Checkbutton(self.CustomizationFrame)
         self.EnableLaneVisual.place(relx=0.08, rely=0.73, relheight=0.15, relwidth=0.85)
         self.EnableLaneVisual.configure(activebackground="#d9d9d9")
         self.EnableLaneVisual.configure(activeforeground="#000000")
@@ -320,7 +411,6 @@ class Window:
         self.EnableLaneVisual.configure(justify=LEFT)
         self.EnableLaneVisual.configure(text='''Enable Lane Visualization?                     ''')
         self.EnableLaneVisual.configure(variable=self.LaneVisualCheck)
-        self.EnableLaneVisual.select()
 
         self.DatasetFrame = ttk.Labelframe(self.setupFrame)
         self.DatasetFrame.place(relx=0.65, rely=0.425, relheight=0.3, relwidth=0.32)
@@ -417,96 +507,9 @@ class Window:
         self.RunButton.configure(pady="0")
         self.RunButton.configure(text='''Run''')
 
-
-
-        # self.ObjectsFrame = LabelFrame(top)
-        # self.ObjectsFrame.place(relx=0.01, rely=0.18, relheight=0.25, relwidth=0.98)
-        # self.ObjectsFrame.configure(relief=GROOVE)
-        # self.ObjectsFrame.configure(foreground="black")
-        # self.ObjectsFrame.configure(text='''Objects''')
-        # self.ObjectsFrame.configure(background="#d9d9d9")
-        # self.ObjectsFrame.configure(width=460)
-
-        # self.Pedestrians = ttk.Label(self.ObjectsFrame)
-        # self.Pedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
-        # self.Pedestrians.configure(background="#d9d9d9")
-        # self.Pedestrians.configure(foreground="#000000")
-        # self.Pedestrians.configure(relief=FLAT)
-        # self._img2 = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
-        # self.Pedestrians.configure(image=self._img2)
-
-        # self.NoPedestrians = ttk.Label(self.ObjectsFrame)
-        # self.NoPedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
-        # self.NoPedestrians.configure(background="#d9d9d9")
-        # #self.Pedestrians.lift(self.NoPedestrians)
-
-        # self.Bikes = ttk.Label(self.ObjectsFrame)
-        # self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
-        # self.Bikes.configure(background="#d9d9d9")
-        # self.Bikes.configure(foreground="#000000")
-        # self.Bikes.configure(relief=FLAT)
-        # self._img3 = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
-        # self.Bikes.configure(image=self._img3)
-
-        # self.NoBikes = ttk.Label(self.ObjectsFrame)
-        # self.NoBikes.place(relx=0.43, rely=0.05, height=125, width=130)
-        # self.NoBikes.configure(background="#d9d9d9")
-        # #self.Bikes.lift(self.NoBikes)
-
-        # self.Vehicles = ttk.Label(self.ObjectsFrame)
-        # self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
-        # self.Vehicles.configure(background="#d9d9d9")
-        # self.Vehicles.configure(foreground="#000000")
-        # self.Vehicles.configure(relief=FLAT)
-        # self._img4 = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
-        # self.Vehicles.configure(image=self._img4)
-
-        # self.NoVehicles = ttk.Label(self.ObjectsFrame)
-        # self.NoVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
-        # self.NoVehicles.configure(background="#d9d9d9")
-        # #self.Vehicles.lift(self.NoVehicles)
-        
-        # self.SignsFrame = LabelFrame(top)
-        # self.SignsFrame.place(relx=0.01, rely=0.46, relheight=0.25, relwidth=0.98)
-        # self.SignsFrame.configure(relief=GROOVE)
-        # self.SignsFrame.configure(foreground="black")
-        # self.SignsFrame.configure(text='''Signs''')
-        # self.SignsFrame.configure(background="#d9d9d9")
-        # self.SignsFrame.configure(width=460)
-
-        # self.StopSign = ttk.Label(self.SignsFrame)
-        # self.StopSign.place(relx=0.27, rely=0.05, height=125, width=125)
-        # self.StopSign.configure(background="#d9d9d9")
-        # self.StopSign.configure(foreground="#000000")
-        # self.StopSign.configure(relief=FLAT)
-        # self.StopSign.configure(text='''Tlabel''')
-        # self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
-        # self.StopSign.configure(image=self._img5)
-
-        # self.NoStopSign = ttk.Label(self.SignsFrame)
-        # self.NoStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
-        # self.NoStopSign.configure(background="#d9d9d9")
-
-        # self.TrafficLights = ttk.Label(self.SignsFrame)
-        # self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
-        # self.TrafficLights.configure(background="#d9d9d9")
-        # self.TrafficLights.configure(foreground="#000000")
-        # self.TrafficLights.configure(relief=FLAT)
-        # self.TrafficLights.configure(text='''Tlabel''')
-        # self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
-        # self.TrafficLights.configure(image=self._img6)
-
-        # self.NoTrafficLights = ttk.Label(self.SignsFrame)
-        # self.NoTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
-        # self.NoTrafficLights.configure(background="#d9d9d9")
-
-        # self.LaneFrame = LabelFrame(top)
-        # self.LaneFrame.place(relx=0.01, rely=0.73, relheight=0.25, relwidth=0.98)
-        # self.LaneFrame.configure(relief=GROOVE)
-        # self.LaneFrame.configure(foreground="black")
-        # self.LaneFrame.configure(text='''Lane''')
-        # self.LaneFrame.configure(background="#d9d9d9")
-        # self.LaneFrame.configure(width=460)
+        print("Welcome to the DeepEye Threat Detector!")
+        print("Configure setup, this press run.")
+        print("To exit and return to this menu, press 'Escape'")
 
     def show_label(self, widget1, widget2):
         widget1.lift(widget2)
@@ -588,11 +591,11 @@ class Window:
         return convertedClassifier, \
             convertedDataset, \
             convertedThreshold, \
-            True, \
-            True, \
-            True, \
-            True, \
-            2, \
+            gui_utils.ObjectDetection, \
+            self.ObjectVisualCheck, \
+            gui_utils.LaneDetection.get(), \
+            self.LaneVisualCheck, \
+            int(self.MonitorId.get()), \
             convertedTopOffset, \
             convertedLeftOffset, \
             convertedWindowWidth, \
@@ -620,6 +623,7 @@ class Window:
             window_height = height)
 
         driving_assistant.object_detector.setup()
+        self.show_label(self.WarningInterfaceFrame, self.setupFrame)
 
         while(True):
             # Register current time to be used for calculating frame rate
@@ -637,6 +641,9 @@ class Window:
                 # Close all Python windows when everything's done
                 cv2.destroyAllWindows()
                 break
+        
+        self.show_label(self.setupFrame, self.WarningInterfaceFrame)
+        print("Returning to Setup Menu")
 
 
     def runProgram(self):
