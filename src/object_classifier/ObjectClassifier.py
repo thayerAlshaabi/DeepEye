@@ -109,12 +109,12 @@ class ObjectClassifier:
         # - Check '../object_detection_api/data/mscoco_label_map.pbtxt' for a full list of category names
         self.categories_dict = None
         self.PEDESTRIAN = 1
-        self.BIKES = [2, 3]
+        self.BIKES = [2, 4]
         self.VEHICLES = [3, 6, 7, 8, 9]
         self.TRAFFIC_LIGHT = 10
         self.STOP_SIGN = 13
         self.PARKING_METER = 14
-        self.ANIMALS = [17, 18, 19, 20, 21, 22, 23, 24, 25]
+        self.OBSTACLES = [17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 31, 33, 37, 62]
 
         # Each box represents a part of the image where a particular object was detected.
         self.detection_boxes = None
@@ -258,7 +258,7 @@ class ObjectClassifier:
             elif obj_id in self.BIKES and confidence_score >= self.classifier_threshold:
                 objects_dict["BIKES"] = True
 
-            elif obj_id in self.ANIMALS and confidence_score >= self.classifier_threshold:
-                objects_dict["ANIMALS"] = True
+            elif obj_id in self.OBSTACLES and confidence_score >= self.classifier_threshold:
+                objects_dict["OBSTACLES"] = True
 
         return objects_dict

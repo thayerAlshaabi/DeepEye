@@ -360,7 +360,7 @@ class Window:
         self.ExitButton.configure(text='''Exit''')
 
 
-        self.RunButton = Button(self.RunExitFrame, command=threading.Thread(target=self.mainLoop).start())
+        self.RunButton = Button(self.RunExitFrame, command=self.runProgram)
         self.RunButton.place(relx=0.09, rely=0.1, height=54, width=187)
         self.RunButton.configure(activebackground="#d9d9d9")
         self.RunButton.configure(activeforeground="#000000")
@@ -559,7 +559,8 @@ class Window:
             self.TopOffset['state'] = NORMAL
             self.LeftOffset['state'] = NORMAL
 
-    def mainLoop(self):
+
+    def set_adas_prams(self):
         convertedThreshold = int(self.Threshold.get()[:-1])/100
         convertedWindowHeight = 0
         convertedWindowWidth = 0
@@ -586,21 +587,39 @@ class Window:
         elif self.DatasetCode.get() == 'Kitti':
             convertedDataset = 'kitti'
 
+        return convertedClassifier, \
+            convertedDataset, \
+            convertedThreshold, \
+            True, \
+            True, \
+            False, \
+            False, \
+            2, \
+            convertedTopOffset, \
+            convertedLeftOffset, \
+            convertedWindowWidth, \
+            convertedWindowHeight
+
+
+
+    def mainLoop(self): 
+        classifier, dataset, threshold, \
+        obj_flag, obj_vis, lane_flag, lane_vis, \
+        mid, top, left, width, height = self.set_adas_prams()
+
         driving_assistant = DrivingAssistant(
-            convertedClassifier, 
-            convertedDataset, 
-            convertedThreshold,
-            True,
-            True,
-            False,
-            False,
-            int(self.MonitorId.get()), 
-            convertedTopOffset,
-            convertedLeftOffset, 
-            convertedWindowWidth, 
-            convertedWindowHeight,
-            1.0
-        )
+            classifier_codename = classifier,
+            dataset_codename = dataset,
+            classifier_threshold = threshold,
+            object_detection = obj_flag,
+            object_visualization = obj_vis,
+            lane_detection = lane_flag,
+            lane_visualization = lane_vis,
+            monitor_id = mid,
+            window_top_offset = top,
+            window_left_offset = left,
+            window_width = width,
+            window_height = height)
 
         driving_assistant.object_detector.setup()
 
@@ -624,15 +643,8 @@ class Window:
 
 
     def runProgram(self):
-
         threading.Thread(target=self.mainLoop).start()
 
-        
-        
-
-
-        #vp_start_warning_interface()
-        #self.Warning_Interface.updateState(self.driving_assistant.threat_classifier())
 
         
 class TextRedirector(object):
@@ -645,6 +657,8 @@ class TextRedirector(object):
         self.widget.configure(state="disabled")
         self.widget.see("end")
 
+    def flush(self):
+        pass
 
 
 # The following code is added to facilitate the Scrolled widgets.

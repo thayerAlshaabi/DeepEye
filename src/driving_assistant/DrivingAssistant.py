@@ -110,7 +110,8 @@ class DrivingAssistant:
             "FAR_RIGHT": False,
             "RIGHT": False,
             "LEFT": False,
-            "CENTER": True
+            "CENTER": False,
+            "UNKNOWN": True
         }
 
     def threat_classifier(self, frame):
@@ -128,33 +129,17 @@ class DrivingAssistant:
             "FAR_RIGHT": False,
             "RIGHT": False,
             "LEFT": False,
-            "CENTER": True
+            "CENTER": False,
+            "UNKNOWN": True
         }
         """
-        objects_dict = self.object_detector.threat_classifier()
 
-        threat_code = self.lane_detector.threat_classifier(frame)
-       
-        lane_dict = {
-            "FAR_LEFT": False,
-            "FAR_RIGHT": False,
-            "RIGHT": False,
-            "LEFT": False,
-            "CENTER": False
-        }
+        if self.object_detection:
+            self.threats.update(self.object_detector.threat_classifier())
 
-        if threat_code == -2:
-            lane_dict["FAR_LEFT"] = True
-        elif threat_code == -1:
-            lane_dict["LEFT"] = True
-        elif threat_code == 2:
-            lane_dict["FAR_RIGHT"] = True
-        elif threat_code == 1:
-            lane_dict["RIGHT"] = True
-        else:
-            lane_dict["CENTER"] = True
+        if self.lane_detection:
+            self.threats.update(self.lane_detector.threat_classifier(frame))
 
-        return {**objects_dict, **lane_dict}
 
 
     def run(self):   
@@ -189,7 +174,7 @@ class DrivingAssistant:
         else:
             pass # skip visualization
         
-        self.threats = self.threat_classifier(self.frame)            
+        self.threat_classifier(self.frame)            
 
 
 
