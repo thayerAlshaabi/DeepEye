@@ -28,3 +28,6 @@ Name | Description
 **Dataset** | There are two options: Coco and Kitti.  Coco is an American trained dataset, with more classes, so this is the default option.  Kitti has less classes, and was trained in Europe.
 **Threshold** | This controls the confidence threshold cutoff for detected objects.  Any object detected with a confidence below the set threshold will not be displayed onscreen.  The default value is 85%.
 **Lane Detection** | Toggles whether lane detection runs.  Requires heavy computing resources.
+
+
+*Note:* press the (ESC) key to exit out of the loop.

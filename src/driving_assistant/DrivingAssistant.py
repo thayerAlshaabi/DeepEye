@@ -83,10 +83,7 @@ class DrivingAssistant:
         if window_scale:
             self.target_window['scale'] = window_scale
 
-
         print("Activating DeepEye Advanced Co-pilot Mode")
-
-
         
         self.object_detector = ObjectClassifier(
             classifier_codename = classifier_codename,
@@ -113,33 +110,6 @@ class DrivingAssistant:
             "CENTER": False,
             "UNKNOWN": True
         }
-
-    def threat_classifier(self, frame):
-        """
-        Run the threat_classifier() methods in both object_detector & lane_detector, 
-        then return a dictionary to indicate any potential threats:
-        {
-            "PEDESTRIAN": False,
-            "STOP_SIGN": False,
-            "TRAFFIC_LIGHT": False,
-            "VEHICLES": False,
-            "BIKES": False,
-            "OBSTACLES": False,
-            "FAR_LEFT": False,
-            "FAR_RIGHT": False,
-            "RIGHT": False,
-            "LEFT": False,
-            "CENTER": False,
-            "UNKNOWN": True
-        }
-        """
-
-        if self.object_detection:
-            self.threats.update(self.object_detector.threat_classifier())
-
-        if self.lane_detection:
-            self.threats.update(self.lane_detector.threat_classifier(frame))
-
 
 
     def run(self):   
@@ -175,6 +145,33 @@ class DrivingAssistant:
             pass # skip visualization
         
         self.threat_classifier(self.frame)            
+
+
+    def threat_classifier(self, frame):
+        """
+        Run the threat_classifier() methods in both object_detector & lane_detector, 
+        then return a dictionary to indicate any potential threats:
+        {
+            "PEDESTRIAN": False,
+            "STOP_SIGN": False,
+            "TRAFFIC_LIGHT": False,
+            "VEHICLES": False,
+            "BIKES": False,
+            "OBSTACLES": False,
+            "FAR_LEFT": False,
+            "FAR_RIGHT": False,
+            "RIGHT": False,
+            "LEFT": False,
+            "CENTER": False,
+            "UNKNOWN": True
+        }
+        """
+
+        if self.object_detection:
+            self.threats.update(self.object_detector.threat_classifier())
+
+        if self.lane_detection:
+            self.threats.update(self.lane_detector.threat_classifier(frame))
 
 
 

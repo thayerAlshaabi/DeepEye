@@ -266,8 +266,7 @@ class Window:
         self.WindowHeight.configure(activebackground="#f9f9f9")
         self.WindowHeight.configure(background="white")
         self.WindowHeight.configure(buttonbackground="#d9d9d9")
-        self.WindowHeight.configure(disabledbackground="#f0f0f0f0f0f0")
-        self.WindowHeight.configure(disabledforeground="#a3a3a3")
+        self.WindowHeight.configure(disabledbackground="#a3a3a3")
         self.WindowHeight.configure(foreground="black")
         self.WindowHeight.configure(from_="1.0")
         self.WindowHeight.configure(highlightbackground="black")
@@ -517,7 +516,7 @@ class Window:
         widget1.lower(widget2)
 
     def updateState(self, threats):   
-        print(threats)        
+        #print(threats)        
         if threats['PEDESTRIAN']:
             self.show_label(self.Pedestrians, self.NoPedestrians)
         else:
@@ -592,8 +591,8 @@ class Window:
             convertedThreshold, \
             True, \
             True, \
-            False, \
-            False, \
+            True, \
+            True, \
             2, \
             convertedTopOffset, \
             convertedLeftOffset, \
@@ -632,8 +631,7 @@ class Window:
 
              # Calculating fps based on the previous registered timer
             frame_rate = 10 / (time.time() - timer)
-            print('frame_rate: {0}'.format(int(frame_rate)))
-
+            #print('frame_rate: {0}'.format(int(frame_rate)))
 
             # Press ESC key to exit.
             if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
