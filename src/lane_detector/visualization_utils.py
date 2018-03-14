@@ -20,6 +20,7 @@ import numpy as np
 import cv2
 import glob
 import collections
+import warnings
 # ---------------------------------------------------------------------------- #
 
 class RoadMarker:
@@ -216,9 +217,8 @@ class Lane:
         self.right_marker.x_axis_pixels = x_target_pixels[right_candidate_pixels]
         self.right_marker.y_axis_pixels = y_target_pixels[right_candidate_pixels]
 
-        # reset flag
-        self.lane_detected = True
-
+        self.lane_detected = False
+        
         # if the left road marker was not detected in the last iteration 
         if not list(self.left_marker.x_axis_pixels) or \
             not list(self.left_marker.y_axis_pixels):
@@ -230,11 +230,23 @@ class Lane:
         
         else: # otherwise, apply least squares polynomial fit
             # returns a vector of coefficients that minimizes the squared error.
-            new_px_left = np.polyfit(self.left_marker.y_axis_pixels, 
-                self.left_marker.x_axis_pixels, 2)
+            with warnings.catch_warnings():
+                warnings.filterwarnings('error')
+                try:
+                    new_px_left = np.polyfit(self.left_marker.y_axis_pixels, 
+                        self.left_marker.x_axis_pixels, 2)
 
-            new_coefficients_left = np.polyfit(self.left_marker.y_axis_pixels * y_ratio, 
-                self.left_marker.x_axis_pixels * x_ratio, 2)
+                    new_coefficients_left = np.polyfit(self.left_marker.y_axis_pixels * y_ratio, 
+                        self.left_marker.x_axis_pixels * x_ratio, 2)
+
+                    # update road marker onto the frame as needed
+                    self.left_marker.adjust(new_px_left, new_coefficients_left, self.lane_detected)
+
+                    self.lane_detected = True
+
+                except np.RankWarning:
+                    self.lane_detected = False
+                
 
         # if the right road marker was not detected in the last iteration
         if not list(self.right_marker.x_axis_pixels) or \
@@ -246,17 +258,25 @@ class Lane:
 
         else: # otherwise, apply least squares polynomial fit
             # returns a vector of coefficients that minimizes the squared error.
-            new_px_right = np.polyfit(self.right_marker.y_axis_pixels, 
-                self.right_marker.x_axis_pixels, 2)
 
-            new_coefficients_right = np.polyfit(self.right_marker.y_axis_pixels * y_ratio, 
-                self.right_marker.x_axis_pixels * x_ratio, 2)
+            with warnings.catch_warnings():
+                warnings.filterwarnings('error')
+                try:
+                    new_px_right = np.polyfit(self.right_marker.y_axis_pixels, 
+                        self.right_marker.x_axis_pixels, 2)
 
-        # update road marker onto the frame as needed
-        self.left_marker.adjust(new_px_left, new_coefficients_left, self.lane_detected)
-        self.right_marker.adjust(new_px_right, new_coefficients_right, self.lane_detected)
+                    new_coefficients_right = np.polyfit(self.right_marker.y_axis_pixels * y_ratio, 
+                        self.right_marker.x_axis_pixels * x_ratio, 2)
 
-        return self.lane_detected
+                    # update road marker onto the frame as needed
+                    self.right_marker.adjust(new_px_right, new_coefficients_right, self.lane_detected)
+                    
+                    self.lane_detected = True
+
+                except np.RankWarning:
+                    self.lane_detected = False
+
+        
 
 
     def highlight(self, 
@@ -269,70 +289,71 @@ class Lane:
         """
         Mark the area enclosed by your lane onto the given frame.
         """
-        if self.lane_detected:
-            frame_height, frame_width, _ = undistorted_frame.shape
+        frame_height, frame_width, _ = undistorted_frame.shape
 
-            # Generate x and y values for plotting
-            metronome = np.linspace(0, frame_height - 1, frame_height)
+        # Generate x and y values for plotting
+        metronome = np.linspace(0, frame_height - 1, frame_height)
 
-            left = self.left_marker.last_observed_pixel[0] * metronome ** 2 + \
-                self.left_marker.last_observed_pixel[1] * metronome + \
-                self.left_marker.last_observed_pixel[2]
+        left = self.left_marker.last_observed_pixel[0] * metronome ** 2 + \
+            self.left_marker.last_observed_pixel[1] * metronome + \
+            self.left_marker.last_observed_pixel[2]
 
-            right = self.right_marker.last_observed_pixel[0] * metronome ** 2 + \
-                self.right_marker.last_observed_pixel[1] * metronome + \
-                self.right_marker.last_observed_pixel[2]
-            
-            warpped_frame = np.zeros_like(undistorted_frame, dtype=np.uint8)
-
-            # reformat arrays to use (cv2.fillPoly)
-            left_points = np.array([np.transpose(np.vstack([left, metronome]))])
-            right_points = np.array([np.flipud(np.transpose(np.vstack([right, metronome])))])
-
-            # array of polygons where each polygon is represented as an array of points.
-            polygons_points = np.hstack((left_points, right_points))
-
-            # mark the area enclosed by your lane onto the given frame
-            cv2.fillPoly(warpped_frame, np.int_([polygons_points]), lane_color)
-
-            # unwarp frame to get the original image(frame)
-            lane_mask = cv2.warpPerspective(warpped_frame, 
-                backward_transformation_matrix, 
-                (frame_width, frame_height))  
-
-            # apply lane mask to the frame 
-            output_frame = cv2.addWeighted(
-                src1 = undistorted_frame, 
-                alpha = alpha, 
-                src2 = lane_mask, 
-                beta = beta, 
-                gamma = gamma)
-
-            # mark the each road divider for the given lane
-            warpped_frame = self.left_marker.mark(warpped_frame)
-            warpped_frame = self.right_marker.mark(warpped_frame)
-            
-            # unwarp frame to get the original image(frame)
-            normal_frame = cv2.warpPerspective(warpped_frame, 
-                backward_transformation_matrix, 
-                (frame_width, frame_height))  
-
-            # copy the last updated frame  
-            road_markers_mask = output_frame.copy()
-            # get target pixels that need to get updated 
-            target_pixels = np.any([normal_frame != 0][0], axis=2) 
-            road_markers_mask[target_pixels] = normal_frame[target_pixels]
-
-            # apply road markers mask to the frame 
-            output_frame = cv2.addWeighted(
-                src1 = road_markers_mask, 
-                alpha = alpha/2, 
-                src2 = output_frame, 
-                beta = beta, 
-                gamma = gamma)
-            return output_frame
+        right = self.right_marker.last_observed_pixel[0] * metronome ** 2 + \
+            self.right_marker.last_observed_pixel[1] * metronome + \
+            self.right_marker.last_observed_pixel[2]
         
-        else: # if lane was not detected 
+        if not set(left).isdisjoint(right):
+            self.lane_detected = False
             return undistorted_frame
 
+        warpped_frame = np.zeros_like(undistorted_frame, dtype=np.uint8)
+
+        # reformat arrays to use (cv2.fillPoly)
+        left_points = np.array([np.transpose(np.vstack([left, metronome]))])
+        right_points = np.array([np.flipud(np.transpose(np.vstack([right, metronome])))])
+
+
+        # array of polygons where each polygon is represented as an array of points.
+        polygons_points = np.hstack((left_points, right_points))
+
+        # mark the area enclosed by your lane onto the given frame
+        cv2.fillPoly(warpped_frame, np.int_([polygons_points]), lane_color)
+
+        # unwarp frame to get the original image(frame)
+        lane_mask = cv2.warpPerspective(warpped_frame, 
+            backward_transformation_matrix, 
+            (frame_width, frame_height))  
+
+        # apply lane mask to the frame 
+        output_frame = cv2.addWeighted(
+            src1 = undistorted_frame, 
+            alpha = alpha, 
+            src2 = lane_mask, 
+            beta = beta, 
+            gamma = gamma)
+
+        # mark the each road divider for the given lane
+        warpped_frame = self.left_marker.mark(warpped_frame)
+        warpped_frame = self.right_marker.mark(warpped_frame)
+        
+        # unwarp frame to get the original image(frame)
+        normal_frame = cv2.warpPerspective(warpped_frame, 
+            backward_transformation_matrix, 
+            (frame_width, frame_height))  
+
+        # copy the last updated frame  
+        road_markers_mask = output_frame.copy()
+        # get target pixels that need to get updated 
+        target_pixels = np.any([normal_frame != 0][0], axis=2) 
+        road_markers_mask[target_pixels] = normal_frame[target_pixels]
+
+        # apply road markers mask to the frame 
+        output_frame = cv2.addWeighted(
+            src1 = road_markers_mask, 
+            alpha = alpha/2, 
+            src2 = output_frame, 
+            beta = beta, 
+            gamma = gamma)
+
+        return output_frame
 
