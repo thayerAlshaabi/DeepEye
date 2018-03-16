@@ -118,10 +118,10 @@ class Window:
         self._img2 = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
         self.Pedestrians.configure(image=self._img2)
 
-        self.NoPedestrians = ttk.Label(self.ObjectsFrame)
-        self.NoPedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
-        self.NoPedestrians.configure(background="#d9d9d9")
-        self.Pedestrians.lift(self.NoPedestrians)
+        self.HidePedestrians = ttk.Label(self.ObjectsFrame)
+        self.HidePedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.HidePedestrians.configure(background="#d9d9d9")
+        self.Pedestrians.lift(self.HidePedestrians)
 
         self.Bikes = ttk.Label(self.ObjectsFrame)
         self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
@@ -131,10 +131,10 @@ class Window:
         self._img3 = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
         self.Bikes.configure(image=self._img3)
 
-        self.NoBikes = ttk.Label(self.ObjectsFrame)
-        self.NoBikes.place(relx=0.43, rely=0.05, height=125, width=130)
-        self.NoBikes.configure(background="#d9d9d9")
-        self.Bikes.lift(self.NoBikes)
+        self.HideBikes = ttk.Label(self.ObjectsFrame)
+        self.HideBikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.HideBikes.configure(background="#d9d9d9")
+        self.Bikes.lift(self.HideBikes)
 
         self.Vehicles = ttk.Label(self.ObjectsFrame)
         self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
@@ -144,10 +144,10 @@ class Window:
         self._img4 = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
         self.Vehicles.configure(image=self._img4)
 
-        self.NoVehicles = ttk.Label(self.ObjectsFrame)
-        self.NoVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
-        self.NoVehicles.configure(background="#d9d9d9")
-        self.Vehicles.lift(self.NoVehicles)
+        self.HideVehicles = ttk.Label(self.ObjectsFrame)
+        self.HideVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.HideVehicles.configure(background="#d9d9d9")
+        self.Vehicles.lift(self.HideVehicles)
         
         self.SignsFrame = LabelFrame(self.WarningInterfaceFrame)
         self.SignsFrame.place(relx=0.01, rely=0.34, relheight=0.32, relwidth=0.98)
@@ -166,10 +166,10 @@ class Window:
         self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
         self.StopSign.configure(image=self._img5)
 
-        self.NoStopSign = ttk.Label(self.SignsFrame)
-        self.NoStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
-        self.NoStopSign.configure(background="#d9d9d9")
-        self.StopSign.lift(self.NoStopSign)
+        self.HideStopSign = ttk.Label(self.SignsFrame)
+        self.HideStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.HideStopSign.configure(background="#d9d9d9")
+        self.StopSign.lift(self.HideStopSign)
 
         self.TrafficLights = ttk.Label(self.SignsFrame)
         self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
@@ -180,10 +180,10 @@ class Window:
         self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
         self.TrafficLights.configure(image=self._img6)
 
-        self.NoTrafficLights = ttk.Label(self.SignsFrame)
-        self.NoTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
-        self.NoTrafficLights.configure(background="#d9d9d9")
-        self.TrafficLights.lift(self.NoTrafficLights)
+        self.HideTrafficLights = ttk.Label(self.SignsFrame)
+        self.HideTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.HideTrafficLights.configure(background="#d9d9d9")
+        self.TrafficLights.lift(self.HideTrafficLights)
 
         self.LaneFrame = LabelFrame(self.WarningInterfaceFrame)
         self.LaneFrame.place(relx=0.01, rely=0.66, relheight=0.32, relwidth=0.98)
@@ -192,6 +192,72 @@ class Window:
         self.LaneFrame.configure(text='''Lane''')
         self.LaneFrame.configure(background="#d9d9d9")
         self.LaneFrame.configure(width=460)
+
+        self.NoLaneDetected = ttk.Label(self.LaneFrame)
+        self.NoLaneDetected.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.NoLaneDetected.configure(background="#d9d9d9")
+        self.NoLaneDetected.configure(foreground="#000000")
+        self.NoLaneDetected.configure(relief=FLAT)
+        self._img10 = PhotoImage(file=os.path.join(FOLDER_PATH, "noLane.gif"))
+        self.NoLaneDetected.configure(image=self._img10)
+
+        self.LaneCentered = ttk.Label(self.LaneFrame)
+        self.LaneCentered.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.LaneCentered.configure(background="#d9d9d9")
+        self.LaneCentered.configure(foreground="#000000")
+        self.LaneCentered.configure(relief=FLAT)
+        self._img7 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneGreen.gif"))
+        self.LaneCentered.configure(image=self._img7)
+
+        self.HideLaneCentered = ttk.Label(self.LaneFrame)
+        self.HideLaneCentered.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.HideLaneCentered.configure(background="#d9d9d9")
+
+        self.LaneOffLeft = ttk.Label(self.LaneFrame)
+        self.LaneOffLeft.place(relx=0.27, rely=0.05, height=125, width=130)
+        self.LaneOffLeft.configure(background="#d9d9d9")
+        self.LaneOffLeft.configure(foreground="#000000")
+        self.LaneOffLeft.configure(relief=FLAT)
+        self._img8 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneYellow.gif"))
+        self.LaneOffLeft.configure(image=self._img8)
+
+        self.HideLaneOffLeft = ttk.Label(self.LaneFrame)
+        self.HideLaneOffLeft.place(relx=0.27, rely=0.05, height=125, width=130)
+        self.HideLaneOffLeft.configure(background="#d9d9d9")
+
+        self.LaneOffLeftBad = ttk.Label(self.LaneFrame)
+        self.LaneOffLeftBad.place(relx=0.11, rely=0.05, height=125, width=130)
+        self.LaneOffLeftBad.configure(background="#d9d9d9")
+        self.LaneOffLeftBad.configure(foreground="#000000")
+        self.LaneOffLeftBad.configure(relief=FLAT)
+        self._img9 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneRed.gif"))
+        self.LaneOffLeftBad.configure(image=self._img9)
+
+        self.HideLaneOffLeftBad = ttk.Label(self.LaneFrame)
+        self.HideLaneOffLeftBad.place(relx=0.11, rely=0.05, height=125, width=130)
+        self.HideLaneOffLeftBad.configure(background="#d9d9d9")
+
+        self.LaneOffRight = ttk.Label(self.LaneFrame)
+        self.LaneOffRight.place(relx=0.59, rely=0.05, height=125, width=130)
+        self.LaneOffRight.configure(background="#d9d9d9")
+        self.LaneOffRight.configure(foreground="#000000")
+        self.LaneOffRight.configure(relief=FLAT)
+        self.LaneOffRight.configure(image=self._img8)
+
+        self.HideLaneOffRight = ttk.Label(self.LaneFrame)
+        self.HideLaneOffRight.place(relx=0.59, rely=0.05, height=125, width=130)
+        self.HideLaneOffRight.configure(background="#d9d9d9")
+
+        self.LaneOffRightBad = ttk.Label(self.LaneFrame)
+        self.LaneOffRightBad.place(relx=0.75, rely=0.05, height=125, width=130)
+        self.LaneOffRightBad.configure(background="#d9d9d9")
+        self.LaneOffRightBad.configure(foreground="#000000")
+        self.LaneOffRightBad.configure(relief=FLAT)
+        self.LaneOffRightBad.configure(image=self._img9)
+
+        self.HideLaneOffRightBad = ttk.Label(self.LaneFrame)
+        self.HideLaneOffRightBad.place(relx=0.75, rely=0.05, height=125, width=130)
+        self.HideLaneOffRightBad.configure(background="#d9d9d9")
 
         self.setupFrame = ttk.Frame(top)
         self.setupFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
@@ -519,32 +585,66 @@ class Window:
         widget1.lower(widget2)
 
     def updateState(self, threats):   
-        #print(threats)        
         if threats['PEDESTRIAN']:
-            self.show_label(self.Pedestrians, self.NoPedestrians)
+            self.show_label(self.Pedestrians, self.HidePedestrians)
         else:
-            self.hide_label(self.Pedestrians, self.NoPedestrians)
+            self.hide_label(self.Pedestrians, self.HidePedestrians)
 
         if threats['BIKES']:
-            self.show_label(self.Bikes, self.NoBikes)
+            self.show_label(self.Bikes, self.HideBikes)
         else:
-            self.hide_label(self.Bikes, self.NoBikes)
+            self.hide_label(self.Bikes, self.HideBikes)
 
         if threats['VEHICLES']:
-            self.show_label(self.Vehicles, self.NoVehicles)
+            self.show_label(self.Vehicles, self.HideVehicles)
         else:
-            self.hide_label(self.Vehicles, self.NoVehicles)
+            self.hide_label(self.Vehicles, self.HideVehicles)
 
         if threats['STOP_SIGN']:
-            self.show_label(self.StopSign, self.NoStopSign)
+            self.show_label(self.StopSign, self.HideStopSign)
         else:
-            self.hide_label(self.StopSign, self.NoStopSign)
+            self.hide_label(self.StopSign, self.HideStopSign)
 
         if threats['TRAFFIC_LIGHT']:
-            self.show_label(self.TrafficLights, self.NoTrafficLights)
+            self.show_label(self.TrafficLights, self.HideTrafficLights)
 
         else:
-            self.hide_label(self.TrafficLights, self.NoTrafficLights)
+            self.hide_label(self.TrafficLights, self.HideTrafficLights)
+
+        #if Lane Detection is enabled
+        if gui_utils.LaneDetection.get() == True:
+            if threats['UNKNOWN']:
+                self.show_label(self.NoLaneDetected, self.HideLaneCentered)
+            else:
+                self.hide_label(self.NoLaneDetected, self.HideLaneCentered)
+
+            if threats['CENTER']:
+                self.show_label(self.LaneCentered, self.HideLaneCentered)
+            else:
+                self.hide_label(self.LaneCentered, self.HideLaneCentered)
+
+            if threats['LEFT']:
+                self.show_label(self.LaneOffLeft, self.HideLaneOffLeft)
+            else:
+                self.hide_label(self.LaneOffLeft, self.HideLaneOffLeft)
+
+            if threats['FAR_LEFT']:
+                self.show_label(self.LaneOffLeftBad, self.HideLaneOffLeftBad)
+            else:
+                self.hide_label(self.LaneOffLeftBad, self.HideLaneOffLeftBad)
+            
+            if threats['RIGHT']:
+                self.show_label(self.LaneOffRight, self.HideLaneOffRight)
+            else:
+                self.hide_label(self.LaneOffRight, self.HideLaneOffRight)
+
+            if threats['FAR_RIGHT']:
+                self.show_label(self.LaneOffRightBad, self.HideLaneOffRightBad)
+            else:
+                self.hide_label(self.LaneOffRightBad, self.HideLaneOffRightBad)
+        else:
+            self.show_label(self.NoLaneDetected, self.HideLaneCentered)
+
 
         
     def FlipState(self):
