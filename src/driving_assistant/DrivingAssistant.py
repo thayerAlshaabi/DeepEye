@@ -133,13 +133,13 @@ class DrivingAssistant:
         #visualization customization 
         if (self.object_visualization and self.lane_visualization) or self.lane_visualization:
             # Display frame with detected objects.
-            cv2.imshow('DeepEye Dashboard', self.frame)
+            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (800, 600)))
 
         elif self.object_visualization and not self.lane_visualization:
             # convert to grayscale to reduce computational power needed for the process
             self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
             # Display frame with detected objects.
-            cv2.imshow('DeepEye Dashboard', self.frame)
+            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (800, 600)) )
 
         else:
             pass # skip visualization
