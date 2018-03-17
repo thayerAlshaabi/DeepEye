@@ -7,14 +7,18 @@
 2. [Running](#running)
 
 ## Introduction
-Our system works in a cycle. Our main class where the cycle starts is the **DrivingAssistant**, containing the main interface.  The main interface controls the next class in the cycle, the **ObjectClassifier**. It also contains the *warnings* function, which issues the driver warnings through artificial speech and/or visual cues. This function is dependent on the **ThreatClassifer** class, at the other end of the cycle.
+Our system works in a cycle. Our master class where the cycle starts is the **DrivingAssistant**, containing the main interface.  The main interface controls the **WindowManger**, which captures frames from a given monitor and send them to the **ObjectClassifier** and **LaneDetector**. It also contains the *warnings* interface, which issues the driver warnings through visual cues on the dashboard. 
+
 
 ## Architecture
+
+![Project's Architecture](project_architecture.png)
+
 Name | Description 
 --- | ---
 **driving_assistant** | This is the main class that controls all advanced driver-assistance systems. For more information please refer to [DrivingAssistant](driving_assistant/README.md).
 **object_classifier** | This class is a deep convolutional neural network implemented using Tensorflow Object Detection API. For more information please refer to [ObjectClassifier](object_classifier/README.md).
-**lane_detector** | This class detects current lane that the car is driving in, then highlights both the road markers, as well as, the area enclosed by your lane onto the given frame. For more information please refer to [LaneDetector](lane_detector/README.md).
+**lane_detector** | This class detects current lane that the car is driving in, then highlights both the road markers, as well as, the area enclosed by your lane onto the given frame using computer vision techniques. For more information please refer to [LaneDetector](lane_detector/README.md).
 
 ## Requirements
 ### Software
