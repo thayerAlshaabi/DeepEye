@@ -2,6 +2,7 @@
 */lane_detector/camera_cal/calibration_data.pickle
 */object_classifier/object_detection/*_coco_2017_11_08
 */object_classifier/object_detection/*_coco_2017_11_08.tar.gz
+*/driving_assistant/user_interface/Thumbs.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -107,3 +108,4 @@ ENV/
 
 # mypy
 .mypy_cache/
+
