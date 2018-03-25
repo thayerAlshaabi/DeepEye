@@ -575,12 +575,14 @@ class Window:
         print("Configure setup, then press run.")
         print("To exit and return to this menu, press 'Esc' key.")
 
+
     def show_label(self, widget1, widget2):
         widget1.lift(widget2)
 
 
     def hide_label(self, widget1, widget2):
         widget1.lower(widget2)
+
 
     def updateState(self, threats):   
         if threats['PEDESTRIAN']:
@@ -643,8 +645,7 @@ class Window:
         else:
             self.show_label(self.NoLaneDetected, self.HideLaneCentered)
 
-
-        
+   
     def FlipState(self):
         self.test = self.windowCheck.get()
             
@@ -701,7 +702,6 @@ class Window:
             convertedWindowHeight
 
 
-
     def mainLoop(self): 
         classifier, dataset, threshold, \
         obj_flag, obj_vis, lane_flag, lane_vis, \
@@ -753,8 +753,7 @@ class Window:
         cv2.destroyAllWindows()
         root.destroy()
 
-
-        
+   
 class TextRedirector(object):
     def __init__(self, widget):
         self.widget = widget
@@ -767,8 +766,6 @@ class TextRedirector(object):
 
     def flush(self):
         pass
-
-
 
 
 # The following code is added to facilitate the Scrolled widgets.
@@ -830,6 +827,7 @@ class AutoScroll(object):
     def __str__(self):
         return str(self.master)
 
+
 def _create_container(func):
     #Creates a ttk Frame with a given master, and use this new frame to
     #place the scrollbars and the widget.
@@ -837,6 +835,7 @@ def _create_container(func):
         container = ttk.Frame(master)
         return func(cls, container, **kw)
     return wrapped
+
 
 class ScrolledListBox(AutoScroll, Listbox):
     #A standard Tkinter Text widget with scrollbars that will

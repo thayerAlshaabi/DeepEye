@@ -47,6 +47,7 @@ class LaneDetector:
 
         self.frame = None
 
+
     def threat_classifier(self):
         """
         Evaluate the current situation for any potential threats
@@ -134,7 +135,6 @@ class LaneDetector:
             lane_dict["CENTER"] = True
 
         return lane_dict
-
 
 
     def detect_lane(self, frame, threats_dict):

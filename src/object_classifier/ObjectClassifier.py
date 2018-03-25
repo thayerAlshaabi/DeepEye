@@ -188,7 +188,6 @@ class ObjectClassifier:
         self.sess = tf.Session(graph = self.detection_graph)
 
 
-
     def threat_classifier(self):
         """
         Evaluate detected objects and return a dictionary to indicate any potential threats.

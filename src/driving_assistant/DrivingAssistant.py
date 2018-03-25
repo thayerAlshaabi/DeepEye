@@ -139,7 +139,7 @@ class DrivingAssistant:
             # convert to grayscale to reduce computational power needed for the process
             self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
             # Display frame with detected objects.
-            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (800, 600)) )
+            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (800, 600)))
 
         else:
             pass # skip visualization
