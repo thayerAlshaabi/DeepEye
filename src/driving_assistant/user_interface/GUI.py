@@ -337,7 +337,6 @@ class Window:
         self.MonitorId = ttk.Combobox(self.WindowManagerFrame)
         #self.MonitorId.configure(background=_fgcolor)
         #self.MonitorId.configure(foreground=_bgcolor)
-        self.MonitorId['state'] = 'readonly'
         self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.2)
         self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
         self.MonitorId.configure(width=113)
@@ -345,6 +344,8 @@ class Window:
         self.value_list = ['0','1', '2']
         self.MonitorId.configure(values=self.value_list)
         self.MonitorId.insert(0,'1')
+        self.MonitorId['state'] = 'readonly'
+
 
         self.windowCheck = IntVar()
         self.CustomWindowCheck = Checkbutton(self.WindowManagerFrame, command=self.FlipState, fg=_fgcolor, bg=_bgcolor)
