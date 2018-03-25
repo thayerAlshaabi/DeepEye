@@ -106,9 +106,11 @@ class Window:
         self.ObjectsFrame = LabelFrame(self.WarningInterfaceFrame)
         self.ObjectsFrame.place(relx=0.01, rely=0.02, relheight=0.32, relwidth=0.98)
         self.ObjectsFrame.configure(relief=GROOVE)
-        self.ObjectsFrame.configure(foreground=_fgcolor)
-        self.ObjectsFrame.configure(text='''Objects''')
         self.ObjectsFrame.configure(background=_bgcolor)
+        self.ObjectsFrame.configure(foreground=_lbcolor)
+        self.ObjectsFrame.configure(highlightbackground=_bgcolor)
+        self.ObjectsFrame.configure(text='''Objects''')
+        
 
         self.Pedestrians = ttk.Label(self.ObjectsFrame)
         self.Pedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
@@ -152,9 +154,10 @@ class Window:
         self.SignsFrame = LabelFrame(self.WarningInterfaceFrame)
         self.SignsFrame.place(relx=0.01, rely=0.34, relheight=0.32, relwidth=0.98)
         self.SignsFrame.configure(relief=GROOVE)
-        self.SignsFrame.configure(foreground=_fgcolor)
-        self.SignsFrame.configure(text='''Signs''')
         self.SignsFrame.configure(background=_bgcolor)
+        self.SignsFrame.configure(foreground=_lbcolor)
+        self.SignsFrame.configure(highlightbackground=_bgcolor)
+        self.SignsFrame.configure(text='''Signs''')
         self.SignsFrame.configure(width=460)
 
         self.StopSign = ttk.Label(self.SignsFrame)
@@ -188,9 +191,10 @@ class Window:
         self.LaneFrame = LabelFrame(self.WarningInterfaceFrame)
         self.LaneFrame.place(relx=0.01, rely=0.66, relheight=0.32, relwidth=0.98)
         self.LaneFrame.configure(relief=GROOVE)
-        self.LaneFrame.configure(foreground=_fgcolor)
-        self.LaneFrame.configure(text='''Lane''')
         self.LaneFrame.configure(background=_bgcolor)
+        self.LaneFrame.configure(foreground=_lbcolor)
+        self.LaneFrame.configure(highlightbackground=_bgcolor)
+        self.LaneFrame.configure(text='''Lane''')
         self.LaneFrame.configure(width=460)
 
         self.NoLaneDetected = ttk.Label(self.LaneFrame)
@@ -300,16 +304,15 @@ class Window:
         self.MonitorIdTitle.place(relx=0.1, rely=0.06, relheight=0.07, relwidth=0.5)
         self.MonitorIdTitle.configure(background=_bgcolor)
         self.MonitorIdTitle.configure(foreground=_fgcolor)
-
         self.MonitorIdTitle.configure(relief=FLAT)
+        
         self.MonitorIdTitle.configure(text='''Monitor ID''')
+
         self.MonitorId = ttk.Combobox(self.WindowManagerFrame)
+        self.MonitorId.configure(background=_fgcolor)
+        self.MonitorId.configure(foreground=_bgcolor)
         self.MonitorId['state'] = 'readonly'
         self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.2)
-        self.MonitorId.configure(background=_abcolor)
-        self.MonitorId.configure(foreground=_fgcolor)
-
-
         self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
         self.MonitorId.configure(width=113)
         self.MonitorId.configure(takefocus="")
@@ -493,6 +496,8 @@ class Window:
         self.ClassifierCode.configure(values=self.value_list)
         self.ClassifierCode.configure(textvariable=gui_utils.ClassiferBox)
         self.ClassifierCode.configure(takefocus="")
+        self.ClassifierCode.configure(background=_fgcolor)
+        self.ClassifierCode.configure(foreground=_bgcolor)
         self.ClassifierCode.insert(0,'Resnet101')
 
         self.DatasetTitle = ttk.Label(self.DatasetFrame)
@@ -508,6 +513,8 @@ class Window:
         self.DatasetCode.configure(values=self.value_list)
         self.DatasetCode.configure(textvariable=gui_utils.DatasetBox)
         self.DatasetCode.configure(takefocus="")
+        self.DatasetCode.configure(background=_fgcolor)
+        self.DatasetCode.configure(foreground=_bgcolor)
         self.DatasetCode.insert(0,'Coco')
 
         self.ThresholdTitle = ttk.Label(self.DatasetFrame)
