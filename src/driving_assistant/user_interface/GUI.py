@@ -223,7 +223,7 @@ class Window:
         self.LaneFrame.configure(width=460)
 
         self.NoLaneDetected = ttk.Label(self.LaneFrame)
-        self.NoLaneDetected.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.NoLaneDetected.place(relx=0.43, rely=0.05, height=130, width=130)
         self.NoLaneDetected.configure(background=_bgcolor)
         self.NoLaneDetected.configure(foreground=_fgcolor)
         self.NoLaneDetected.configure(relief=FLAT)
@@ -231,7 +231,7 @@ class Window:
         self.NoLaneDetected.configure(image=self._img10)
 
         self.LaneCentered = ttk.Label(self.LaneFrame)
-        self.LaneCentered.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.LaneCentered.place(relx=0.43, rely=0.05, height=130, width=130)
         self.LaneCentered.configure(background=_bgcolor)
         self.LaneCentered.configure(foreground=_fgcolor)
         self.LaneCentered.configure(relief=FLAT)
@@ -239,11 +239,11 @@ class Window:
         self.LaneCentered.configure(image=self._img7)
 
         self.HideLaneCentered = ttk.Label(self.LaneFrame)
-        self.HideLaneCentered.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.HideLaneCentered.place(relx=0.43, rely=0.05, height=130, width=130)
         self.HideLaneCentered.configure(background=_bgcolor)
 
         self.LaneOffLeft = ttk.Label(self.LaneFrame)
-        self.LaneOffLeft.place(relx=0.27, rely=0.05, height=125, width=130)
+        self.LaneOffLeft.place(relx=0.27, rely=0.05, height=130, width=130)
         self.LaneOffLeft.configure(background=_bgcolor)
         self.LaneOffLeft.configure(foreground=_fgcolor)
         self.LaneOffLeft.configure(relief=FLAT)
@@ -251,11 +251,11 @@ class Window:
         self.LaneOffLeft.configure(image=self._img8)
 
         self.HideLaneOffLeft = ttk.Label(self.LaneFrame)
-        self.HideLaneOffLeft.place(relx=0.27, rely=0.05, height=125, width=130)
+        self.HideLaneOffLeft.place(relx=0.27, rely=0.05, height=130, width=130)
         self.HideLaneOffLeft.configure(background=_bgcolor)
 
         self.LaneOffLeftBad = ttk.Label(self.LaneFrame)
-        self.LaneOffLeftBad.place(relx=0.11, rely=0.05, height=125, width=130)
+        self.LaneOffLeftBad.place(relx=0.11, rely=0.05, height=130, width=130)
         self.LaneOffLeftBad.configure(background=_bgcolor)
         self.LaneOffLeftBad.configure(foreground=_fgcolor)
         self.LaneOffLeftBad.configure(relief=FLAT)
@@ -263,11 +263,11 @@ class Window:
         self.LaneOffLeftBad.configure(image=self._img9)
 
         self.HideLaneOffLeftBad = ttk.Label(self.LaneFrame)
-        self.HideLaneOffLeftBad.place(relx=0.11, rely=0.05, height=125, width=130)
+        self.HideLaneOffLeftBad.place(relx=0.11, rely=0.05, height=130, width=130)
         self.HideLaneOffLeftBad.configure(background=_bgcolor)
 
         self.LaneOffRight = ttk.Label(self.LaneFrame)
-        self.LaneOffRight.place(relx=0.59, rely=0.05, height=125, width=130)
+        self.LaneOffRight.place(relx=0.59, rely=0.05, height=130, width=130)
         self.LaneOffRight.configure(background=_bgcolor)
         self.LaneOffRight.configure(foreground=_fgcolor)
         self.LaneOffRight.configure(relief=FLAT)
@@ -275,11 +275,11 @@ class Window:
         self.LaneOffRight.configure(image=self._img11)
 
         self.HideLaneOffRight = ttk.Label(self.LaneFrame)
-        self.HideLaneOffRight.place(relx=0.59, rely=0.05, height=125, width=130)
+        self.HideLaneOffRight.place(relx=0.59, rely=0.05, height=130, width=130)
         self.HideLaneOffRight.configure(background=_bgcolor)
 
         self.LaneOffRightBad = ttk.Label(self.LaneFrame)
-        self.LaneOffRightBad.place(relx=0.75, rely=0.05, height=125, width=130)
+        self.LaneOffRightBad.place(relx=0.75, rely=0.05, height=130, width=130)
         self.LaneOffRightBad.configure(background=_bgcolor)
         self.LaneOffRightBad.configure(foreground=_fgcolor)
         self.LaneOffRightBad.configure(relief=FLAT)
@@ -287,7 +287,7 @@ class Window:
         self.LaneOffRightBad.configure(image=self._img12)
 
         self.HideLaneOffRightBad = ttk.Label(self.LaneFrame)
-        self.HideLaneOffRightBad.place(relx=0.75, rely=0.05, height=125, width=130)
+        self.HideLaneOffRightBad.place(relx=0.75, rely=0.05, height=130, width=130)
         self.HideLaneOffRightBad.configure(background=_bgcolor)
 
         self.setupFrame = Frame(top, borderwidth = 0, highlightthickness = 0)
