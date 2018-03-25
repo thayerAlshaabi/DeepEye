@@ -3,7 +3,7 @@
 
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
-import sys, os, threading, time, cv2
+import sys, os, threading, time, cv2, keyboard
 
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
@@ -98,26 +98,23 @@ class Window:
         self.style.map('TCombobox', highlightbackground=[('readonly', _abcolor)])
 
  
-
-
-    
         self.EyeBall = ttk.Label(top)
-        self.EyeBall.place(relx=0.02, rely=0.02, height=99, width=106)
+        self.EyeBall.place(relx=0.03, rely=0.02, height=110, width=900)
         self.EyeBall.configure(background=_bgcolor)
         self.EyeBall.configure(foreground=_fgcolor)
         self.EyeBall.configure(relief=FLAT)
         self.EyeBall.configure(text='''Tlabel''')
         self.EyeBall.configure(width=106)
-        self._img1 = PhotoImage(file=os.path.join(FOLDER_PATH, 'eye.gif'))
+        self._img1 = PhotoImage(file=os.path.join(FOLDER_PATH, 'logo.gif'))
         self.EyeBall.configure(image=self._img1)
 
-        self.Title = ttk.Label(top)
-        self.Title.place(relx=0.2, rely=0.02, height=110, width=496)
-        self.Title.configure(background=_bgcolor)
-        self.Title.configure(foreground=_fgcolor)
-        self.Title.configure(font=font21)
-        self.Title.configure(relief=FLAT)
-        self.Title.configure(text='''DeepEye\nYour Personal CoPilot!''')
+        # self.Title = ttk.Label(top)
+        # self.Title.place(relx=0.2, rely=0.02, height=110, width=496)
+        # self.Title.configure(background=_bgcolor)
+        # self.Title.configure(foreground=_fgcolor)
+        # self.Title.configure(font=font21)
+        # self.Title.configure(relief=FLAT)
+        # self.Title.configure(text='''DeepEye // Driving Copilot''')
 
         self.WarningInterfaceFrame = ttk.Frame(top)
         self.WarningInterfaceFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
@@ -132,7 +129,7 @@ class Window:
         
 
         self.Pedestrians = ttk.Label(self.ObjectsFrame)
-        self.Pedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.Pedestrians.place(relx=0.11, rely=0.05, height=130, width=130)
         self.Pedestrians.configure(background=_bgcolor)
         self.Pedestrians.configure(foreground=_fgcolor)
         self.Pedestrians.configure(relief=FLAT)
@@ -140,12 +137,12 @@ class Window:
         self.Pedestrians.configure(image=self._img2)
 
         self.HidePedestrians = ttk.Label(self.ObjectsFrame)
-        self.HidePedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
+        self.HidePedestrians.place(relx=0.11, rely=0.05, height=130, width=130)
         self.HidePedestrians.configure(background=_bgcolor)
         self.Pedestrians.lift(self.HidePedestrians)
 
         self.Collision = ttk.Label(self.ObjectsFrame)
-        self.Collision.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.Collision.place(relx=0.43, rely=0.05, height=130, width=130)
         self.Collision.configure(background=_bgcolor)
         self.Collision.configure(foreground=_fgcolor)
         self.Collision.configure(relief=FLAT)
@@ -153,7 +150,7 @@ class Window:
         self.Collision.configure(image=self._img13)
 
         self.Bikes = ttk.Label(self.ObjectsFrame)
-        self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.Bikes.place(relx=0.43, rely=0.05, height=130, width=130)
         self.Bikes.configure(background=_bgcolor)
         self.Bikes.configure(foreground=_fgcolor)
         self.Bikes.configure(relief=FLAT)
@@ -161,12 +158,12 @@ class Window:
         self.Bikes.configure(image=self._img3)
 
         self.HideBikes = ttk.Label(self.ObjectsFrame)
-        self.HideBikes.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.HideBikes.place(relx=0.43, rely=0.05, height=130, width=130)
         self.HideBikes.configure(background=_bgcolor)
         self.Bikes.lift(self.HideBikes)
 
         self.Vehicles = ttk.Label(self.ObjectsFrame)
-        self.Vehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.Vehicles.place(relx=0.73, rely=0.05, height=130, width=130)
         self.Vehicles.configure(background=_bgcolor)
         self.Vehicles.configure(foreground=_fgcolor)
         self.Vehicles.configure(relief=FLAT)
@@ -174,7 +171,7 @@ class Window:
         self.Vehicles.configure(image=self._img4)
 
         self.HideVehicles = ttk.Label(self.ObjectsFrame)
-        self.HideVehicles.place(relx=0.73, rely=0.05, height=125, width=125)
+        self.HideVehicles.place(relx=0.73, rely=0.05, height=130, width=130)
         self.HideVehicles.configure(background=_bgcolor)
         self.Vehicles.lift(self.HideVehicles)
         
@@ -188,7 +185,7 @@ class Window:
         self.SignsFrame.configure(width=460)
 
         self.StopSign = ttk.Label(self.SignsFrame)
-        self.StopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.StopSign.place(relx=0.27, rely=0.05, height=135, width=130)
         self.StopSign.configure(background=_bgcolor)
         self.StopSign.configure(foreground=_fgcolor)
         self.StopSign.configure(relief=FLAT)
@@ -197,12 +194,12 @@ class Window:
         self.StopSign.configure(image=self._img5)
 
         self.HideStopSign = ttk.Label(self.SignsFrame)
-        self.HideStopSign.place(relx=0.27, rely=0.05, height=125, width=125)
+        self.HideStopSign.place(relx=0.27, rely=0.05, height=135, width=130)
         self.HideStopSign.configure(background=_bgcolor)
         self.StopSign.lift(self.HideStopSign)
 
         self.TrafficLights = ttk.Label(self.SignsFrame)
-        self.TrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.TrafficLights.place(relx=0.58, rely=0.05, height=130, width=130)
         self.TrafficLights.configure(background=_bgcolor)
         self.TrafficLights.configure(foreground=_fgcolor)
         self.TrafficLights.configure(relief=FLAT)
@@ -211,7 +208,7 @@ class Window:
         self.TrafficLights.configure(image=self._img6)
 
         self.HideTrafficLights = ttk.Label(self.SignsFrame)
-        self.HideTrafficLights.place(relx=0.58, rely=0.05, height=125, width=125)
+        self.HideTrafficLights.place(relx=0.58, rely=0.05, height=130, width=130)
         self.HideTrafficLights.configure(background=_bgcolor)
         self.TrafficLights.lift(self.HideTrafficLights)
 
@@ -605,6 +602,13 @@ class Window:
         self.RunButton.configure(pady="0")
         self.RunButton.configure(text='''Run''')
 
+        self.frame_rate_output = 0
+        self.FramesPerSecond = ttk.Label(top)
+        self.FramesPerSecond.place(relx=0.95, rely=0.97)
+        self.FramesPerSecond.configure(background=_bgcolor)
+        self.FramesPerSecond.configure(foreground=_fgcolor)
+        self.FramesPerSecond.configure(relief=FLAT)
+
         print("Welcome to DeepEye Advanced Driver-Assistance Systems.\n")
         print("Configure setup, then press run.")
         print("To exit and return to this menu, press 'Esc' key.")
@@ -619,6 +623,8 @@ class Window:
 
 
     def updateState(self, threats):
+        
+        self.FramesPerSecond.configure(text=self.frame_rate_output)
 
         if threats['PEDESTRIAN']:
             self.show_label(self.Pedestrians, self.HidePedestrians)
@@ -776,12 +782,12 @@ class Window:
 
              # Calculating fps based on the previous registered timer
             frame_rate = 10 / (time.time() - timer)
-            #print('frame_rate: {0}'.format(int(frame_rate)))
+            self.frame_rate_output = 'FPS: {0}'.format(int(frame_rate))
 
             # Press ESC key to exit.
-            if cv2.waitKey(25) & 0xFF == ord(chr(27)): # ESC=27 (ASCII)
-                # Close all Python windows when everything's done
+            if cv2.waitKey(25) & keyboard.is_pressed('escape'):
                 cv2.destroyAllWindows()
+                self.FramesPerSecond.configure(text="")
                 break
         
         self.show_label(self.setupFrame, self.WarningInterfaceFrame)
