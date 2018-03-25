@@ -74,12 +74,31 @@ class Window:
         self.style.configure('.',background=_bgcolor)
         self.style.configure('.',foreground=_fgcolor)
         self.style.configure('.',font="TkDefaultFont")
-        self.style.map('.',background=
-            [('selected', _compcolor), ('active',_ana2color)])
+        #self.style.map('.',background=
+            #[('selected', _compcolor), ('active',_ana2color)])
 
         top.geometry("952x660")
         top.title("DeepEye")
         top.configure(background=_bgcolor)
+
+        root.option_add('*TCombobox*Listbox*selectBackground', _bgcolor) # change highlight color
+        root.option_add("*TCombobox*Listbox*Background", _abcolor)
+        root.option_add("*TCombobox*Listbox*Foreground", _fgcolor)
+        root.option_add("*TCombobox*Listbox*fieldForeground", _fgcolor)
+        root.option_add("*TCombobox*Listbox*highlightBackground", _abcolor)
+        root.option_add("*TCombobox*Listbox*fieldBackground", _abcolor)
+        root.option_add("*TCombobox*Listbox*selectForeground", _bgcolor)
+
+
+
+        self.style.map('TCombobox', fieldbackground=[('readonly', _abcolor)])
+        self.style.map('TCombobox', selectbackground=[('readonly', _abcolor)])
+        self.style.map('TCombobox', selectforeground=[('readonly', _fgcolor)])
+        self.style.map('TCombobox', fieldforeground=[('readonly', _fgcolor)])
+        self.style.map('TCombobox', highlightbackground=[('readonly', _abcolor)])
+
+ 
+
 
     
         self.EyeBall = ttk.Label(top)
@@ -124,6 +143,14 @@ class Window:
         self.HidePedestrians.place(relx=0.11, rely=0.05, height=125, width=125)
         self.HidePedestrians.configure(background=_bgcolor)
         self.Pedestrians.lift(self.HidePedestrians)
+
+        self.Collision = ttk.Label(self.ObjectsFrame)
+        self.Collision.place(relx=0.43, rely=0.05, height=125, width=130)
+        self.Collision.configure(background=_bgcolor)
+        self.Collision.configure(foreground=_fgcolor)
+        self.Collision.configure(relief=FLAT)
+        self._img13 = PhotoImage(file=os.path.join(FOLDER_PATH, "collision.gif"))
+        self.Collision.configure(image=self._img13)
 
         self.Bikes = ttk.Label(self.ObjectsFrame)
         self.Bikes.place(relx=0.43, rely=0.05, height=125, width=130)
@@ -222,7 +249,7 @@ class Window:
         self.LaneOffLeft.configure(background=_bgcolor)
         self.LaneOffLeft.configure(foreground=_fgcolor)
         self.LaneOffLeft.configure(relief=FLAT)
-        self._img8 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneYellow.gif"))
+        self._img8 = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneYellow.gif"))
         self.LaneOffLeft.configure(image=self._img8)
 
         self.HideLaneOffLeft = ttk.Label(self.LaneFrame)
@@ -234,7 +261,7 @@ class Window:
         self.LaneOffLeftBad.configure(background=_bgcolor)
         self.LaneOffLeftBad.configure(foreground=_fgcolor)
         self.LaneOffLeftBad.configure(relief=FLAT)
-        self._img9 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneRed.gif"))
+        self._img9 = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneRed.gif"))
         self.LaneOffLeftBad.configure(image=self._img9)
 
         self.HideLaneOffLeftBad = ttk.Label(self.LaneFrame)
@@ -246,7 +273,8 @@ class Window:
         self.LaneOffRight.configure(background=_bgcolor)
         self.LaneOffRight.configure(foreground=_fgcolor)
         self.LaneOffRight.configure(relief=FLAT)
-        self.LaneOffRight.configure(image=self._img8)
+        self._img11 = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneYellow.gif"))
+        self.LaneOffRight.configure(image=self._img11)
 
         self.HideLaneOffRight = ttk.Label(self.LaneFrame)
         self.HideLaneOffRight.place(relx=0.59, rely=0.05, height=125, width=130)
@@ -257,7 +285,8 @@ class Window:
         self.LaneOffRightBad.configure(background=_bgcolor)
         self.LaneOffRightBad.configure(foreground=_fgcolor)
         self.LaneOffRightBad.configure(relief=FLAT)
-        self.LaneOffRightBad.configure(image=self._img9)
+        self._img12 = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneRed.gif"))
+        self.LaneOffRightBad.configure(image=self._img12)
 
         self.HideLaneOffRightBad = ttk.Label(self.LaneFrame)
         self.HideLaneOffRightBad.place(relx=0.75, rely=0.05, height=125, width=130)
@@ -309,8 +338,8 @@ class Window:
         self.MonitorIdTitle.configure(text='''Monitor ID''')
 
         self.MonitorId = ttk.Combobox(self.WindowManagerFrame)
-        self.MonitorId.configure(background=_fgcolor)
-        self.MonitorId.configure(foreground=_bgcolor)
+        #self.MonitorId.configure(background=_fgcolor)
+        #self.MonitorId.configure(foreground=_bgcolor)
         self.MonitorId['state'] = 'readonly'
         self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.2)
         self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
@@ -496,9 +525,10 @@ class Window:
         self.ClassifierCode.configure(values=self.value_list)
         self.ClassifierCode.configure(textvariable=gui_utils.ClassiferBox)
         self.ClassifierCode.configure(takefocus="")
-        self.ClassifierCode.configure(background=_fgcolor)
-        self.ClassifierCode.configure(foreground=_bgcolor)
+        #self.ClassifierCode.configure(background=_fgcolor)
+        #self.ClassifierCode.configure(foreground=_bgcolor)
         self.ClassifierCode.insert(0,'Resnet101')
+        self.ClassifierCode['state'] = 'readonly'
 
         self.DatasetTitle = ttk.Label(self.DatasetFrame)
         self.DatasetTitle.place(relx=0.05, rely=0.42, relheight=0.15, relwidth=0.3)
@@ -513,9 +543,10 @@ class Window:
         self.DatasetCode.configure(values=self.value_list)
         self.DatasetCode.configure(textvariable=gui_utils.DatasetBox)
         self.DatasetCode.configure(takefocus="")
-        self.DatasetCode.configure(background=_fgcolor)
-        self.DatasetCode.configure(foreground=_bgcolor)
+        #self.DatasetCode.configure(background=_fgcolor)
+        #self.DatasetCode.configure(foreground=_bgcolor)
         self.DatasetCode.insert(0,'Coco')
+        self.DatasetCode['state'] = 'readonly'
 
         self.ThresholdTitle = ttk.Label(self.DatasetFrame)
         self.ThresholdTitle.place(relx=0.05, rely=0.73, relheight=0.15, relwidth=0.3)
@@ -587,7 +618,8 @@ class Window:
         widget1.lower(widget2)
 
 
-    def updateState(self, threats):   
+    def updateState(self, threats):
+
         if threats['PEDESTRIAN']:
             self.show_label(self.Pedestrians, self.HidePedestrians)
         else:
@@ -613,6 +645,14 @@ class Window:
 
         else:
             self.hide_label(self.TrafficLights, self.HideTrafficLights)
+
+        if threats['COLLISION']:
+            self.hide_label(self.Pedestrians, self.HidePedestrians)
+            self.hide_label(self.Bikes, self.HideBikes)
+            self.hide_label(self.Vehicles, self.HideVehicles)
+            self.show_label(self.Collision, self.HideBikes)
+        else:
+            self.hide_label(self.Collision, self.HideBikes)
 
         #if Lane Detection is enabled
         if gui_utils.LaneDetection.get() == True:
