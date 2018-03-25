@@ -522,8 +522,6 @@ class Window:
         self.ClassifierCode.configure(values=self.value_list)
         self.ClassifierCode.configure(textvariable=gui_utils.ClassiferBox)
         self.ClassifierCode.configure(takefocus="")
-        #self.ClassifierCode.configure(background=_fgcolor)
-        #self.ClassifierCode.configure(foreground=_bgcolor)
         self.ClassifierCode.insert(0,'Resnet101')
         self.ClassifierCode['state'] = 'readonly'
 
@@ -540,8 +538,6 @@ class Window:
         self.DatasetCode.configure(values=self.value_list)
         self.DatasetCode.configure(textvariable=gui_utils.DatasetBox)
         self.DatasetCode.configure(takefocus="")
-        #self.DatasetCode.configure(background=_fgcolor)
-        #self.DatasetCode.configure(foreground=_bgcolor)
         self.DatasetCode.insert(0,'Coco')
         self.DatasetCode['state'] = 'readonly'
 
@@ -562,15 +558,16 @@ class Window:
         self.Threshold.configure(buttonbackground=_bgcolor)
         self.Threshold.configure(highlightcolor=_bgcolor)
         self.Threshold.configure(insertbackground=_fgcolor)
+        self.Threshold.configure(readonlybackground=_abcolor) 
         self.Threshold.configure(increment="0.01")
         self.Threshold.configure(textvariable=gui_utils.ThresholdBox)
-        self.Threshold.configure(to="1.0")
         self.value_list.clear()
         for i in range(101):
             self.value_list.append(str(i)+'%')        
         self.Threshold.configure(values=self.value_list)
         self.Threshold.delete(0,"end")
         self.Threshold.insert(0,'85%')
+        self.Threshold['state'] = 'readonly'
 
         self.ButtonFrame = Frame(self.setupFrame, borderwidth=0, highlightthickness = 0)
         self.ButtonFrame.place(relx=0.31, rely=0.77, relheight=0.17, relwidth=0.66)
@@ -611,7 +608,7 @@ class Window:
 
         print("Welcome to DeepEye Advanced Driver-Assistance Systems.\n")
         print("Configure setup, then press run.")
-        print("To exit and return to this menu, press 'Esc' key.")
+        print("To exit and return to this menu, hold 'Esc' key.")
 
 
     def show_label(self, widget1, widget2):
