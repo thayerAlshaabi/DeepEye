@@ -191,7 +191,7 @@ class Window:
         self.StopSign.configure(foreground=_fgcolor)
         self.StopSign.configure(relief=FLAT)
         self.StopSign.configure(text='''Tlabel''')
-        self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "sign.gif"))
+        self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "stop.gif"))
         self.StopSign.configure(image=self._img5)
 
         self.HideStopSign = ttk.Label(self.SignsFrame)
