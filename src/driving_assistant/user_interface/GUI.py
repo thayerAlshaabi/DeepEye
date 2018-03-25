@@ -7,6 +7,7 @@ import sys, os, threading, time, cv2, keyboard
 
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
+from winsound import *
 
 try:
     from Tkinter import *
@@ -335,8 +336,6 @@ class Window:
         self.MonitorIdTitle.configure(text='''Monitor ID''')
 
         self.MonitorId = ttk.Combobox(self.WindowManagerFrame)
-        #self.MonitorId.configure(background=_fgcolor)
-        #self.MonitorId.configure(foreground=_bgcolor)
         self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.2)
         self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
         self.MonitorId.configure(width=113)
@@ -655,6 +654,7 @@ class Window:
             self.hide_label(self.Bikes, self.HideBikes)
             self.hide_label(self.Vehicles, self.HideVehicles)
             self.show_label(self.Collision, self.HideBikes)
+            threading.Thread(target=self.playBeep).start()
         else:
             self.hide_label(self.Collision, self.HideBikes)
 
@@ -692,7 +692,9 @@ class Window:
         else:
             self.show_label(self.NoLaneDetected, self.HideLaneCentered)
 
-   
+    def playBeep(self):
+        PlaySound(os.path.join(FOLDER_PATH, "beep.wav"), SND_FILENAME)
+
     def FlipState(self):
         self.test = self.windowCheck.get()
             
