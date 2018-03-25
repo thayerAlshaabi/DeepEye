@@ -176,12 +176,12 @@ class LaneDetector:
                     backward_transformation_matrix,
                     lane_color=(255, 0, 0))
                 
-            # if car is slightly off-lane => highlight lane in orange
+            # if car is slightly off-lane => highlight lane in yellow
             elif threats_dict["RIGHT"] or threats_dict["LEFT"]:  
                 self.frame = self.lane.highlight(
                     self.frame, 
                     backward_transformation_matrix,
-                    lane_color=(255, 127, 0))
+                    lane_color=(255, 255, 0))
 
             # if car is relatively in the center of lane => highlight lane in green
             elif threats_dict["CENTER"]: 

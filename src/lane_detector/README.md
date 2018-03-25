@@ -77,7 +77,7 @@ To use a different classifier and/or different dataset you'll need to look at:
 Parameter | Description 
 --- | ---
 **marker_color** | A Tuple of RGB values to indicate the color used to mark the lane divider. <br/> **(255, 255, 255)[White]** by default.
-**lane_color** | A Tuple of RGB values to indicate the color used to mark the area enclosed by your lane. <br/> **(0, 255, 127)** [Green] car is relatively in the center of lane. <br/> **(255, 127, 0)** [Orange] car is slightly off-lane. <br/> **(255, 0, 0)** [Red] car is off-lane.
+**lane_color** | A Tuple of RGB values to indicate the color used to mark the area enclosed by your lane. <br/> **(0, 255, 127)** [Green] car is relatively in the center of lane. <br/> **(255, 255, 0)** [Yellow] car is slightly off-lane. <br/> **(255, 0, 0)** [Red] car is off-lane.
 
 
 ## Licensing Information
