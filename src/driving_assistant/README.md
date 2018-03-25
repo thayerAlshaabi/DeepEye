@@ -31,4 +31,3 @@ Name | Description
 --- | ---
 **user_interface** | This is a graphical user interface built using Python TkInter. For more information  please refer to [GUI](user_interface/README.md).
 **run** | Capture frames, initiate both objects and lane detectors, and then visualize output.
-**threat_classifier** | Evaluate the current situation for any potential threats. 

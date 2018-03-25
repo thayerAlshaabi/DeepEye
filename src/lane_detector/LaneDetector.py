@@ -45,63 +45,9 @@ class LaneDetector:
         self.translation_vectors = calibrator.get_prams()
         # -------------------------------------------------------------------- #
 
+        self.frame = None
 
-    def detect_lane(self, frame):
-        """
-        Mark the area enclosed by your lane onto the given frame.
-        """
-        height, width = frame.shape[:2]
-
-        # adjust calibration prams to the given frame 
-        adjusted_frame = calibrator.set_distortion_coefficients(
-            frame,
-            self.camera_matrix, 
-            self.distortion_coefficients)
-
-        # highlight lanes in the frame
-        lanes_bitmap = transformer.convert_to_bitmap(adjusted_frame)
-
-        # compute transformation matrices to get bird's eye view
-        birdseye_view, forward_transformation_matrix, backward_transformation_matrix = transformer.convert_to_birdseye_view(lanes_bitmap)
-
-        # run a sliding window search to detect lane in the frame  
-        self.lane.detect_pixles(birdseye_view)
-        
-        # evaluate the current situation for any potential threats
-        lane_status = self.threat_classifier(adjusted_frame)
-
-        # highlight lane onto the given frame if it was detected
-        if self.visualization:
-            if lane_status["UNKNOWN"]: 
-                output = adjusted_frame
-     
-            # if car is off-lane => highlight lane in red to alert the driver
-            elif lane_status["FAR_RIGHT"] or lane_status["FAR_LEFT"]:  
-                output = self.lane.highlight(
-                    adjusted_frame, 
-                    backward_transformation_matrix,
-                    lane_color=(255, 0, 0))
-                
-            # if car is slightly off-lane => highlight lane in orange
-            elif lane_status["RIGHT"] or lane_status["LEFT"]:  
-                output = self.lane.highlight(
-                    adjusted_frame, 
-                    backward_transformation_matrix,
-                    lane_color=(255, 127, 0))
-
-            # if car is relatively in the center of lane => highlight lane in green
-            elif lane_status["CENTER"]: 
-                output = self.lane.highlight(
-                    adjusted_frame, 
-                    backward_transformation_matrix,
-                    lane_color=(0, 255, 127))
-        else:
-            output = adjusted_frame
-
-        return cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-    
-
-    def threat_classifier(self, frame):
+    def threat_classifier(self):
         """
         Evaluate the current situation for any potential threats
         return a dict {
@@ -120,10 +66,10 @@ class LaneDetector:
                 "LEFT": False,
                 "CENTER": False,
                 "UNKNOWN": False
-            }
+        }
 
         current_pos = 0
-        monitor_ratio = frame.shape[0]/frame.shape[1]
+        monitor_ratio = self.frame.shape[0]/self.frame.shape[1]
 
         if self.lane.lane_detected:
             # calculate the right and left boundaries of the given lane 
@@ -155,7 +101,7 @@ class LaneDetector:
                     lane_dict["UNKNOWN"] = True
                     
                 else:
-                    center_point = frame.shape[1] / 2   
+                    center_point = self.frame.shape[1] / 2   
                     # calculate the offset from the center point of the given lane
                     current_pos = ((left_boundary + width / 2) - center_point) * monitor_ratio
                     lane_dict["UNKNOWN"] = False
@@ -188,5 +134,65 @@ class LaneDetector:
             lane_dict["CENTER"] = True
 
         return lane_dict
+
+
+
+    def detect_lane(self, frame, threats_dict):
+        """
+        Mark the area enclosed by your lane onto the given frame.
+        """
+        self.frame = frame
+
+        height, width = self.frame.shape[:2]
+
+        # adjust calibration prams to the given frame 
+        self.calb_frame = calibrator.set_distortion_coefficients(
+            self.frame,
+            self.camera_matrix, 
+            self.distortion_coefficients)
+
+        # highlight lanes in the frame
+        lanes_bitmap = transformer.convert_to_bitmap(self.calb_frame)
+
+        # compute transformation matrices to get bird's eye view
+        birdseye_view, forward_transformation_matrix, backward_transformation_matrix = transformer.convert_to_birdseye_view(lanes_bitmap)
+
+        # run a sliding window search to detect lane in the frame  
+        self.lane.detect_pixles(birdseye_view)
+        
+        # evaluate the current situation for any potential threats
+        threats_dict.update(self.threat_classifier())
+
+        # highlight lane onto the given frame if it was detected
+        if self.visualization:
+            # lane was not detected
+            if threats_dict["UNKNOWN"]: 
+                pass
+
+            # if car is off-lane => highlight lane in red to alert the driver
+            elif threats_dict["FAR_RIGHT"] or threats_dict["FAR_LEFT"]:  
+                self.frame = self.lane.highlight(
+                    self.frame, 
+                    backward_transformation_matrix,
+                    lane_color=(255, 0, 0))
+                
+            # if car is slightly off-lane => highlight lane in orange
+            elif threats_dict["RIGHT"] or threats_dict["LEFT"]:  
+                self.frame = self.lane.highlight(
+                    self.frame, 
+                    backward_transformation_matrix,
+                    lane_color=(255, 127, 0))
+
+            # if car is relatively in the center of lane => highlight lane in green
+            elif threats_dict["CENTER"]: 
+                self.frame = self.lane.highlight(
+                    self.frame, 
+                    backward_transformation_matrix,
+                    lane_color=(0, 255, 127))
+        else:
+            pass
+
+        return (cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB), threats_dict)
+    
 
     

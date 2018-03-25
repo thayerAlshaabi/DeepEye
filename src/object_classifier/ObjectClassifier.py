@@ -131,6 +131,8 @@ class ObjectClassifier:
 
         # The decision threshold : all detection scores below this given threshold will be discarded
         self.classifier_threshold = classifier_threshold
+
+        self.frame = None
         # -------------------------------------------------------------------- #
         
 
@@ -186,12 +188,117 @@ class ObjectClassifier:
         self.sess = tf.Session(graph = self.detection_graph)
 
 
-    def scan_road(self, frame):
+    def locate_object(self, relative_coordinates):
+        """
+        Locate object's 3D-spatial position according to its coordinates in the given frame
+        """
+        frame_height, frame_width = self.frame.shape[:2]
+
+        top = relative_coordinates[0] * frame_height
+        left = relative_coordinates[1] * frame_width
+        bottom = relative_coordinates[2] * frame_height
+        right = relative_coordinates[3] * frame_width
+
+        return (top, left, bottom, right)
+
+
+
+    def threat_classifier(self):
+        """
+        Evaluate detected objects and return a dictionary to indicate any potential threats.
+        """
+        objects_dict = {
+            "COLLISION": False,
+            "PEDESTRIAN": False,
+            "STOP_SIGN": False,
+            "TRAFFIC_LIGHT": False,
+            "VEHICLES": False,
+            "BIKES": False,
+            "OBSTACLES": False
+        }
+
+        frame_height, frame_width = self.frame.shape[:2]
+
+        # get the detected objects by the neural network along with their confidence scores
+        detected_objs = zip(self.detection_classes[0], self.detection_scores[0], self.detection_boxes[0])
+
+        # region of interest(roi):
+        # width = 2/3 of the frame's width starting from the center point and expanding 1/3 in each direction
+        # height = the entire frame's height
+        roi = {
+            "top_boundary"      : 0,
+            "left_boundary"     : (frame_width/2) - (frame_width/3),
+            "bottom_boundary"   : frame_height,
+            "right_boundary"    : (frame_width/2) + (frame_width/3)
+        }
+
+
+        # collision region of interest(roi):
+        # width = 1/3 of the frame's width starting from the center point and expanding 1/2 in each direction
+        # height = the bottom-half of frame
+        collision_roi = {
+            "top_boundary"      : frame_height/2,
+            "left_boundary"     : (frame_width/2) - (frame_width/4),
+            "bottom_boundary"   : frame_height,
+            "right_boundary"    : (frame_width/2) + (frame_width/4)
+        }
+        
+        # update warning interface as needed 
+        for(obj_id, confidence_score, pos) in detected_objs:
+            if confidence_score >= self.classifier_threshold:
+                # locate object's 3D-spatial position 
+                loc_top, loc_left, loc_bottom, loc_right = self.locate_object(pos)
+
+                # Collision
+                # -------------------------------------------------------------------- #
+                if(loc_right - loc_left) >= (collision_roi["right_boundary"] - collision_roi["left_boundary"]): 
+                    #print("--COLLISION WARNING! @ {:f} {:f} {:f} {:f}" .format(loc_top, loc_left, loc_bottom, loc_right))
+                    
+                    objects_dict["COLLISION"] = True
+
+                    # highlight object when there's a collision warning
+                    visualization_utils.draw_bounding_box_on_image_array(
+                        self.frame,
+                        pos[0], pos[1], pos[2], pos[3],
+                        thickness=100)
+                # -------------------------------------------------------------------- #
+
+                # classification
+                # -------------------------------------------------------------------- #
+                if obj_id == self.PEDESTRIAN:
+                    # alert the driver if there's a pedestrian crossing in front of the car
+                    if(loc_left >= roi["left_boundary"] and loc_right <= roi["right_boundary"]):
+                        objects_dict["PEDESTRIAN"] = True
+                            
+                elif obj_id == self.STOP_SIGN:
+                    objects_dict["STOP_SIGN"] = True      
+
+                elif obj_id == self.TRAFFIC_LIGHT:
+                    objects_dict["TRAFFIC_LIGHT"] = True
+
+                elif obj_id in self.VEHICLES:
+                    objects_dict["VEHICLES"] = True
+
+                elif obj_id in self.BIKES:
+                    objects_dict["BIKES"] = True
+
+                elif obj_id in self.OBSTACLES:
+                    # alert the driver if there's an obstacle in front of the car
+                    if(loc_left >= roi["left_boundary"] and loc_right <= roi["right_boundary"]):
+                        objects_dict["OBSTACLES"] = True
+                # -------------------------------------------------------------------- #
+                
+        return objects_dict
+
+
+    def scan_road(self, frame, threats_dict):
         """
         Detect objects and classify them into one of the defined categories in the dataset.
         """
+        self.frame = frame
+
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-        frame_expanded = np.expand_dims(frame, axis=0)
+        frame_expanded = np.expand_dims(self.frame, axis=0)
 
         # Definite input and output Tensors for detection_graph
         self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
@@ -210,55 +317,19 @@ class ObjectClassifier:
             [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
             feed_dict={self.image_tensor: frame_expanded})
         
+        # Run threat_classifier() method
+        threats_dict.update(self.threat_classifier())
+
         if self.visualization:
             # Visualization of the results of a detection.
             visualization_utils.visualize_boxes_and_labels_on_image_array(
-                frame,
+                self.frame,
                 np.squeeze(self.detection_boxes),
                 np.squeeze(self.detection_classes).astype(np.int32),
                 np.squeeze(self.detection_scores),
                 self.categories_dict,
                 use_normalized_coordinates=True,
-                min_score_thresh=self.classifier_threshold, line_thickness=1)
-        
-        return frame
+                min_score_thresh=self.classifier_threshold, 
+                line_thickness=1)        
 
-
-    def threat_classifier(self):
-        """
-        Evaluate detected objects and return a dictionary to indicate any potential threats.
-        """
-        objects_dict = {
-            "PEDESTRIAN": False,
-            "STOP_SIGN": False,
-            "TRAFFIC_LIGHT": False,
-            "VEHICLES": False,
-            "BIKES": False,
-            "OBSTACLES": False
-        }
-
-        # get the detected objects by the neural network along with their confidence scores
-        detected_objs = zip(self.detection_classes[0], self.detection_scores[0])
-        
-        # update warning interface as needed 
-        for(obj_id, confidence_score) in detected_objs:
-            
-            if obj_id == self.PEDESTRIAN and confidence_score >= self.classifier_threshold:
-                objects_dict["PEDESTRIAN"] = True
-            
-            elif obj_id == self.STOP_SIGN and confidence_score >= self.classifier_threshold:
-                objects_dict["STOP_SIGN"] = True
-
-            elif obj_id == self.TRAFFIC_LIGHT and confidence_score >= self.classifier_threshold:
-                objects_dict["TRAFFIC_LIGHT"] = True
-
-            elif obj_id in self.VEHICLES and confidence_score >= self.classifier_threshold:
-                objects_dict["VEHICLES"] = True
-
-            elif obj_id in self.BIKES and confidence_score >= self.classifier_threshold:
-                objects_dict["BIKES"] = True
-
-            elif obj_id in self.OBSTACLES and confidence_score >= self.classifier_threshold:
-                objects_dict["OBSTACLES"] = True
-
-        return objects_dict
+        return (self.frame, threats_dict)

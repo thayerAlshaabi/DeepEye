@@ -97,6 +97,7 @@ class DrivingAssistant:
         )
 
         self.threats = {
+            "COLLISION": False,
             "PEDESTRIAN": False,
             "STOP_SIGN": False,
             "TRAFFIC_LIGHT": False,
@@ -124,11 +125,11 @@ class DrivingAssistant:
 
         # detect objects in the given frame
         if self.object_detection:
-            self.frame = self.object_detector.scan_road(self.frame)
+            (self.frame, self.threats) = self.object_detector.scan_road(self.frame, self.threats)
 
         # detect lane in the given frame
         if self.lane_detection:
-            self.frame = self.lane_detector.detect_lane(self.frame)
+            (self.frame, self.threats) = self.lane_detector.detect_lane(self.frame, self.threats)
 
         #visualization customization 
         if (self.object_visualization and self.lane_visualization) or self.lane_visualization:
@@ -144,34 +145,7 @@ class DrivingAssistant:
         else:
             pass # skip visualization
         
-        self.threat_classifier(self.frame)            
-
-
-    def threat_classifier(self, frame):
-        """
-        Run the threat_classifier() methods in both object_detector & lane_detector, 
-        then return a dictionary to indicate any potential threats:
-        {
-            "PEDESTRIAN": False,
-            "STOP_SIGN": False,
-            "TRAFFIC_LIGHT": False,
-            "VEHICLES": False,
-            "BIKES": False,
-            "OBSTACLES": False,
-            "FAR_LEFT": False,
-            "FAR_RIGHT": False,
-            "RIGHT": False,
-            "LEFT": False,
-            "CENTER": False,
-            "UNKNOWN": True
-        }
-        """
-
-        if self.object_detection:
-            self.threats.update(self.object_detector.threat_classifier())
-
-        if self.lane_detection:
-            self.threats.update(self.lane_detector.threat_classifier(frame))
+                   
 
 
 

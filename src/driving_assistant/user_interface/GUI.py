@@ -8,8 +8,6 @@ import sys, os, threading, time, cv2
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
 
-
-
 try:
     from Tkinter import *
 except ImportError:
