@@ -103,7 +103,6 @@ class DrivingAssistant:
             "TRAFFIC_LIGHT": False,
             "VEHICLES": False,
             "BIKES": False,
-            "OBSTACLES": False,
             "FAR_LEFT": False,
             "FAR_RIGHT": False,
             "RIGHT": False,

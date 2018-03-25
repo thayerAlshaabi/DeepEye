@@ -545,7 +545,7 @@ class Window:
         self.ButtonFrame.configure(borderwidth="2")
         self.ButtonFrame.configure(relief=GROOVE)
 
-        self.ExitButton = Button(self.ButtonFrame, command=root.destroy)
+        self.ExitButton = Button(self.ButtonFrame, command=self.exitProgram)
         self.ExitButton.place(relx=0.52, rely=0.1, relheight=.8, relwidth=.45)
         self.ExitButton.configure(activebackground="#d9d9d9")
         self.ExitButton.configure(activeforeground="#000000")
@@ -747,6 +747,11 @@ class Window:
 
     def runProgram(self):
         threading.Thread(target=self.mainLoop).start()
+    
+
+    def exitProgram(self):
+        cv2.destroyAllWindows()
+        root.destroy()
 
 
         

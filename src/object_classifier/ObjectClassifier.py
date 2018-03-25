@@ -114,7 +114,7 @@ class ObjectClassifier:
         self.TRAFFIC_LIGHT = 10
         self.STOP_SIGN = 13
         self.PARKING_METER = 14
-        self.OBSTACLES = [17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 31, 33, 37, 62]
+
 
         # Each box represents a part of the image where a particular object was detected.
         self.detection_boxes = None
@@ -188,20 +188,6 @@ class ObjectClassifier:
         self.sess = tf.Session(graph = self.detection_graph)
 
 
-    def locate_object(self, relative_coordinates):
-        """
-        Locate object's 3D-spatial position according to its coordinates in the given frame
-        """
-        frame_height, frame_width = self.frame.shape[:2]
-
-        top = relative_coordinates[0] * frame_height
-        left = relative_coordinates[1] * frame_width
-        bottom = relative_coordinates[2] * frame_height
-        right = relative_coordinates[3] * frame_width
-
-        return (top, left, bottom, right)
-
-
 
     def threat_classifier(self):
         """
@@ -214,7 +200,6 @@ class ObjectClassifier:
             "TRAFFIC_LIGHT": False,
             "VEHICLES": False,
             "BIKES": False,
-            "OBSTACLES": False
         }
 
         frame_height, frame_width = self.frame.shape[:2]
@@ -232,28 +217,21 @@ class ObjectClassifier:
             "right_boundary"    : (frame_width/2) + (frame_width/3)
         }
 
-
-        # collision region of interest(roi):
-        # width = 1/3 of the frame's width starting from the center point and expanding 1/2 in each direction
-        # height = the bottom-half of frame
-        collision_roi = {
-            "top_boundary"      : frame_height/2,
-            "left_boundary"     : (frame_width/2) - (frame_width/4),
-            "bottom_boundary"   : frame_height,
-            "right_boundary"    : (frame_width/2) + (frame_width/4)
-        }
-        
         # update warning interface as needed 
         for(obj_id, confidence_score, pos) in detected_objs:
             if confidence_score >= self.classifier_threshold:
-                # locate object's 3D-spatial position 
-                loc_top, loc_left, loc_bottom, loc_right = self.locate_object(pos)
+                # Locate object's 3D-spatial position according to its coordinates in the given frame
+                loc_top = pos[0] * frame_height
+                loc_left = pos[1] * frame_width
+                loc_bottom = pos[2] * frame_height
+                loc_right = pos[3] * frame_width
+
+                object_width = loc_right - loc_left
+                object_height = loc_bottom - loc_top
 
                 # Collision
                 # -------------------------------------------------------------------- #
-                if(loc_right - loc_left) >= (collision_roi["right_boundary"] - collision_roi["left_boundary"]): 
-                    #print("--COLLISION WARNING! @ {:f} {:f} {:f} {:f}" .format(loc_top, loc_left, loc_bottom, loc_right))
-                    
+                if object_width >= frame_width/3 and object_height >= frame_height/3: 
                     objects_dict["COLLISION"] = True
 
                     # highlight object when there's a collision warning
@@ -281,11 +259,6 @@ class ObjectClassifier:
 
                 elif obj_id in self.BIKES:
                     objects_dict["BIKES"] = True
-
-                elif obj_id in self.OBSTACLES:
-                    # alert the driver if there's an obstacle in front of the car
-                    if(loc_left >= roi["left_boundary"] and loc_right <= roi["right_boundary"]):
-                        objects_dict["OBSTACLES"] = True
                 # -------------------------------------------------------------------- #
                 
         return objects_dict
