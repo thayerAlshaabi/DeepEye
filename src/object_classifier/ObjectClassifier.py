@@ -207,13 +207,17 @@ class ObjectClassifier:
         detected_objs = zip(self.detection_classes[0], self.detection_scores[0], self.detection_boxes[0])
 
         # region of interest
-        # width = 2/3 of the frame's width starting from the center point and expanding 1/3 in each direction
+        # width = 1/2 of the frame's width starting from the center point and expanding 1/4 in each direction
         # height = the entire frame's height
         roi = {
-            "t": 0,                                 #top_boundary
-            "l": (frame_width/2) - (frame_width/3), #left_boundary
+            "t": frame_height/2,                    #top_boundary
+            "l": (frame_width/2) - (frame_width/4), #left_boundary
             "b": frame_height,                      #bottom_boundary
-            "r": (frame_width/2) + (frame_width/3), #right_boundary
+            "r": (frame_width/2) + (frame_width/4), #right_boundary
+
+            "ct": frame_height/8,
+            "cl": (frame_width/2) - (frame_width/6),
+            "cr": (frame_width/2) + (frame_width/6)
         }
 
         # update warning interface as needed 
@@ -230,10 +234,8 @@ class ObjectClassifier:
 
                 # Collision
                 # -------------------------------------------------------------------- #
-                if object_width >= frame_width/4  \
-                    and object_height >= frame_height/4 \
-                    and loc_left >= roi["l"] \
-                    and loc_right <= roi["r"]: 
+                if loc_bottom < roi["ct"] and \
+                    (loc_left > roi["cl"] or loc_right < roi["cr"]) : 
 
                     objects_dict["COLLISION"] = True
 
@@ -248,7 +250,7 @@ class ObjectClassifier:
                 # -------------------------------------------------------------------- #
                 if obj_id == self.PEDESTRIAN:
                     # alert the driver if there's a pedestrian crossing in front of the car
-                    if(loc_left >= roi["l"] and loc_right <= roi["r"]):
+                    if loc_bottom > roi["t"] and object_height >= (frame_height/6):
                         objects_dict["PEDESTRIAN"] = True
                             
                 elif obj_id == self.STOP_SIGN:
@@ -258,10 +260,12 @@ class ObjectClassifier:
                     objects_dict["TRAFFIC_LIGHT"] = True
 
                 elif obj_id in self.VEHICLES:
-                    objects_dict["VEHICLES"] = True
+                    if loc_bottom > roi["t"]:
+                        objects_dict["VEHICLES"] = True
 
                 elif obj_id in self.BIKES:
-                    objects_dict["BIKES"] = True
+                    if loc_bottom > roi["t"]:
+                        objects_dict["BIKES"] = True
                 # -------------------------------------------------------------------- #
                 
         return objects_dict
