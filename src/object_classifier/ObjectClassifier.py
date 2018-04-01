@@ -215,9 +215,10 @@ class ObjectClassifier:
             "b": frame_height,                      #bottom_boundary
             "r": (frame_width/2) + (frame_width/4), #right_boundary
 
-            "ct": frame_height/8,
-            "cl": (frame_width/2) - (frame_width/6),
-            "cr": (frame_width/2) + (frame_width/6)
+            # COLLISION Detection Area
+            "ct": frame_height/8,                    #top_boundary
+            "cl": (frame_width/2) - (frame_width/6), #left_boundary
+            "cr": (frame_width/2) + (frame_width/6)  #right_boundary
         }
 
         # update warning interface as needed 
