@@ -111,16 +111,23 @@ class DrivingAssistant:
             "UNKNOWN": True
         }
 
+        self.frame_id = 0
+
 
     def run(self):   
         """
         Capture frames, initiate both objects and lane detectors, and then visualize output. 
         """
+        timestamp = str(time.ctime())
+
         # Get raw pixels from the screen, save it to a Numpy array
         pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
         
         # convert pixels from BGRA to RGB values
         self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
+
+        if self.frame_id % 5:
+            cv2.imwrite("test/%s_%d_before.jpg" % (timestamp, self.frame_id), pixels_arr)
 
         # detect objects in the given frame
         if self.object_detection:
@@ -144,6 +151,11 @@ class DrivingAssistant:
         else:
             pass # skip visualization
         
+        if self.frame_id % 5:
+            cv2.imwrite("test/%s_%d_after.jpg" % (timestamp, self.frame_id), self.frame)
+
+        self.frame_id += 1
+
                    
 
 

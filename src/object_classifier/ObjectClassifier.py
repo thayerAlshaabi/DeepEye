@@ -235,7 +235,7 @@ class ObjectClassifier:
 
                 # Collision
                 # -------------------------------------------------------------------- #
-                if obj_bottom > roi["ct"] and (obj_left < roi["cl"] or obj_right > roi["cr"]):
+                if obj_bottom > roi["ct"] and (obj_left > roi["cl"] or obj_right < roi["cr"]):
                     objects_dict["COLLISION"] = True
 
                     # highlight object when there's a collision warning

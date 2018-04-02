@@ -3,6 +3,7 @@
 */object_classifier/object_detection/*_coco_2017_11_08
 */object_classifier/object_detection/*_coco_2017_11_08.tar.gz
 */driving_assistant/user_interface/Thumbs.db
+test/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
