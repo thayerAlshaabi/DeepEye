@@ -378,6 +378,7 @@ class Window:
         self.WindowWidth.configure(from_="1.0")
         self.WindowWidth.configure(textvariable=gui_utils.WindowWidthBox)
         self.WindowWidth.configure(to="5000.0")
+        self.WindowWidth.insert(888,'888')
         self.WindowWidth['state'] = DISABLED
 
         self.HeightTitle = ttk.Label(self.WindowManagerFrame)
@@ -400,6 +401,7 @@ class Window:
         self.WindowHeight.configure(from_="1.0")
         self.WindowHeight.configure(textvariable=gui_utils.WindowHeightBox)
         self.WindowHeight.configure(to="5000.0")
+        self.WindowHeight.insert(480,'480')
         self.WindowHeight['state'] = DISABLED
 
         self.TopTitle = ttk.Label(self.WindowManagerFrame)
