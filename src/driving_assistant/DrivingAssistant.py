@@ -47,6 +47,7 @@ class DrivingAssistant:
         object_visualization = True,
         lane_detection = True,
         lane_visualization = True,
+        diagnostic_mode = True,
         monitor_id = 1,
         window_top_offset = 0,
         window_left_offset = 0,
@@ -89,7 +90,8 @@ class DrivingAssistant:
             classifier_codename = classifier_codename,
             dataset_codename = dataset_codename,
             classifier_threshold = classifier_threshold,
-            visualization = object_visualization
+            visualization = object_visualization,
+            diagnostic_mode = diagnostic_mode
         )
 
         self.lane_detector = LaneDetector(

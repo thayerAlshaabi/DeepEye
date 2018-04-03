@@ -458,7 +458,7 @@ class Window:
         self.CustomizationFrame.configure(text='''Customization''')
 
         self.ObjectDetectionCheck = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
-        self.ObjectDetectionCheck.place(relx=0.08, rely=0.1, relheight=0.15, relwidth=0.85)
+        self.ObjectDetectionCheck.place(relx=0.08, rely=0.01, relheight=0.15, relwidth=0.85)
         self.ObjectDetectionCheck.configure(activebackground=_bgcolor)
         self.ObjectDetectionCheck.configure(disabledforeground=_fgcolor)
         self.ObjectDetectionCheck.configure(activeforeground=_fgcolor)
@@ -469,7 +469,7 @@ class Window:
         self.ObjectDetectionCheck.configure(variable=gui_utils.ObjectDetection)
 
         self.LaneDetectionCheck = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
-        self.LaneDetectionCheck.place(relx=0.08, rely=0.31, relheight=0.15, relwidth=0.85)
+        self.LaneDetectionCheck.place(relx=0.08, rely=0.21, relheight=0.15, relwidth=0.85)
         self.LaneDetectionCheck.configure(activebackground=_bgcolor)
         self.LaneDetectionCheck.configure(disabledforeground=_fgcolor)
         self.LaneDetectionCheck.configure(activeforeground=_fgcolor)
@@ -478,31 +478,40 @@ class Window:
         self.LaneDetectionCheck.configure(justify=LEFT)
         self.LaneDetectionCheck.configure(text='''Enable Lane Detection?                           ''')
         self.LaneDetectionCheck.configure(variable=gui_utils.LaneDetection)
-        self.LaneDetectionCheck.select()
 
-        self.ObjectVisualCheck = IntVar()
         self.EnableObjectVisual = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
-        self.EnableObjectVisual.place(relx=0.08, rely=0.53, relheight=0.15, relwidth=0.85)
+        self.EnableObjectVisual.place(relx=0.08, rely=0.41, relheight=0.15, relwidth=0.85)
         self.EnableObjectVisual.configure(activebackground=_bgcolor)
         self.EnableObjectVisual.configure(disabledforeground=_fgcolor)
         self.EnableObjectVisual.configure(activeforeground=_fgcolor)
         self.EnableObjectVisual.configure(highlightcolor=_bgcolor)
         self.EnableObjectVisual.configure(selectcolor=_bgcolor)
         self.EnableObjectVisual.configure(justify=LEFT)
-        self.EnableObjectVisual.configure(text='''Enable Object Detection Visualization?''')
-        self.EnableObjectVisual.configure(variable=self.ObjectVisualCheck)
+        self.EnableObjectVisual.configure(text='''Enable Object Detection Visualization? ''')
+        self.EnableObjectVisual.configure(variable=gui_utils.ObjectVisual)
 
-        self.LaneVisualCheck = IntVar()
         self.EnableLaneVisual = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
-        self.EnableLaneVisual.place(relx=0.08, rely=0.73, relheight=0.15, relwidth=0.85)
+        self.EnableLaneVisual.place(relx=0.08, rely=0.61, relheight=0.15, relwidth=0.85)
         self.EnableLaneVisual.configure(activebackground=_bgcolor)
         self.EnableLaneVisual.configure(disabledforeground=_fgcolor)
         self.EnableLaneVisual.configure(activeforeground=_fgcolor)
         self.EnableLaneVisual.configure(highlightcolor=_bgcolor)
         self.EnableLaneVisual.configure(selectcolor=_bgcolor)
         self.EnableLaneVisual.configure(justify=LEFT)
-        self.EnableLaneVisual.configure(text='''Enable Lane Visualization?                     ''')
-        self.EnableLaneVisual.configure(variable=self.LaneVisualCheck)
+        self.EnableLaneVisual.configure(text='''Enable Lane Visualization?                      ''')
+        self.EnableLaneVisual.configure(variable=gui_utils.LaneVisual)
+
+
+        self.EnableDiagnosticMode = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
+        self.EnableDiagnosticMode.place(relx=0.07, rely=0.81, relheight=0.15, relwidth=0.85)
+        self.EnableDiagnosticMode.configure(activebackground=_bgcolor)
+        self.EnableDiagnosticMode.configure(disabledforeground=_fgcolor)
+        self.EnableDiagnosticMode.configure(activeforeground=_fgcolor)
+        self.EnableDiagnosticMode.configure(highlightcolor=_bgcolor)
+        self.EnableDiagnosticMode.configure(selectcolor=_bgcolor)
+        self.EnableDiagnosticMode.configure(justify=LEFT)
+        self.EnableDiagnosticMode.configure(text='''Enable Diagnostic Mode?                      ''')
+        self.EnableDiagnosticMode.configure(variable=gui_utils.DiagnosticMode)
 
         self.DatasetFrame = LabelFrame(self.setupFrame)
         self.DatasetFrame.place(relx=0.65, rely=0.425, relheight=0.3, relwidth=0.32)
@@ -743,9 +752,10 @@ class Window:
             convertedDataset, \
             convertedThreshold, \
             gui_utils.ObjectDetection.get(), \
-            self.ObjectVisualCheck.get(), \
+            gui_utils.ObjectVisual.get(), \
             gui_utils.LaneDetection.get(), \
-            self.LaneVisualCheck.get(), \
+            gui_utils.LaneVisual.get(), \
+            gui_utils.DiagnosticMode.get(), \
             int(self.MonitorId.get()), \
             convertedTopOffset, \
             convertedLeftOffset, \
@@ -755,7 +765,7 @@ class Window:
 
     def mainLoop(self): 
         classifier, dataset, threshold, \
-        obj_flag, obj_vis, lane_flag, lane_vis, \
+        obj_flag, obj_vis, lane_flag, lane_vis, diagnostic, \
         mid, top, left, width, height = self.set_adas_prams()
 
         driving_assistant = DrivingAssistant(
@@ -766,6 +776,7 @@ class Window:
             object_visualization = obj_vis,
             lane_detection = lane_flag,
             lane_visualization = lane_vis,
+            diagnostic_mode = diagnostic,
             monitor_id = mid,
             window_top_offset = top,
             window_left_offset = left,

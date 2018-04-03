@@ -73,10 +73,12 @@ class ObjectClassifier:
         classifier_codename = 'faster_rcnn_nas_coco_2017_11_08',
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
-        visualization = False):
+        visualization = False,
+        diagnostic_mode = False):
 
         # Boolean flag for visualization utils
         self.visualization = visualization
+        self.diagnostic_mode = diagnostic_mode
         
         # Folder name for object detection module
         self.FOLDER_NAME = 'object_detection'
@@ -216,12 +218,14 @@ class ObjectClassifier:
             "r": (frame_width/2) + (frame_width/4), #right_boundary
 
             # COLLISION Detection Area
+            # width = 1/4 of the frame's width starting from the center point and expanding 1/8 in each direction
+            # height = 1/10 of the frame's bottom base
             "ct": frame_height - (frame_height/10),  #top_boundary
             "cl": (frame_width/2) - (frame_width/8), #left_boundary
             "cr": (frame_width/2) + (frame_width/8)  #right_boundary
         }
         
-        if self.visualization:
+        if self.diagnostic_mode:
             # draw a box around the area scaned for for PEDESTRIAN/VEHICLES detection
             visualization_utils.draw_bounding_box_on_image_array(
                 self.frame,

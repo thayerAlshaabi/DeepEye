@@ -31,6 +31,12 @@ def set_Tk_var():
     LaneDetection = BooleanVar(value=1)
     global ObjectDetection
     ObjectDetection = BooleanVar(value=1)
+    global ObjectVisual
+    ObjectVisual = BooleanVar(value=0)
+    global LaneVisual
+    LaneVisual = BooleanVar(value=0)
+    global DiagnosticMode
+    DiagnosticMode = BooleanVar(value=0)
     global cpd53
     cpd53 = StringVar()
     global spinbox
@@ -45,8 +51,6 @@ def set_Tk_var():
     TopOffsetBox = StringVar()
     global LeftOffsetBox
     LeftOffsetBox = StringVar()
-    global EnableVisualization
-    EnableVisualization = StringVar()
     global che38
     che38 = StringVar()
     global CommandLineOutput
