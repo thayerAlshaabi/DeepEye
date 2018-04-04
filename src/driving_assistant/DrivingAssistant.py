@@ -26,6 +26,7 @@ to voice warning system that would notify the driver of any upcoming threats.
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
 import numpy as np
+import pandas as pd
 import cv2
 import os, sys
 import mss
@@ -58,6 +59,7 @@ class DrivingAssistant:
         # Boolean flag for feature-customization
         self.object_detection = object_detection
         self.object_visualization = object_visualization
+        self.diagnostic_mode = diagnostic_mode
 
         self.lane_detection = lane_detection
         self.lane_visualization = lane_visualization
@@ -115,21 +117,31 @@ class DrivingAssistant:
 
         self.frame_id = 0
 
+        self.columns = [
+            'FRAME_ID',
+            'PEDESTRIAN',
+            'VEHICLES',
+            'BIKES',
+            'STOP_SIGN',
+            'TRAFFIC_LIGHT',
+            'OFF_LANE'
+        ]
+
+        self.data_frame = pd.DataFrame(columns=self.columns)
+
 
     def run(self):   
         """
         Capture frames, initiate both objects and lane detectors, and then visualize output. 
         """
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-
         # Get raw pixels from the screen, save it to a Numpy array
         pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
         
         # convert pixels from BGRA to RGB values
         self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
 
-        if self.frame_id % 5:
-            cv2.imwrite("test/" + timestamp + "pre.jpg", pixels_arr)
+        if ((self.frame_id % 25) == 0) and (self.diagnostic_mode):
+            cv2.imwrite("test/pre/" + str(self.frame_id/25) + ".jpg", pixels_arr)
 
         # detect objects in the given frame
         if self.object_detection:
@@ -153,8 +165,28 @@ class DrivingAssistant:
         else:
             pass # skip visualization
         
-        if self.frame_id % 5:
-            cv2.imwrite("test/" + timestamp + "post.jpg", self.frame)
+        if ((self.frame_id % 25) == 0) and (self.diagnostic_mode):
+            cv2.imwrite("test/post/" + str(self.frame_id/25) + ".jpg", self.frame)
+            
+            if self.threats["FAR_LEFT"] or \
+                self.threats["FAR_RIGHT"] or \
+                self.threats["RIGHT"]  or \
+                self.threats["LEFT"]:
+                OFF_LANE = 1
+            else:
+                OFF_LANE = 0
+
+            # append a new row 
+            self.data_frame = self.data_frame.append({
+                'FRAME_ID':         self.frame_id,
+                'PEDESTRIAN':       int(self.threats['PEDESTRIAN']),
+                'VEHICLES':         int(self.threats['VEHICLES']),
+                'BIKES':            int(self.threats['BIKES']),
+                'STOP_SIGN':        int(self.threats['STOP_SIGN']),
+                'TRAFFIC_LIGHT':    int(self.threats['TRAFFIC_LIGHT']),
+                'OFF_LANE':         int(OFF_LANE),
+                'COLLISION':        int(self.threats['COLLISION'])
+            }, ignore_index=True)
 
         self.frame_id += 1
 

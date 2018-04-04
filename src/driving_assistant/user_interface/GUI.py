@@ -4,6 +4,7 @@
 # libraries and dependencies
 # ---------------------------------------------------------------------------- #
 import sys, os, threading, time, cv2, keyboard
+import pandas as pd
 
 import driving_assistant.user_interface.gui_utils as gui_utils
 from driving_assistant.DrivingAssistant import *
@@ -804,6 +805,12 @@ class Window:
                 break
         
         self.show_label(self.setupFrame, self.WarningInterfaceFrame)
+
+        
+        timestamp = time.strftime("test/%Y%m%d-%H%M%S.csv")
+        print("Saveing data logs to: ", timestamp)
+        driving_assistant.data_frame.to_csv(timestamp)
+
         print("Returning to Setup Menu")
 
 
