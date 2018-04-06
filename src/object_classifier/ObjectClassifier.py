@@ -209,8 +209,8 @@ class ObjectClassifier:
         detected_objs = zip(self.detection_classes[0], self.detection_scores[0], self.detection_boxes[0])
 
         # region of interest
-        # width = 1/2 of the frame's width starting from the center point and expanding 1/4 in each direction
-        # height = the entire frame's height
+        # width = 1/4 of the frame's width starting from the center point and expanding 1/4 in each direction
+        # height = 1/2 of the frame's height
         roi = {
             "t": frame_height/2,                    #top_boundary
             "l": (frame_width/2) - (frame_width/4), #left_boundary
@@ -219,8 +219,8 @@ class ObjectClassifier:
 
             # COLLISION Detection Area
             # width = 1/4 of the frame's width starting from the center point and expanding 1/8 in each direction
-            # height = 1/10 of the frame's bottom base
-            "ct": frame_height - (frame_height/10),  #top_boundary
+            # height = 1/12 of the frame's bottom base
+            "ct": frame_height - (frame_height/12),  #top_boundary
             "cl": (frame_width/2) - (frame_width/8), #left_boundary
             "cr": (frame_width/2) + (frame_width/8)  #right_boundary
         }
@@ -293,7 +293,7 @@ class ObjectClassifier:
                 # -------------------------------------------------------------------- #
                 if obj_id == self.PEDESTRIAN:
                     # alert the driver if there's a pedestrian crossing in front of the car
-                    if obj_bottom > roi["t"] and object_height >= (frame_height/6):
+                    if obj_bottom > roi["t"]:
                         objects_dict["PEDESTRIAN"] = True
                             
                 elif obj_id == self.STOP_SIGN:

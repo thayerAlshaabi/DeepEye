@@ -807,8 +807,8 @@ class Window:
         self.show_label(self.setupFrame, self.WarningInterfaceFrame)
 
         
-        timestamp = time.strftime("test/%Y%m%d-%H%M%S.csv")
-        print("Saveing data logs to: ", timestamp)
+        timestamp = time.strftime("test/logs/[%Y-%m-%d_%H-%M]--DeepEye.csv")
+        print("Saveing logs to: test/logs/", timestamp)
         driving_assistant.data_frame.to_csv(timestamp)
 
         print("Returning to Setup Menu")

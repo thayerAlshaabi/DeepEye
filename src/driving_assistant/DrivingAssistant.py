@@ -124,7 +124,8 @@ class DrivingAssistant:
             'BIKES',
             'STOP_SIGN',
             'TRAFFIC_LIGHT',
-            'OFF_LANE'
+            'OFF_LANE',
+            'COLLISION'
         ]
 
         self.data_frame = pd.DataFrame(columns=self.columns)
@@ -140,8 +141,8 @@ class DrivingAssistant:
         # convert pixels from BGRA to RGB values
         self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
 
-        if ((self.frame_id % 25) == 0) and (self.diagnostic_mode):
-            cv2.imwrite("test/pre/" + str(self.frame_id/25) + ".jpg", pixels_arr)
+        if (self.frame_id % 10 == 0) and (self.diagnostic_mode):
+            cv2.imwrite("test/pre/" + str(self.frame_id/10) + ".jpg", pixels_arr)
 
         # detect objects in the given frame
         if self.object_detection:
@@ -165,8 +166,8 @@ class DrivingAssistant:
         else:
             pass # skip visualization
         
-        if ((self.frame_id % 25) == 0) and (self.diagnostic_mode):
-            cv2.imwrite("test/post/" + str(self.frame_id/25) + ".jpg", self.frame)
+        if (self.frame_id % 10 == 0) and (self.diagnostic_mode):
+            cv2.imwrite("test/post/" + str(self.frame_id/10) + ".jpg", self.frame)
             
             if self.threats["FAR_LEFT"] or \
                 self.threats["FAR_RIGHT"] or \
@@ -178,14 +179,14 @@ class DrivingAssistant:
 
             # append a new row 
             self.data_frame = self.data_frame.append({
-                'FRAME_ID':         self.frame_id,
+                'FRAME_ID':         int(self.frame_id/10),
                 'PEDESTRIAN':       int(self.threats['PEDESTRIAN']),
                 'VEHICLES':         int(self.threats['VEHICLES']),
                 'BIKES':            int(self.threats['BIKES']),
                 'STOP_SIGN':        int(self.threats['STOP_SIGN']),
                 'TRAFFIC_LIGHT':    int(self.threats['TRAFFIC_LIGHT']),
                 'OFF_LANE':         int(OFF_LANE),
-                'COLLISION':        int(self.threats['COLLISION'])
+                'COLLISION':        int(self.threats['COLLISION']),
             }, ignore_index=True)
 
         self.frame_id += 1
