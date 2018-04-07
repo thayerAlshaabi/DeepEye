@@ -146,26 +146,32 @@ class ObjectClassifier:
             # width = 1/4 of the frame's width starting from the center point and expanding 1/4 in each direction
             # height = 1/2 of the frame's height
             # -------------------------------------------------------------------- #
-            #top_boundary
-            "t": self.frame_height/2,                        
-            #left_boundary  
-            "l": (self.frame_width/2) - (self.frame_width/4),        
-            #bottom_boundary   
-            "b": self.frame_height,                           
-             #right_boundary             
-            "r": (self.frame_width/2) + (self.frame_width/4),      
+            # For Dash Cam
+            "t": self.frame_height/2,                               #top_boundary                    
+            "l": (self.frame_width/2) - (self.frame_width/4),       #left_boundary       
+            "b": self.frame_height,                                 #bottom_boundary   
+            "r": (self.frame_width/2) + (self.frame_width/4),       #right_boundary    
+
+            # For GTA
+            #"t": self.frame_height/3,                               #top_boundary
+            #"l": (self.frame_width/2) - (self.frame_width/2),       #left_boundary
+            #"b": self.frame_height,                                 #bottom_boundary
+            #"r": (self.frame_width/2) + (self.frame_width/2),       #right_boundary  
             # -------------------------------------------------------------------- #  
 
             # COLLISION Detection Area
             # width = 1/5 of the frame's width starting from the center point and expanding 1/8 in each direction
             # height = 1/12 of the frame's bottom base
             # -------------------------------------------------------------------- #
-            #top_boundary
-            "ct": self.frame_height - (self.frame_height/12),     
-            #left_boundary  
-            "cl": (self.frame_width/2) - (self.frame_width/10),         
-            #right_boundary 
-            "cr": (self.frame_width/2) + (self.frame_width/10)     
+            # For Dash Cam
+            "ct": self.frame_height - (self.frame_height/12),       #top_boundary  
+            "cl": (self.frame_width/2) - (self.frame_width/10),     #left_boundary        
+            "cr": (self.frame_width/2) + (self.frame_width/10)      #right_boundary 
+
+            # For GTA
+            #"ct": frame_height - (frame_height/3),                  #top_boundary
+            #"cl": (frame_width/2) - (frame_width/4),                #left_boundary
+            #"cr": (frame_width/2) + (frame_width/4)                 #right_boundary
             # -------------------------------------------------------------------- #   
         }
         # -------------------------------------------------------------------- #

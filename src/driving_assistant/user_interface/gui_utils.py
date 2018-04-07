@@ -37,6 +37,8 @@ def set_Tk_var():
     LaneVisual = BooleanVar(value=0)
     global DiagnosticMode
     DiagnosticMode = BooleanVar(value=0)
+    global FrameRateOutput
+    FrameRateOutput = IntVar(value=0)
     global cpd53
     cpd53 = StringVar()
     global spinbox
@@ -55,6 +57,10 @@ def set_Tk_var():
     che38 = StringVar()
     global CommandLineOutput
     CommandLineOutput = StringVar()
+    global WindowCheck
+    WindowCheck = IntVar()
+
+
 
 def init(top, gui, *args, **kwargs):
     global w, top_level, root

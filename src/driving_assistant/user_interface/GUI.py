@@ -76,8 +76,6 @@ class Window:
         self.style.configure('.',background=_bgcolor)
         self.style.configure('.',foreground=_fgcolor)
         self.style.configure('.',font="TkDefaultFont")
-        #self.style.map('.',background=
-            #[('selected', _compcolor), ('active',_ana2color)])
 
         top.geometry("952x660")
         top.title("DeepEye")
@@ -91,32 +89,30 @@ class Window:
         root.option_add("*TCombobox*Listbox*fieldBackground", _abcolor)
         root.option_add("*TCombobox*Listbox*selectForeground", _bgcolor)
 
-
-
         self.style.map('TCombobox', fieldbackground=[('readonly', _abcolor)])
         self.style.map('TCombobox', selectbackground=[('readonly', _abcolor)])
         self.style.map('TCombobox', selectforeground=[('readonly', _fgcolor)])
         self.style.map('TCombobox', fieldforeground=[('readonly', _fgcolor)])
         self.style.map('TCombobox', highlightbackground=[('readonly', _abcolor)])
 
+        self.logoImg = PhotoImage(file=os.path.join(FOLDER_PATH, 'logo.gif'))
+        self.pedestrianImg = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
+        self.collisionImg = PhotoImage(file=os.path.join(FOLDER_PATH, "collision.gif"))
+        self.bikeImg = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
+        self.vehicleImg = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
+        self.stopSignImg = PhotoImage(file=os.path.join(FOLDER_PATH, "stop.gif"))
+        self.lightImg = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
+        self.noLaneImg = PhotoImage(file=os.path.join(FOLDER_PATH, "noLane.gif"))
+        self.laneGreenImg = PhotoImage(file=os.path.join(FOLDER_PATH, "laneGreen.gif"))
+        self.leftLaneYellowImg = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneYellow.gif"))
+        self.leftLaneRedImg = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneRed.gif"))
+        self.rightLaneYellowImg = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneYellow.gif"))
+        self.rightLaneRedImg = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneRed.gif"))
  
-        self.EyeBall = ttk.Label(top)
-        self.EyeBall.place(relx=0.03, rely=0.02, height=110, width=900)
-        self.EyeBall.configure(background=_bgcolor)
-        self.EyeBall.configure(foreground=_fgcolor)
-        self.EyeBall.configure(relief=FLAT)
-        self.EyeBall.configure(text='''Tlabel''')
-        self.EyeBall.configure(width=106)
-        self._img1 = PhotoImage(file=os.path.join(FOLDER_PATH, 'logo.gif'))
-        self.EyeBall.configure(image=self._img1)
-
-        # self.Title = ttk.Label(top)
-        # self.Title.place(relx=0.2, rely=0.02, height=110, width=496)
-        # self.Title.configure(background=_bgcolor)
-        # self.Title.configure(foreground=_fgcolor)
-        # self.Title.configure(font=font21)
-        # self.Title.configure(relief=FLAT)
-        # self.Title.configure(text='''DeepEye // Driving Copilot''')
+        self.Logo = ttk.Label(top)
+        self.Logo.place(relx=0.03, rely=0.02, height=110, width=900)
+        self.Logo.configure(width=106)
+        self.Logo.configure(image=self.logoImg)
 
         self.WarningInterfaceFrame = ttk.Frame(top)
         self.WarningInterfaceFrame.place(relx=0.02, rely=0.2, relheight=0.78, relwidth=0.96)
@@ -126,17 +122,11 @@ class Window:
         self.ObjectsFrame.configure(relief=GROOVE)
         self.ObjectsFrame.configure(background=_bgcolor)
         self.ObjectsFrame.configure(foreground=_lbcolor)
-        self.ObjectsFrame.configure(highlightbackground=_bgcolor)
         self.ObjectsFrame.configure(text='''Objects''')
-        
 
         self.Pedestrians = ttk.Label(self.ObjectsFrame)
         self.Pedestrians.place(relx=0.11, rely=0.05, height=130, width=130)
-        self.Pedestrians.configure(background=_bgcolor)
-        self.Pedestrians.configure(foreground=_fgcolor)
-        self.Pedestrians.configure(relief=FLAT)
-        self._img2 = PhotoImage(file=os.path.join(FOLDER_PATH, "pedestrian.gif"))
-        self.Pedestrians.configure(image=self._img2)
+        self.Pedestrians.configure(image=self.pedestrianImg)
 
         self.HidePedestrians = ttk.Label(self.ObjectsFrame)
         self.HidePedestrians.place(relx=0.11, rely=0.05, height=130, width=130)
@@ -145,19 +135,11 @@ class Window:
 
         self.Collision = ttk.Label(self.ObjectsFrame)
         self.Collision.place(relx=0.43, rely=0.05, height=130, width=130)
-        self.Collision.configure(background=_bgcolor)
-        self.Collision.configure(foreground=_fgcolor)
-        self.Collision.configure(relief=FLAT)
-        self._img13 = PhotoImage(file=os.path.join(FOLDER_PATH, "collision.gif"))
-        self.Collision.configure(image=self._img13)
+        self.Collision.configure(image=self.collisionImg)
 
         self.Bikes = ttk.Label(self.ObjectsFrame)
         self.Bikes.place(relx=0.43, rely=0.05, height=130, width=130)
-        self.Bikes.configure(background=_bgcolor)
-        self.Bikes.configure(foreground=_fgcolor)
-        self.Bikes.configure(relief=FLAT)
-        self._img3 = PhotoImage(file=os.path.join(FOLDER_PATH, "bike.gif"))
-        self.Bikes.configure(image=self._img3)
+        self.Bikes.configure(image=self.bikeImg)
 
         self.HideBikes = ttk.Label(self.ObjectsFrame)
         self.HideBikes.place(relx=0.43, rely=0.05, height=130, width=130)
@@ -166,11 +148,7 @@ class Window:
 
         self.Vehicles = ttk.Label(self.ObjectsFrame)
         self.Vehicles.place(relx=0.73, rely=0.05, height=130, width=130)
-        self.Vehicles.configure(background=_bgcolor)
-        self.Vehicles.configure(foreground=_fgcolor)
-        self.Vehicles.configure(relief=FLAT)
-        self._img4 = PhotoImage(file=os.path.join(FOLDER_PATH, "car.gif"))
-        self.Vehicles.configure(image=self._img4)
+        self.Vehicles.configure(image=self.vehicleImg)
 
         self.HideVehicles = ttk.Label(self.ObjectsFrame)
         self.HideVehicles.place(relx=0.73, rely=0.05, height=130, width=130)
@@ -182,18 +160,11 @@ class Window:
         self.SignsFrame.configure(relief=GROOVE)
         self.SignsFrame.configure(background=_bgcolor)
         self.SignsFrame.configure(foreground=_lbcolor)
-        self.SignsFrame.configure(highlightbackground=_bgcolor)
         self.SignsFrame.configure(text='''Signs''')
-        self.SignsFrame.configure(width=460)
 
         self.StopSign = ttk.Label(self.SignsFrame)
         self.StopSign.place(relx=0.27, rely=0.05, height=135, width=130)
-        self.StopSign.configure(background=_bgcolor)
-        self.StopSign.configure(foreground=_fgcolor)
-        self.StopSign.configure(relief=FLAT)
-        self.StopSign.configure(text='''Tlabel''')
-        self._img5 = PhotoImage(file=os.path.join(FOLDER_PATH, "stop.gif"))
-        self.StopSign.configure(image=self._img5)
+        self.StopSign.configure(image=self.stopSignImg)
 
         self.HideStopSign = ttk.Label(self.SignsFrame)
         self.HideStopSign.place(relx=0.27, rely=0.05, height=135, width=130)
@@ -202,12 +173,7 @@ class Window:
 
         self.TrafficLights = ttk.Label(self.SignsFrame)
         self.TrafficLights.place(relx=0.58, rely=0.05, height=130, width=130)
-        self.TrafficLights.configure(background=_bgcolor)
-        self.TrafficLights.configure(foreground=_fgcolor)
-        self.TrafficLights.configure(relief=FLAT)
-        self.TrafficLights.configure(text='''Tlabel''')
-        self._img6 = PhotoImage(file=os.path.join(FOLDER_PATH, "light.gif"))
-        self.TrafficLights.configure(image=self._img6)
+        self.TrafficLights.configure(image=self.lightImg)
 
         self.HideTrafficLights = ttk.Label(self.SignsFrame)
         self.HideTrafficLights.place(relx=0.58, rely=0.05, height=130, width=130)
@@ -219,25 +185,15 @@ class Window:
         self.LaneFrame.configure(relief=GROOVE)
         self.LaneFrame.configure(background=_bgcolor)
         self.LaneFrame.configure(foreground=_lbcolor)
-        self.LaneFrame.configure(highlightbackground=_bgcolor)
         self.LaneFrame.configure(text='''Lane''')
-        self.LaneFrame.configure(width=460)
 
         self.NoLaneDetected = ttk.Label(self.LaneFrame)
         self.NoLaneDetected.place(relx=0.43, rely=0.05, height=130, width=130)
-        self.NoLaneDetected.configure(background=_bgcolor)
-        self.NoLaneDetected.configure(foreground=_fgcolor)
-        self.NoLaneDetected.configure(relief=FLAT)
-        self._img10 = PhotoImage(file=os.path.join(FOLDER_PATH, "noLane.gif"))
-        self.NoLaneDetected.configure(image=self._img10)
+        self.NoLaneDetected.configure(image=self.noLaneImg)
 
         self.LaneCentered = ttk.Label(self.LaneFrame)
         self.LaneCentered.place(relx=0.43, rely=0.05, height=130, width=130)
-        self.LaneCentered.configure(background=_bgcolor)
-        self.LaneCentered.configure(foreground=_fgcolor)
-        self.LaneCentered.configure(relief=FLAT)
-        self._img7 = PhotoImage(file=os.path.join(FOLDER_PATH, "laneGreen.gif"))
-        self.LaneCentered.configure(image=self._img7)
+        self.LaneCentered.configure(image=self.laneGreenImg)
 
         self.HideLaneCentered = ttk.Label(self.LaneFrame)
         self.HideLaneCentered.place(relx=0.43, rely=0.05, height=130, width=130)
@@ -245,11 +201,7 @@ class Window:
 
         self.LaneOffLeft = ttk.Label(self.LaneFrame)
         self.LaneOffLeft.place(relx=0.27, rely=0.05, height=130, width=130)
-        self.LaneOffLeft.configure(background=_bgcolor)
-        self.LaneOffLeft.configure(foreground=_fgcolor)
-        self.LaneOffLeft.configure(relief=FLAT)
-        self._img8 = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneYellow.gif"))
-        self.LaneOffLeft.configure(image=self._img8)
+        self.LaneOffLeft.configure(image=self.leftLaneYellowImg)
 
         self.HideLaneOffLeft = ttk.Label(self.LaneFrame)
         self.HideLaneOffLeft.place(relx=0.27, rely=0.05, height=130, width=130)
@@ -257,11 +209,7 @@ class Window:
 
         self.LaneOffLeftBad = ttk.Label(self.LaneFrame)
         self.LaneOffLeftBad.place(relx=0.11, rely=0.05, height=130, width=130)
-        self.LaneOffLeftBad.configure(background=_bgcolor)
-        self.LaneOffLeftBad.configure(foreground=_fgcolor)
-        self.LaneOffLeftBad.configure(relief=FLAT)
-        self._img9 = PhotoImage(file=os.path.join(FOLDER_PATH, "leftLaneRed.gif"))
-        self.LaneOffLeftBad.configure(image=self._img9)
+        self.LaneOffLeftBad.configure(image=self.leftLaneRedImg)
 
         self.HideLaneOffLeftBad = ttk.Label(self.LaneFrame)
         self.HideLaneOffLeftBad.place(relx=0.11, rely=0.05, height=130, width=130)
@@ -269,11 +217,7 @@ class Window:
 
         self.LaneOffRight = ttk.Label(self.LaneFrame)
         self.LaneOffRight.place(relx=0.59, rely=0.05, height=130, width=130)
-        self.LaneOffRight.configure(background=_bgcolor)
-        self.LaneOffRight.configure(foreground=_fgcolor)
-        self.LaneOffRight.configure(relief=FLAT)
-        self._img11 = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneYellow.gif"))
-        self.LaneOffRight.configure(image=self._img11)
+        self.LaneOffRight.configure(image=self.rightLaneYellowImg)
 
         self.HideLaneOffRight = ttk.Label(self.LaneFrame)
         self.HideLaneOffRight.place(relx=0.59, rely=0.05, height=130, width=130)
@@ -281,11 +225,7 @@ class Window:
 
         self.LaneOffRightBad = ttk.Label(self.LaneFrame)
         self.LaneOffRightBad.place(relx=0.75, rely=0.05, height=130, width=130)
-        self.LaneOffRightBad.configure(background=_bgcolor)
-        self.LaneOffRightBad.configure(foreground=_fgcolor)
-        self.LaneOffRightBad.configure(relief=FLAT)
-        self._img12 = PhotoImage(file=os.path.join(FOLDER_PATH, "rightLaneRed.gif"))
-        self.LaneOffRightBad.configure(image=self._img12)
+        self.LaneOffRightBad.configure(image=self.rightLaneRedImg)
 
         self.HideLaneOffRightBad = ttk.Label(self.LaneFrame)
         self.HideLaneOffRightBad.place(relx=0.75, rely=0.05, height=130, width=130)
@@ -304,7 +244,6 @@ class Window:
         self.OutputFrame.configure(foreground=_lbcolor)
         self.OutputFrame.configure(highlightbackground=_bgcolor)
         self.OutputFrame.configure(text='''Setup Console''')
-        
 
         self.CommandLineOutput = ScrolledListBox(self.OutputFrame, borderwidth = 0, highlightthickness = 0)
         self.CommandLineOutput.place(relx=0.01, rely=0.02, relheight=0.93, relwidth=0.98)
@@ -318,7 +257,6 @@ class Window:
         self.CommandLineOutput.configure(selectforeground=_bgcolor)
         self.CommandLineOutput.configure(listvariable=gui_utils.CommandLineOutput)
         self.CommandLineOutput.see("end")
-        sys.stdout = TextRedirector(self.CommandLineOutput)
 
         self.WindowManagerFrame = LabelFrame(self.setupFrame)
         self.WindowManagerFrame.place(relx=0.03, rely=0.425, relheight=0.51, relwidth=0.25)
@@ -330,24 +268,18 @@ class Window:
 
         self.MonitorIdTitle = ttk.Label(self.WindowManagerFrame)
         self.MonitorIdTitle.place(relx=0.1, rely=0.06, relheight=0.07, relwidth=0.5)
-        self.MonitorIdTitle.configure(background=_bgcolor)
         self.MonitorIdTitle.configure(foreground=_fgcolor)
-        self.MonitorIdTitle.configure(relief=FLAT)
-        
         self.MonitorIdTitle.configure(text='''Monitor ID''')
 
         self.MonitorId = ttk.Combobox(self.WindowManagerFrame)
-        self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.2)
+        self.MonitorId.place(relx=0.42, rely=0.06, relheight=0.08, relwidth=0.5)
         self.MonitorId.configure(textvariable=gui_utils.MonitorIDBox)
-        self.MonitorId.configure(width=113)
         self.MonitorId.configure(takefocus="")
         self.value_list = ['0','1', '2']
         self.MonitorId.configure(values=self.value_list)
         self.MonitorId.insert(0,'1')
         self.MonitorId['state'] = 'readonly'
 
-
-        self.windowCheck = IntVar()
         self.CustomWindowCheck = Checkbutton(self.WindowManagerFrame, command=self.FlipState, fg=_fgcolor, bg=_bgcolor)
         self.CustomWindowCheck.place(relx=0.21, rely=0.21, relheight=0.09, relwidth=0.7)
         self.CustomWindowCheck.configure(activebackground=_bgcolor)
@@ -357,13 +289,11 @@ class Window:
         self.CustomWindowCheck.configure(selectcolor=_bgcolor)
         self.CustomWindowCheck.configure(justify=LEFT)
         self.CustomWindowCheck.configure(text='''Set Custom Window Size?''')
-        self.CustomWindowCheck.configure(variable=self.windowCheck)
+        self.CustomWindowCheck.configure(variable=gui_utils.WindowCheck)
         
         self.WidthTitle = ttk.Label(self.WindowManagerFrame)
         self.WidthTitle.place(relx=0.08, rely=0.37, relheight=0.07, relwidth=0.5)
-        self.WidthTitle.configure(background=_bgcolor)
         self.WidthTitle.configure(foreground=_fgcolor)
-        self.WidthTitle.configure(relief=FLAT)
         self.WidthTitle.configure(text='''         Width''')
 
         self.WindowWidth = Spinbox(self.WindowManagerFrame, from_=1.0, to=5000.0)
@@ -384,9 +314,7 @@ class Window:
 
         self.HeightTitle = ttk.Label(self.WindowManagerFrame)
         self.HeightTitle.place(relx=0.08, rely=0.53, relheight=0.07, relwidth=0.5)
-        self.HeightTitle.configure(background=_bgcolor)
         self.HeightTitle.configure(foreground=_fgcolor)
-        self.HeightTitle.configure(relief=FLAT)
         self.HeightTitle.configure(text='''        Height''')
 
         self.WindowHeight = Spinbox(self.WindowManagerFrame, from_=1.0, to=5000.0)
@@ -407,9 +335,7 @@ class Window:
 
         self.TopTitle = ttk.Label(self.WindowManagerFrame)
         self.TopTitle.place(relx=0.08, rely=0.69, relheight=0.07, relwidth=0.5)
-        self.TopTitle.configure(background=_bgcolor)
         self.TopTitle.configure(foreground=_fgcolor)
-        self.TopTitle.configure(relief=FLAT)
         self.TopTitle.configure(text='''  Top Offest''')
 
         self.TopOffset = Spinbox(self.WindowManagerFrame, from_=0.0, to=5000.0)
@@ -430,9 +356,7 @@ class Window:
 
         self.LeftTitle = ttk.Label(self.WindowManagerFrame)
         self.LeftTitle.place(relx=.08, rely=0.84, relheight=0.07, relwidth=0.5)
-        self.LeftTitle.configure(background=_bgcolor)
         self.LeftTitle.configure(foreground=_fgcolor)
-        self.LeftTitle.configure(relief=FLAT)
         self.LeftTitle.configure(text='''   Left Offset''')
 
         self.LeftOffset = Spinbox(self.WindowManagerFrame, from_=0.0, to=5000.0)
@@ -452,10 +376,9 @@ class Window:
         self.LeftOffset['state'] = DISABLED
 
         self.CustomizationFrame = LabelFrame(self.setupFrame)
-        self.CustomizationFrame.place(relx=0.31, rely=0.425, relheight=0.3, relwidth=0.31)
+        self.CustomizationFrame.place(relx=0.31, rely=0.425, relheight=0.32, relwidth=0.31)
         self.CustomizationFrame.configure(background=_bgcolor)
         self.CustomizationFrame.configure(foreground=_lbcolor)
-        self.CustomizationFrame.configure(highlightbackground=_bgcolor)
         self.CustomizationFrame.configure(text='''Customization''')
 
         self.ObjectDetectionCheck = Checkbutton(self.CustomizationFrame, fg=_fgcolor, bg=_bgcolor)
@@ -515,17 +438,14 @@ class Window:
         self.EnableDiagnosticMode.configure(variable=gui_utils.DiagnosticMode)
 
         self.DatasetFrame = LabelFrame(self.setupFrame)
-        self.DatasetFrame.place(relx=0.65, rely=0.425, relheight=0.3, relwidth=0.32)
+        self.DatasetFrame.place(relx=0.65, rely=0.425, relheight=0.32, relwidth=0.32)
         self.DatasetFrame.configure(background=_bgcolor)
         self.DatasetFrame.configure(foreground=_lbcolor)
-        self.DatasetFrame.configure(highlightbackground=_bgcolor)
         self.DatasetFrame.configure(text='''CNN''')
 
         self.ClassifierTitle = ttk.Label(self.DatasetFrame)
         self.ClassifierTitle.place(relx=0.05, rely=0.1, relheight=0.15, relwidth=0.3)
-        self.ClassifierTitle.configure(background=_bgcolor)
         self.ClassifierTitle.configure(foreground=_fgcolor)
-        self.ClassifierTitle.configure(relief=FLAT)
         self.ClassifierTitle.configure(text='''  Identifier''')
 
         self.ClassifierCode = ttk.Combobox(self.DatasetFrame)
@@ -539,9 +459,7 @@ class Window:
 
         self.DatasetTitle = ttk.Label(self.DatasetFrame)
         self.DatasetTitle.place(relx=0.05, rely=0.42, relheight=0.15, relwidth=0.3)
-        self.DatasetTitle.configure(background=_bgcolor)
         self.DatasetTitle.configure(foreground=_fgcolor)
-        self.DatasetTitle.configure(relief=FLAT)
         self.DatasetTitle.configure(text='''    Dataset''')
 
         self.DatasetCode = ttk.Combobox(self.DatasetFrame)
@@ -555,11 +473,13 @@ class Window:
 
         self.ThresholdTitle = ttk.Label(self.DatasetFrame)
         self.ThresholdTitle.place(relx=0.05, rely=0.73, relheight=0.15, relwidth=0.3)
-        self.ThresholdTitle.configure(background=_bgcolor)
         self.ThresholdTitle.configure(foreground=_fgcolor)
-        self.ThresholdTitle.configure(relief=FLAT)
         self.ThresholdTitle.configure(text='''Threshold''')
         
+        self.value_list.clear()
+        for i in range(101):
+            self.value_list.append(str(i)+'%')
+
         self.Threshold = Spinbox(self.DatasetFrame, from_=0.0, to=1.0)
         self.Threshold.place(relx=0.3, rely=0.73, relheight=0.15, relwidth=0.58)
         self.Threshold.configure(bg=_abcolor)
@@ -572,10 +492,7 @@ class Window:
         self.Threshold.configure(insertbackground=_fgcolor)
         self.Threshold.configure(readonlybackground=_abcolor) 
         self.Threshold.configure(increment="0.01")
-        self.Threshold.configure(textvariable=gui_utils.ThresholdBox)
-        self.value_list.clear()
-        for i in range(101):
-            self.value_list.append(str(i)+'%')        
+        self.Threshold.configure(textvariable=gui_utils.ThresholdBox)        
         self.Threshold.configure(values=self.value_list)
         self.Threshold.delete(0,"end")
         self.Threshold.insert(0,'85%')
@@ -583,12 +500,10 @@ class Window:
 
         self.ButtonFrame = Frame(self.setupFrame, borderwidth=0, highlightthickness = 0)
         self.ButtonFrame.place(relx=0.31, rely=0.77, relheight=0.17, relwidth=0.66)
-        self.ButtonFrame.configure(relief=GROOVE)
         self.ButtonFrame.configure(background=_bgcolor)
-        self.ButtonFrame.configure(highlightbackground=_bgcolor)
 
         self.ExitButton = Button(self.ButtonFrame, command=self.exitProgram, borderwidth = 0, highlightthickness = 0)
-        self.ExitButton.place(relx=0.52, rely=0.1, relheight=.8, relwidth=.45)
+        self.ExitButton.place(relx=0.52, rely=0.16, relheight=.8, relwidth=.49)
         self.ExitButton.configure(activebackground=_bgcolor)
         self.ExitButton.configure(activeforeground=_fgcolor)
         self.ExitButton.configure(background="#731A1A")
@@ -600,7 +515,7 @@ class Window:
         self.ExitButton.configure(text='''Exit''')
 
         self.RunButton = Button(self.ButtonFrame, command=self.runProgram, borderwidth = 0, highlightthickness = 0)
-        self.RunButton.place(relx=0.03, rely=0.1, relheight=.8, relwidth=.45)
+        self.RunButton.place(relx=0.0, rely=0.16, relheight=.8, relwidth=.47)
         self.RunButton.configure(activebackground=_bgcolor)
         self.RunButton.configure(activeforeground=_fgcolor)
         self.RunButton.configure(background="#60A116")
@@ -611,13 +526,11 @@ class Window:
         self.RunButton.configure(pady="0")
         self.RunButton.configure(text='''Run''')
 
-        self.frame_rate_output = 0
         self.FramesPerSecond = ttk.Label(top)
         self.FramesPerSecond.place(relx=0.95, rely=0.97)
-        self.FramesPerSecond.configure(background=_bgcolor)
         self.FramesPerSecond.configure(foreground=_fgcolor)
-        self.FramesPerSecond.configure(relief=FLAT)
 
+        sys.stdout = TextRedirector(self.CommandLineOutput)
         print("Welcome to DeepEye Advanced Driver-Assistance Systems.\n")
         print("Configure setup, then press run.")
         print("To exit and return to this menu, hold 'Esc' key.")
@@ -633,7 +546,7 @@ class Window:
 
     def updateState(self, threats):
         
-        self.FramesPerSecond.configure(text=self.frame_rate_output)
+        self.FramesPerSecond.configure(text=gui_utils.FrameRateOutput)
 
         if threats['PEDESTRIAN']:
             self.show_label(self.Pedestrians, self.HidePedestrians)
@@ -729,7 +642,7 @@ class Window:
         convertedTopOffset = 0
         convertedLeftOffset = 0
         
-        if self.windowCheck.get() == 1:
+        if gui_utils.WindowCheck.get() == 1:
             convertedWindowHeight = int(self.WindowHeight.get())
             convertedWindowWidth = int(self.WindowWidth.get())
             convertedTopOffset = int(self.TopOffset.get())
@@ -796,7 +709,7 @@ class Window:
 
              # Calculating fps based on the previous registered timer
             frame_rate = 10 / (time.time() - timer)
-            self.frame_rate_output = 'FPS: {0}'.format(int(frame_rate))
+            gui_utils.FrameRateOutput = 'FPS: {0}'.format(int(frame_rate))
 
             # Press ESC key to exit.
             if cv2.waitKey(25) & keyboard.is_pressed('escape'):
