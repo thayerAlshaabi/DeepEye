@@ -267,10 +267,7 @@ class DrivingAssistant:
             # save a screen shot of the current frame after getting processed 
             cv2.imwrite("test/post/" + str(self.frame_id/10) + ".jpg", frame)
             
-            if self.threats["FAR_LEFT"] or \
-                self.threats["FAR_RIGHT"] or \
-                self.threats["RIGHT"]  or \
-                self.threats["LEFT"]:
+            if self.threats["FAR_LEFT"] or self.threats["FAR_RIGHT"]:
                 OFF_LANE = 1
             else:
                 OFF_LANE = 0
