@@ -35,6 +35,7 @@ import time
 
 from object_classifier.ObjectClassifier import *
 from lane_detector.LaneDetector import *
+from object_classifier.object_detection.utils import label_map_util, visualization_utils
 
 # ---------------------------------------------------------------------------- #
 
@@ -93,7 +94,9 @@ class DrivingAssistant:
             dataset_codename = dataset_codename,
             classifier_threshold = classifier_threshold,
             visualization = object_visualization,
-            diagnostic_mode = diagnostic_mode
+            diagnostic_mode = diagnostic_mode,
+            frame_height = self.target_window['height'],
+            frame_width = self.target_window['width']
         )
 
         self.lane_detector = LaneDetector(
@@ -136,38 +139,133 @@ class DrivingAssistant:
         Capture frames, initiate both objects and lane detectors, and then visualize output. 
         """
         # Get raw pixels from the screen, save it to a Numpy array
-        pixels_arr = np.asarray(self.window_manager.grab(self.target_window))
+        original_frame = np.asarray(self.window_manager.grab(self.target_window))
+
+        # set frame's height & width
+        frame_height, frame_width = original_frame.shape[:2]
+
+        # convert pixels from BGRA to RGB values 
+        original_frame = cv2.cvtColor(original_frame, cv2.COLOR_BGRA2BGR)
+
+        if self.diagnostic_mode:
+            pre = original_frame.copy()
+            # draw a box around the area scaned for for PEDESTRIAN/VEHICLES detection
+            visualization_utils.draw_bounding_box_on_image_array(
+                pre,
+                self.object_detector.roi["t"]/frame_height, 
+                self.object_detector.roi["l"]/frame_width, 
+                self.object_detector.roi["b"]/frame_height, 
+                self.object_detector.roi["r"]/frame_width,
+                color=(255, 255, 0), # BGR VALUE 
+                display_str_list=(' ROI ',))
+
+            # draw a box around the area scaned for collision warnings
+            visualization_utils.draw_bounding_box_on_image_array(
+                pre,
+                self.object_detector.roi["ct"]/frame_height, 
+                self.object_detector.roi["cl"]/frame_width, 
+                self.object_detector.roi["b"]/frame_height, 
+                self.object_detector.roi["cr"]/frame_width,
+                color=(255, 0, 255), # BGR VALUE 
+                display_str_list=(' COLLISION ROI ',))
+
+            # save a screen shot of the current frame before getting processed 
+            if self.frame_id % 10 == 0:
+                cv2.imwrite("test/pre/" + str(self.frame_id/10) + ".jpg", pre)
+
+        # only detect objects in the given frame
+        if self.object_detection and not self.lane_detection:
+            (frame, self.threats) = self.object_detector.scan_road(original_frame, self.threats)
+
+            if self.object_visualization:
+                # Display frame with detected objects.
+                cv2.imshow(
+                    'DeepEye Dashboard', 
+                    cv2.resize(frame, (640, 480))
+                )
+
+        # only detect lane in the given frame
+        elif self.lane_detection and not self.object_detection:
+            (frame, self.threats) = self.lane_detector.detect_lane(original_frame, self.threats)
+
+            if self.lane_visualization:
+                # Display frame with detected lane.
+                cv2.imshow(
+                    'DeepEye Dashboard', 
+                    cv2.resize(frame, (640, 480))
+                )
         
-        # convert pixels from BGRA to RGB values
-        self.frame = cv2.cvtColor(pixels_arr, cv2.COLOR_BGRA2RGB)
+        # detect both objects and lane
+        elif self.object_detection and self.lane_detection:
 
-        if (self.frame_id % 10 == 0) and (self.diagnostic_mode):
-            cv2.imwrite("test/pre/" + str(self.frame_id/10) + ".jpg", pixels_arr)
+            # Visualize object detection ONLY 
+            if self.object_visualization and not self.lane_visualization:
+                (frame, self.threats) = self.object_detector.scan_road(original_frame, self.threats)
 
-        # detect objects in the given frame
-        if self.object_detection:
-            (self.frame, self.threats) = self.object_detector.scan_road(self.frame, self.threats)
+                # Display frame with detected lane.
+                cv2.imshow(
+                    'DeepEye Dashboard', 
+                    cv2.resize(frame, (640, 480))
+                )
 
-        # detect lane in the given frame
-        if self.lane_detection:
-            (self.frame, self.threats) = self.lane_detector.detect_lane(self.frame, self.threats)
+                (_, self.threats) = self.lane_detector.detect_lane(original_frame, self.threats)
+                
+                
+            # Visualize lane detection ONLY 
+            elif self.lane_visualization and not self.object_visualization:
+                (frame, self.threats) = self.lane_detector.detect_lane(original_frame, self.threats)
 
-        #visualization customization 
-        if (self.object_visualization and self.lane_visualization) or self.lane_visualization:
-            # Display frame with detected objects.
-            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (640, 480)))
+                # Display frame with detected lane.
+                cv2.imshow(
+                    'DeepEye Dashboard', 
+                    cv2.resize(frame, (640, 480))
+                )
 
-        elif self.object_visualization and not self.lane_visualization:
-            # convert to grayscale to reduce computational power needed for the process
-            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
-            # Display frame with detected objects.
-            cv2.imshow('DeepEye Dashboard', cv2.resize(self.frame, (640, 480)))
+                (_, self.threats) = self.object_detector.scan_road(original_frame, self.threats)
 
+            # Visualize both object & lane detection 
+            elif self.object_visualization and self.lane_visualization:      
+                (frame, self.threats) = self.object_detector.scan_road(original_frame, self.threats)
+                (frame, self.threats) = self.lane_detector.detect_lane(frame, self.threats)
+
+                # Display frame with detected lane.
+                cv2.imshow(
+                    'DeepEye Dashboard', 
+                    cv2.resize(frame, (640, 480))
+                )
+
+            # skip visualization
+            else:
+                frame = original_frame
+        
+        # skip detection
         else:
-            pass # skip visualization
+            frame = original_frame
+
         
         if (self.frame_id % 10 == 0) and (self.diagnostic_mode):
-            cv2.imwrite("test/post/" + str(self.frame_id/10) + ".jpg", self.frame)
+            # draw a box around the area scaned for for PEDESTRIAN/VEHICLES detection
+            visualization_utils.draw_bounding_box_on_image_array(
+                frame,
+                self.object_detector.roi["t"]/frame_height, 
+                self.object_detector.roi["l"]/frame_width, 
+                self.object_detector.roi["b"]/frame_height, 
+                self.object_detector.roi["r"]/frame_width,
+                color=(255, 255, 0), # BGR VALUE 
+                display_str_list=(' ROI ',))
+
+            # draw a box around the area scaned for collision warnings
+            visualization_utils.draw_bounding_box_on_image_array(
+                frame,
+                self.object_detector.roi["ct"]/frame_height, 
+                self.object_detector.roi["cl"]/frame_width, 
+                self.object_detector.roi["b"]/frame_height, 
+                self.object_detector.roi["cr"]/frame_width,
+                color=(255, 0, 255), # BGR VALUE 
+                display_str_list=(' COLLISION ROI ',))
+
+            # save a screen shot of the current frame after getting processed 
+            cv2.imwrite("test/post/" + str(self.frame_id/10) + ".jpg", frame)
             
             if self.threats["FAR_LEFT"] or \
                 self.threats["FAR_RIGHT"] or \
@@ -177,7 +275,7 @@ class DrivingAssistant:
             else:
                 OFF_LANE = 0
 
-            # append a new row 
+            # append a new row to dataframe
             self.data_frame = self.data_frame.append({
                 'FRAME_ID':         int(self.frame_id/10),
                 'PEDESTRIAN':       int(self.threats['PEDESTRIAN']),

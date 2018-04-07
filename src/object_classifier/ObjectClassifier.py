@@ -74,7 +74,9 @@ class ObjectClassifier:
         dataset_codename = 'mscoco',
         classifier_threshold = .75,
         visualization = False,
-        diagnostic_mode = False):
+        diagnostic_mode = False,
+        frame_height = 0,
+        frame_width = 0):
 
         # Boolean flag for visualization utils
         self.visualization = visualization
@@ -117,7 +119,6 @@ class ObjectClassifier:
         self.STOP_SIGN = 13
         self.PARKING_METER = 14
 
-
         # Each box represents a part of the image where a particular object was detected.
         self.detection_boxes = None
 
@@ -134,9 +135,41 @@ class ObjectClassifier:
         # The decision threshold : all detection scores below this given threshold will be discarded
         self.classifier_threshold = classifier_threshold
 
+        # A placegolder for the current frame being processed
         self.frame = None
+
+        self.frame_height, self.frame_width = frame_height, frame_width
+
+        # Region of Interest (ROI) -- targeted detection area
+        self.roi = {
+            # VEHICLES/PEDESTRIAN Detection Area
+            # width = 1/4 of the frame's width starting from the center point and expanding 1/4 in each direction
+            # height = 1/2 of the frame's height
+            # -------------------------------------------------------------------- #
+            #top_boundary
+            "t": self.frame_height/2,                        
+            #left_boundary  
+            "l": (self.frame_width/2) - (self.frame_width/4),        
+            #bottom_boundary   
+            "b": self.frame_height,                           
+             #right_boundary             
+            "r": (self.frame_width/2) + (self.frame_width/4),      
+            # -------------------------------------------------------------------- #  
+
+            # COLLISION Detection Area
+            # width = 1/5 of the frame's width starting from the center point and expanding 1/8 in each direction
+            # height = 1/12 of the frame's bottom base
+            # -------------------------------------------------------------------- #
+            #top_boundary
+            "ct": self.frame_height - (self.frame_height/12),     
+            #left_boundary  
+            "cl": (self.frame_width/2) - (self.frame_width/10),         
+            #right_boundary 
+            "cr": (self.frame_width/2) + (self.frame_width/10)     
+            # -------------------------------------------------------------------- #   
+        }
         # -------------------------------------------------------------------- #
-        
+
 
     def download_model(self):
         """
@@ -203,49 +236,17 @@ class ObjectClassifier:
             "BIKES": False,
         }
 
-        frame_height, frame_width = self.frame.shape[:2]
-
         # get the detected objects by the neural network along with their confidence scores
         detected_objs = zip(self.detection_classes[0], self.detection_scores[0], self.detection_boxes[0])
-
-        # region of interest
-        # width = 1/4 of the frame's width starting from the center point and expanding 1/4 in each direction
-        # height = 1/2 of the frame's height
-        roi = {
-            "t": frame_height/2,                    #top_boundary
-            "l": (frame_width/2) - (frame_width/4), #left_boundary
-            "b": frame_height,                      #bottom_boundary
-            "r": (frame_width/2) + (frame_width/4), #right_boundary
-
-            # COLLISION Detection Area
-            # width = 1/4 of the frame's width starting from the center point and expanding 1/8 in each direction
-            # height = 1/12 of the frame's bottom base
-            "ct": frame_height - (frame_height/12),  #top_boundary
-            "cl": (frame_width/2) - (frame_width/8), #left_boundary
-            "cr": (frame_width/2) + (frame_width/8)  #right_boundary
-        }
-        
-        if self.diagnostic_mode:
-            # draw a box around the area scaned for for PEDESTRIAN/VEHICLES detection
-            visualization_utils.draw_bounding_box_on_image_array(
-                self.frame,
-                roi["t"]/frame_height, roi["l"]/frame_width, roi["b"]/frame_height, roi["r"]/frame_width,
-                color="Gold", display_str_list=(' ROI ',))
-
-            # draw a box around the area scaned for collision warnings
-            visualization_utils.draw_bounding_box_on_image_array(
-                self.frame,
-                roi["ct"]/frame_height, roi["cl"]/frame_width, roi["b"]/frame_height, roi["cr"]/frame_width,
-                color="Red", display_str_list=(' COLLISION ROI ',))
 
         # update warning interface as needed 
         for(obj_id, confidence_score, pos) in detected_objs:
             if confidence_score >= self.classifier_threshold:
                 # Locate object's 3D-spatial position according to its coordinates in the given frame
-                obj_top = pos[0] * frame_height
-                obj_left = pos[1] * frame_width
-                obj_bottom = pos[2] * frame_height
-                obj_right = pos[3] * frame_width
+                obj_top = pos[0] * self.frame_height
+                obj_left = pos[1] * self.frame_width
+                obj_bottom = pos[2] * self.frame_height
+                obj_right = pos[3] * self.frame_width
 
                 object_width = obj_right - obj_left
                 object_height = obj_bottom - obj_top
@@ -255,16 +256,16 @@ class ObjectClassifier:
                 base_flag, cornor_flag, too_large_flag = False, False, False
                 
                 # if the bottom base of the object is below the upper boundary of the scanned area 
-                if obj_bottom > roi["ct"]:
+                if obj_bottom > self.roi["ct"]:
                     base_flag = True
 
                 # if either corners of the object is within the scanned area
-                if (obj_right < roi["cr"] and obj_right > roi["cl"]) or \
-                    (obj_left < roi["cr"] and obj_left > roi["cl"]):
+                if (obj_right < self.roi["cr"] and obj_right > self.roi["cl"]) or \
+                    (obj_left < self.roi["cr"] and obj_left > self.roi["cl"]):
                     cornor_flag = True
 
                 # if both corners of the object are around the scanned area
-                if obj_left < roi["cl"] and obj_right > roi["cr"]:
+                if obj_left < self.roi["cl"] and obj_right > self.roi["cr"]:
                     too_large_flag = True
 
                 if base_flag and (cornor_flag or too_large_flag):
@@ -273,27 +274,39 @@ class ObjectClassifier:
                     if self.visualization:
                         # highlight object when there's a collision warning
                         matrix = np.zeros(self.frame.shape[:2])
-                        for c in range(frame_width - 1):
-                            for r in range(frame_height - 1):
+                        for c in range(self.frame_width - 1):
+                            for r in range(self.frame_height - 1):
                                 if (c > obj_left and c < obj_right and r > obj_top and r < obj_bottom):
                                     matrix[r][c] = 1
                                     
                         mask = np.asarray(matrix, dtype=np.uint8)
                         visualization_utils.draw_mask_on_image_array(
-                            self.frame, mask, color='Red', alpha=.5)
+                            self.frame, mask, color="blue", alpha=.5)
 
                         #visualization_utils.draw_bounding_box_on_image_array(
                         #    self.frame,
                         #    pos[0], pos[1], pos[2], pos[3],
-                        #   thickness=50)
+                        #    color="blue",
+                        #    thickness=50)
 
                 # -------------------------------------------------------------------- #
 
                 # classification
                 # -------------------------------------------------------------------- #
+                base_flag, cornor_flag = False, False
+
+                # if the bottom base of the object is below the upper boundary of the scanned area 
+                if obj_bottom > self.roi["t"]:
+                    base_flag = True
+
+                # if either corners of the object is within the scanned area
+                if (obj_right < self.roi["r"] and obj_right > self.roi["l"]) or \
+                    (obj_left < self.roi["r"] and obj_left > self.roi["l"]):
+                    cornor_flag = True
+
                 if obj_id == self.PEDESTRIAN:
                     # alert the driver if there's a pedestrian crossing in front of the car
-                    if obj_bottom > roi["t"]:
+                    if base_flag and cornor_flag:
                         objects_dict["PEDESTRIAN"] = True
                             
                 elif obj_id == self.STOP_SIGN:
@@ -303,11 +316,11 @@ class ObjectClassifier:
                     objects_dict["TRAFFIC_LIGHT"] = True
 
                 elif obj_id in self.VEHICLES:
-                    if obj_bottom > roi["t"]:
+                    if base_flag and cornor_flag:
                         objects_dict["VEHICLES"] = True
 
                 elif obj_id in self.BIKES:
-                    if obj_bottom > roi["t"]:
+                    if base_flag and cornor_flag:
                         objects_dict["BIKES"] = True
                 # -------------------------------------------------------------------- #
                 

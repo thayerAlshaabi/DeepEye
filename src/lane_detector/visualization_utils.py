@@ -284,7 +284,7 @@ class Lane:
             backward_transformation_matrix,
             lane_color,
             alpha = 1.0, 
-            beta = 0.5, 
+            beta = 0.0, 
             gamma = 0.0):
         """
         Mark the area enclosed by your lane onto the given frame.
@@ -350,7 +350,7 @@ class Lane:
         # apply road markers mask to the frame 
         output_frame = cv2.addWeighted(
             src1 = road_markers_mask, 
-            alpha = alpha/2, 
+            alpha = alpha, 
             src2 = output_frame, 
             beta = beta, 
             gamma = gamma)
