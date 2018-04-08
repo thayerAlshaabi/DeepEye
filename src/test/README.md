@@ -17,7 +17,6 @@ results.style.format("{:.2%}", subset=pd.IndexSlice[:, pd.IndexSlice[:, 'SCORE']
 results
 ```
 
-
 <div>
 <table border="1" class="dataframe">
   <thead>
