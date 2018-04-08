@@ -62,14 +62,14 @@ Bird's-eye view (bitmap) | Bitmap Histogram |  Bird's-eye view (lane detected)
 
 Initially, the lane detector was hardcoded to accept a particular frame size, and then it would detect lane-pixels by focusing on the bottom-half of the frame to. Then, we updated our **LaneDetector** class to adopt various frame sizes. Furthermore, instead of the focusing on the bottom-haf of the frame, it captures a specific area within the lower half of the frame, particularly, one-third of the frame vertically, and two-thirds of the frame horizontally starting from the center as illustrated in the graph below:
 
-![Sliding Windows](readme_imgs/sliding_windows_info.png)
+![Sliding Windows](readme_imgs/sliding_windows_info.png) 
 
 ## Methods
 Name | Description 
 --- | ---
 **\_\_init\_\_** | The constructor doesn't necessarily require passing any parameters as they all have some satisfactory default values to start with. See [Customization](#customization) for detailed information. 
-**detect_lane** | Detect the current lane that the car is driving in.
-**threat_classifier** | Evaluate the current situation for any potential threats. 
+**detect_lane()** | Detect the current lane that the car is driving in.
+**threat_classifier()** | Evaluate the current situation for any potential threats. 
 
 ## Customization
 To use a different classifier and/or different dataset you'll need to look at:
@@ -77,10 +77,11 @@ To use a different classifier and/or different dataset you'll need to look at:
 Parameter | Description 
 --- | ---
 **marker_color** | A Tuple of RGB values to indicate the color used to mark the lane divider. <br/> **(255, 255, 255)[White]** by default.
-**lane_color** | A Tuple of RGB values to indicate the color used to mark the area enclosed by your lane. <br/> **(0, 255, 127)** [Green] car is relatively in the center of lane. <br/> **(255, 255, 0)** [Yellow] car is slightly off-lane. <br/> **(255, 0, 0)** [Red] car is off-lane.
+**lane_color** | A Tuple of RGB values to indicate the color used to mark the area enclosed by your lane. <br/> **(0, 255, 127)** [Green] car is relatively in the center of lane. <br/> **(255, 255, 127)** [Yellow] car is slightly off-lane. <br/> **(255, 127, 127)** [Red] car is off-lane.
 
 
 ## Licensing Information
 The following code was inspired by [Udacity: self-driving-car project](https://github.com/udacity/CarND-Advanced-Lane-Lines).
 
 Original SourceCode was adopted from @ [advanced_lane_finding](https://github.com/ndrplz/self-driving-car) by Andrea Palazzi.
+ 

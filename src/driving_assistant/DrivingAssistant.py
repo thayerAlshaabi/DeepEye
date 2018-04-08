@@ -236,7 +236,8 @@ class DrivingAssistant:
 
             # skip visualization
             else:
-                frame = original_frame
+                (_, self.threats) = self.object_detector.scan_road(original_frame, self.threats)
+                (_, self.threats) = self.lane_detector.detect_lane(original_frame, self.threats)
         
         # skip detection
         else:
@@ -285,12 +286,3 @@ class DrivingAssistant:
             }, ignore_index=True)
 
         self.frame_id += 1
-
-                   
-
-
-
-
-           
-
-        

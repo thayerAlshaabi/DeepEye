@@ -6,6 +6,10 @@
 3. [Customization](#customization)
 
 
+User Interface          |  Warning Interface
+:-------------------------:|:-------------------------:
+![User Interface](user_interface.png)  |  ![Warning Interface](warning_interface.png)
+
 ## Introduction
 This is a Graphical User Interface that pops up as soon as main is run.  This allows the user to change certain useful parameters for running the program, detailed below.  Once the user clicks "Run", the program launches with the given parameters.
 The code makes use of the Tkinter library.  The boilerplate code (for widget creation and placement) was generated using [Page](http://page.sourceforge.net/), a drag-and-drop Python GUI creation tool.
@@ -17,7 +21,7 @@ Name | Description
 **Window** | This is the main class that contains all the widgets and their associated variables, positioning and default values.
 **FlipState** | This method controls whether the custom window width and height are enabled or disabled based on the state of the checkbox above them.
 **runProgram** | This method calls the [DrivingAssistant](../README.md) class to start the program.  But first, it converts the values of the widget variables (such as turning strings to ints) so that they can be properly understood when passed to the DrivingAssistant class.  After the program is finished running, the GUI closes.    
-
+ 
 ## Customization
 Name | Description 
 --- | ---

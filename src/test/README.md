@@ -296,55 +296,12 @@ results
 
 ## Overall Performance
 
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr>
-      <th></th>
-      <th>ACCURACY</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th>SCORE</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>274.000000</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>0.915537</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>0.114775</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>0.428571</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>0.857143</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+GTA-V          |  Dash-Cam
+:-------------------------:|:-------------------------:
+![User Interface](gtav_score.png)  |  ![Dash-Cam](dashcam_score.png)
 
+
+## Dash-Cam Analysis
 
 ### Predictions results for Pedstrians
 

@@ -24,7 +24,7 @@ Name | Description
 **load_model()** | Load pre-trained model into memory.
 **setup()** | This method would download a trained model from the API if necessary files were not found. And, it loads the trained model into memory - preferably GPU memory using the methods stated above. Then, prep. the tensorflow computation graph and initiates a tensorflow session.
 **scan_road()** | Capture frames and detecte objects.
-**threat_classifier** | Evaluate detected objects and return a dictionary to indicate any potential threats.
+**threat_classifier()** | Evaluate detected objects and return a dictionary to indicate any potential threats.
 
 
 
@@ -42,6 +42,13 @@ Parameter | Description
 **classifier_codename** | Codename of the pre-trained model used for object detection **([list of available models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md))**.
 **dataset_codename** | Codename of the dataset that the model was trained on (available datasets: **mscoco, kitti**).
 **classifier_threshold** | The decision threshold : all detection scores below this given threshold will be discarded **(0.75 by default)**.
+
+### Detection
+
+We limited pedestrian warnings to only people who are crossing in front of the driver. Furthermore, we limited vehicles/bikes warnings to only alert the driver if the object is close enough to the car by excluding any objects that are detected outside of a predefined area in the given frame *(our mian region of interest (ROI) highlighted in yellow in the graph below)*. Similarly, we added a **(Vision-based Collision Detection)** to alert the driver if there's any potential collision with an object surrounding the car by scanning the given frame and checking if the bottom part of an object was detected within the *(COLLISION ROI) highlighted in red in the graph below)*.
+
+![Region of Interest](roi.png) 
+
 
 
 ## Licensing Information

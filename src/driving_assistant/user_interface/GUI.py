@@ -719,10 +719,10 @@ class Window:
         
         self.show_label(self.setupFrame, self.WarningInterfaceFrame)
 
-        
-        timestamp = time.strftime("test/logs/[%Y-%m-%d_%H-%M]--DeepEye.csv")
-        print("Saveing logs to: test/logs/", timestamp)
-        driving_assistant.data_frame.to_csv(timestamp)
+        if driving_assistant.diagnostic_mode:
+            timestamp = time.strftime("test/logs/[%Y-%m-%d_%H-%M]--DeepEye.csv")
+            print("Saveing logs to: test/logs/", timestamp)
+            driving_assistant.data_frame.to_csv(timestamp)
 
         print("Returning to Setup Menu")
 
