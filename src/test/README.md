@@ -296,7 +296,7 @@ results
 
 ## Overall Performance
 
-GTA-V          |  Dash-Cam
+GTA-V Performance Results         |  Dash-Cam Performance Results 
 :-------------------------:|:-------------------------:
 ![User Interface](gtav_score.png)  |  ![Dash-Cam](dashcam_score.png)
 
