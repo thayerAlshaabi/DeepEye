@@ -621,7 +621,7 @@ class Window:
         PlaySound(os.path.join(FOLDER_PATH, "beep.wav"), SND_FILENAME)
 
     def FlipState(self):
-        self.test = self.windowCheck.get()
+        self.test = gui_utils.WindowCheck.get()
             
         if self.test == 0:
             self.WindowWidth['state'] = DISABLED
