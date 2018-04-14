@@ -37,7 +37,7 @@ We used a combination of color and gradient thresholds to create a bitmap of zer
 - [cv2.morphologyEx](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html): a morphological transformation to paint/fill the small gaps in the detected lines, basically to get a (solid line) instead of an (intermittent or dashed line)
 
 #### HSV Mask
-First, we applied an HSV mask to the undistorted image, which helps to extract the yellow lines by focusing on the hue and saturation of the pixel and not so much on how dark te pixel might be.
+First, we applied an HSV mask to the undistorted image, which helps to extract the yellow lines by focusing on the hue and saturation of the pixel and not so much on how dark the pixel might be.
 
 ![hsv_mask](readme_imgs/hsv_mask.jpeg)
 
