@@ -60,7 +60,7 @@ Bird's-eye view (bitmap) | Bitmap Histogram |  Bird's-eye view (lane detected)
 :-------------------------:|:-------------------------:|:-------------------------:
 ![Bird's-eye view (bitmap) ](readme_imgs/bitmap.png) | ![histogram](readme_imgs/histogram.png) |  ![Bird's-eye view (lane detected)](readme_imgs/sliding_windows.png)
 
-Initially, the lane detector was hardcoded to accept a particular frame size, and then it would detect lane-pixels by focusing on the bottom-half of the frame to. Then, we updated our **LaneDetector** class to adopt various frame sizes. Furthermore, instead of the focusing on the bottom-haf of the frame, it captures a specific area within the lower half of the frame, particularly, one-third of the frame vertically, and two-thirds of the frame horizontally starting from the center as illustrated in the graph below:
+Initially, the lane detector was hard-coded to detect lane-pixels by focusing on the bottom-half of the frame. Then, we updated our **LaneDetector** class to adopt various frame sizes. Furthermore, instead of the focusing on the bottom-haf of the frame, it captures a specific area within the lower half of the frame, particularly, one-third of the frame vertically, and two-thirds of the frame horizontally starting from the center as illustrated in the graph below:
 
 ![Sliding Windows](readme_imgs/sliding_windows_info.png) 
 
