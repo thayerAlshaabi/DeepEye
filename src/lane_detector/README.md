@@ -15,7 +15,7 @@ This class uses a lot of OpenCV built-in functions to detect the current lane th
 ## Algorithms
 
 ### Camera Calibration and Frame Undistortion
-3D objects are normally transformed into 2D projections of the objects in a 2D-space, which causes various levels of distortion depending on the camera used to take the picture. Fourthly, there are ways to effectively undo this distortion using some functions provided in the OpenCV library (i.e. [cv2.findChessboardCorners](https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html#ga93efa9b0aa890de240ca32b11253dd4a), [cv2.calibrateCamera](https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html#ga687a1ab946686f0d85ae0363b5af1d7b), [cv2.undistort](https://docs.opencv.org/3.3.1/da/d54/group__imgproc__transform.html#ga69f2545a8b62a6b0fc2ee060dc30559d)). 
+3D objects are normally transformed into 2D projections of the objects in a 2D-space, which causes various levels of distortion depending on the camera used to take the picture. There are ways to effectively undo this distortion using some functions provided in the OpenCV library (i.e. [cv2.findChessboardCorners](https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html#ga93efa9b0aa890de240ca32b11253dd4a), [cv2.calibrateCamera](https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html#ga687a1ab946686f0d85ae0363b5af1d7b), [cv2.undistort](https://docs.opencv.org/3.3.1/da/d54/group__imgproc__transform.html#ga69f2545a8b62a6b0fc2ee060dc30559d)). 
 
 We start by preparing (object points), which will be the (x, y, z) coordinates of the chessboard corners in the original image. We then used the output `object_points` and `image_points` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  We applied this distortion correction to the test image [chessboards](object_classifier/lane_detector/camera_cal) using the `cv2.undistort()` function and obtained this result: 
 
@@ -37,7 +37,7 @@ We used a combination of color and gradient thresholds to create a bitmap of zer
 - [cv2.morphologyEx](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html): a morphological transformation to paint/fill the small gaps in the detected lines, basically to get a (solid line) instead of an (intermittent or dashed line)
 
 #### HSV Mask
-First, we applied an HSV mask to the undistorted image, which helps to extract the yellow lines by focusing on the hue and saturation of the pixel and not so much on how dark te pixel might be.
+First, we applied an HSV mask to the undistorted image, which helps to extract the yellow lines by focusing on the hue and saturation of the pixel and not so much on how dark the pixel might be.
 
 ![hsv_mask](readme_imgs/hsv_mask.jpeg)
 
@@ -60,7 +60,7 @@ Bird's-eye view (bitmap) | Bitmap Histogram |  Bird's-eye view (lane detected)
 :-------------------------:|:-------------------------:|:-------------------------:
 ![Bird's-eye view (bitmap) ](readme_imgs/bitmap.png) | ![histogram](readme_imgs/histogram.png) |  ![Bird's-eye view (lane detected)](readme_imgs/sliding_windows.png)
 
-Initially, the lane detector was hardcoded to accept a particular frame size, and then it would detect lane-pixels by focusing on the bottom-half of the frame to. Then, we updated our **LaneDetector** class to adopt various frame sizes. Furthermore, instead of the focusing on the bottom-haf of the frame, it captures a specific area within the lower half of the frame, particularly, one-third of the frame vertically, and two-thirds of the frame horizontally starting from the center as illustrated in the graph below:
+Initially, the lane detector was hard-coded to detect lane-pixels by focusing on the bottom-half of the frame. Then, we updated our **LaneDetector** class to adopt various frame sizes. Furthermore, instead of the focusing on the bottom-haf of the frame, it captures a specific area within the lower half of the frame, particularly, one-third of the frame vertically, and two-thirds of the frame horizontally starting from the center as illustrated in the graph below:
 
 ![Sliding Windows](readme_imgs/sliding_windows_info.png) 
 
