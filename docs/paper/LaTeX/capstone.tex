@@ -1,0 +1,42 @@
+\documentclass[12pt]{report}
+\usepackage{capstone}
+
+\graphicspath{{figures/}} % add your images to the {figures} directory
+
+\begin{document}
+\sloppy\pagenumbering{gobble}
+
+\input{sections/titlepage.tex}\pagebreak
+
+\pagenumbering{roman} % Overview
+%-------------------------------------------%
+\input{sections/abstract.tex}\pagebreak
+\input{sections/acknowledgements.tex}\pagebreak
+\tableofcontents\pagebreak
+\listoffigures\pagebreak
+%\listoftables\pagebreak
+%-------------------------------------------%
+
+
+\sloppy\pagenumbering{arabic} % Chapters
+%-------------------------------------------%
+\input{sections/introduction.tex}\pagebreak
+\input{sections/literature.tex}\pagebreak
+\input{sections/methods.tex}\pagebreak
+\input{sections/results.tex}\pagebreak
+\input{sections/conclusion.tex}\pagebreak
+%-------------------------------------------%
+
+%BibTeX References in IEEE format 
+%-------------------------------------------%
+\bibliographystyle{IEEEtranS}
+\bibliography{references}
+%-------------------------------------------%
+
+% Optional
+%-------------------------------------------%
+\newpage
+\input{sections/appendix.tex}
+%-------------------------------------------%
+
+\end{document}

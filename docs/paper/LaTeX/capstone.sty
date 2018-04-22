@@ -1,0 +1,172 @@
+
+\typeout{Champlain Capstone Style, Version 0.1}
+\typeout{Copyright (c) 2017 Thayer Alshaabi, Joshua Auerbach}
+\typeout{Licensed under the Academic Free License version 2.0}
+
+% Add any extra packages as needed to the end of this file 
+%-------------------------------------------%
+\usepackage[english]{babel}
+\usepackage[square,numbers]{natbib}
+\usepackage{url}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{parskip}
+\usepackage{vmargin}
+\usepackage{caption}
+\usepackage{geometry}
+\usepackage{changepage}
+\usepackage{multicol}
+\usepackage{subfigure}
+\usepackage[titletoc,toc,title]{appendix}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang] 
+{\normalfont\LARGE\bfseries}{\chaptertitlename\ \thechapter:}{20pt}{}
+\titlespacing*{\chapter}{0pt}{-25pt}{25pt}
+
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\AtBeginDocument{\renewcommand{\bibname}{References}}
+
+\usepackage{tabularx}
+\usepackage[pdftex]{graphicx}
+\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in }
+\setmarginsrb{1 in}{1 in}{1 in}{1 in}{0 in}{0 in}{1 cm}{1 cm}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={CAPSTONE DOCUMENTATION},
+} 
+\urlstyle{same}
+
+\usepackage{fancyhdr}
+\usepackage{ifpdf}
+\ifpdf
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+\else
+\fi
+
+\renewenvironment{abstract}{%
+\addcontentsline{toc}{section}{Abstract}
+\small
+\begin{center}%
+  {\bfseries\LARGE\abstractname\vspace{1em}\vspace{\z@}}%
+\end{center}%
+\quotation
+}{
+\newpage
+}
+
+\newenvironment{acknowledgements}{% 
+  \section*{Acknowledgements}
+  \addcontentsline{toc}{section}{Acknowledgements}
+}{
+ \newpage
+}
+
+\renewcommand\tableofcontents{%
+    \section*{Table of Contents
+        \@mkboth{%
+           Table of Contents}{Table of Contents}}%
+    \@starttoc{toc}%
+    \newpage
+    }
+
+\renewcommand\listoffigures{%
+    \section*{\listfigurename
+      \@mkboth{\MakeUppercase\listfigurename}%
+              {\MakeUppercase\listfigurename}}%
+    \@starttoc{lof}%
+    \addcontentsline{toc}{section}{\listfigurename}
+    \newpage
+    }
+
+\renewcommand\listoftables{%
+    \section*{\listtablename
+      \@mkboth{%
+          \MakeUppercase\listtablename}{\MakeUppercase\listtablename}}%
+    \@starttoc{lot}%
+    \addcontentsline{toc}{section}{\listtablename}
+    \newpage
+    }
+%-------------------------------------------%
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{caption}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{code}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{
+style=code,
+frame=top,frame=bottom,
+basicstyle=\small\normalfont\sffamily, 
+stepnumber=1,      
+numbersep=10pt,     
+tabsize=2,           
+extendedchars=true,         
+breaklines=true,           
+captionpos=t,                     
+mathescape=true,
+stringstyle=\color{codepurple}\ttfamily, 
+showspaces=false,      
+showtabs=false,     
+xleftmargin=17pt,
+xrightmargin=17pt,
+framexleftmargin=17pt,
+framexrightmargin=17pt,
+framexbottommargin=5pt,
+framextopmargin=5pt,
+showstringspaces=false,
+escapechar=\@
+}
+
+\DeclareCaptionFormat{listing}{\rule{\dimexpr\textwidth+17pt\relax}{0.4pt}\par\vskip1pt#1#2#3}
+\captionsetup[lstlisting]{format=listing,singlelinecheck=false, margin=0pt, font={sf},labelsep=space,labelfont=bf}
+
+\renewcommand\lstlistingname{Path}
+
+\usepackage{xargs} 
+\usepackage[colorinlistoftodos,prependcaption]{todonotes}
+\newcommandx{\note}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+
+\usepackage{forest}
+
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+      folder/.pic={
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+        \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+          (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+      }
+    }

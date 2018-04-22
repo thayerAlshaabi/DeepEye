@@ -1,0 +1,43 @@
+\chapter{Conclusion}
+% (2-4 pages)
+
+
+\section{Challenges and Solutions}
+%-------------------------------------------%
+
+We had several challenges throughout this project that took some additional time to work through.
+
+\paragraph{TKinter:} The development of the interface proved to be more challenging than expected due to the limitations of \textit{TKinter}.  Originally, the setup interface and the runtime interface would be separate.  However, we learned that only one instance of \textit{Tkinter} can run at a time.  So, we decided to hide the widgets in the setup interface behind those of the runtime interface when the program is running.  Essentially, everything is in one window.  In general, this is not an ideal solution, but for the scope and purpose of this project it will suffice.  We also had communication problems between the interface and the Driving Assistant class.  Originally, when the program was running (before the runtime interface was created), the setup interface would become unresponsive.  We knew eventually this would be a problem, since our future runtime interface would suffer the same issue.  We discovered the problem was a common threading issue, and the solution was simply to call the \textit{mainLoop} function (which creates the Driving Assistant and runs the program) in a new thread.
+
+\paragraph{Inter-process Communication:} The development of the interface also suffered a communication issue. When a frame is analyzed, a dictionary is updated with the values of each possible threat (present or not present).  The \textbf{updateState} function reads this dictionary and decides which icons to display based on the values of the threat dictionary.  However, \textbf{updateState} did not have access to the dictionary because of the code structure.  To fix this, we rearranged the code structure to it is present state, which gave \textbf{updateState} access to the dictionary, and structurally more sense overall.
+
+\paragraph{Hardware Limitations:} There were also problems caused by hardware limitations.  We ran our program on two different systems, with an nVidia Titan Xp and 1080GTX respectively, yet still they struggled to achieve decent frame rates.  A slow frame rate results in a delay between what the driver is actually seeing, and what has been processed and is reflected in the interface.  For general object detection, it is less of a concern.  However, it renders the collision threat detection fairly useless.  When testing intentional collisions in GTA, the actual collisions almost always occurred before the program was able to give a warning.  The slow frame rate also results in many missing frames, which further reduces its effectiveness - oftentimes in the event of a collision, no frames passed through the program that would have indicated an imminent collision.  The only solution to this problem is better hardware.  Other researchers implementing similar systems used four Titan Xp's bridged together. We did not have the budget for this, so we do not know how it would have performed with that level of processing power.   
+
+%-------------------------------------------%
+
+
+\section{Future Work}
+%-------------------------------------------%
+
+There were many features that we wanted to add to our project that did not end up in the first release due to hardware limitations and the fact that it would be too time consuming. For example, currently our system generically detects traffic lights, however it does not specifically detect whether that is a green, yellow or red light. In the future, it would be really useful to add the distinction to get a more meaningful warning rather than just detecting a traffic light ahead. Furthermore, the only traffic signs our system can detect are traffic lights and stop signs. It would be helpful and more insightful to detect all traffic signs such as speed limits, warning signs, temporary traffic control signs, regulatory, and guide signs. \par 
+
+Further, our lane detection algorithm is certainly not perfect. It relies on a combination of gradient thresholds along with an edge detection algorithm to locate the exact pixels that represent the road markers. That could be improved by retraining our CNN to detect the current lane as well as other objects. However, both techniques will still perform poorly in severe weather conditions, or even bad lighting situations where the road markers are not necessarily clear. One possible solution would be to repaint all road markers with a special type of paint that could be detected with an on-board sensor. Additionally, it would be even more useful to add lane curvature detection, which is crucial if the system were to be deployed in a fully autonomous driving mode. \par
+
+Finally, our current implementation only targets single-camera forward detections. In other words, it detects objects in front of the driving agent. Ideally, the system would be deployed with cameras that cover an entire 360\-degree view around the car, which would allow to detect objects in the blind spots of the driving agent. Ultimately, we recommend replacing the single-camera approach with a stereovision approach. They may be more expensive, but they are able to transform the 2-D spacial view into a 3-dimensional structure by deriving visual cues from two eyes instead of one. This is how humans imply the perception of depth to the objects surrounding us. \par
+
+%-------------------------------------------%
+
+\section{Project Importance}
+%-------------------------------------------%
+
+We have learned much from this project about the impact Artificial Intelligence will have on the automotive industry.  We have several important conclusions based on the results of this project.
+
+\paragraph{Object Detection:} We believe computer-vision based object detection is a useful system that can be implemented in future vehicles.  While observant drivers may not find our implementation particularly helpful since it only takes in a front facing camera view, a 360\-degree camera view would be very useful, as it could detect important objects in blind spots.  This could substantially reduce motorcycle crashes, as they often happen because other drivers do not see them in their blind spots.  More specific audible warnings could easily be added in such a system: "Motorcycle on the left side, use caution."  We believe the frame rates we achieved with our hardware are suitable enough for this general object detection purpose.
+
+
+\paragraph{Lane Detection:} Over the last decade, it has been noted that using computer-vision for lane detection is not an ideal solution due to multiple issues. First, a deep learning approach powered by neural networks may perform better than the color filters and thresholding approach. Conceptually, using neural nets for lane detection would be more resource intensive, and the complexity of the system will increase exponentially as the underlying architecture grows bigger. However, using either approach to detect road markers becomes more complicated in common scenarios such as severe weather conditions where the markers are not visible on the road. 
+
+
+\paragraph{Collision Detection:} Based on our results, we cannot recommend computer vision based collision detection systems.  There are several major problems with our collision detection system. The first is the hardware - because we cannot get a high frame rate, collisions usually happen before the system can predict one.  More advanced (and expensive) hardware may help.  The size and position of the collision box is rather arbitrary, and has to be changed with different angles, width of view, etc. A consistent camera angle would be needed, as well as a custom shaped collision area, rather than a rectangular box.  The last major issue is the fact that the object classifier cannot classify objects that are right in front of the camera, because it cannot see the entirety of the object.  Buildings and vehicles close to the camera are examples of this.  If the driver is about to collide with an object that has not been detected, the system cannot warn the driver.  There is no feasible way to solve this problem.  Radar/LIDAR based systems are much more practical, and do not suffer any of the problems our computer-vision based system does.
+
+%-------------------------------------------%
